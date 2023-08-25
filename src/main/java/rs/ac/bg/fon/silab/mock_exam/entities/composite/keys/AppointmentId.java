@@ -6,7 +6,7 @@ import rs.ac.bg.fon.silab.mock_exam.entities.Exam;
 import java.io.Serializable;
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.FOREIGN_KEY_EXAM;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_EXAM;
 
 @Embeddable
 public class AppointmentId implements Serializable {

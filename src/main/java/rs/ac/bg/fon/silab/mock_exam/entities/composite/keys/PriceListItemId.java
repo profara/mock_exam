@@ -5,7 +5,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import rs.ac.bg.fon.silab.mock_exam.entities.PriceList;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.FOREIGN_KEY_PRICE_LIST;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_PRICE_LIST;
 import java.io.Serializable;
 import java.util.Objects;
 

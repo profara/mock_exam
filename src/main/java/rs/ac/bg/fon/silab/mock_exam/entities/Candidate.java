@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.*;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
 
 @Entity
 public class Candidate {

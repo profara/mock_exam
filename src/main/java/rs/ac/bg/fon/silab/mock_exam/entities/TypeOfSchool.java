@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.TYPE_OF_SCHOOL_TABLE_NAME;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.TYPE_OF_SCHOOL_TABLE_NAME;
 
 @Entity
 @Table(name = TYPE_OF_SCHOOL_TABLE_NAME)

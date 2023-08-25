@@ -1,4 +1,4 @@
-package rs.ac.bg.fon.silab.mock_exam.config;
+package rs.ac.bg.fon.silab.mock_exam.infrastructure.config;
 
 public class Constants {
 

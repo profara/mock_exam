@@ -7,11 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.*;
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.FOREIGN_KEY_APPLICATION;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_APPLICATION;
 
 @Entity
-@IdClass(AppointmentId.class)
 public class Appointment {
     @EmbeddedId
     private AppointmentId appointmentId;

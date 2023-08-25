@@ -1,11 +1,12 @@
 package rs.ac.bg.fon.silab.mock_exam.entities;
 
 import jakarta.persistence.*;
+import rs.ac.bg.fon.silab.mock_exam.domain.user.role.entity.UserRole;
 
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.USER_PROFILE_TABLE_NAME;
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.FOREIGN_KEY_USER_ROLE;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.USER_PROFILE_TABLE_NAME;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_USER_ROLE;
 
 @Entity
 @Table(name = USER_PROFILE_TABLE_NAME)

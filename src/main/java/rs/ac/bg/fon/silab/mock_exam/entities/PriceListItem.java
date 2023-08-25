@@ -6,7 +6,7 @@ import rs.ac.bg.fon.silab.mock_exam.entities.composite.keys.PriceListItemId;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.*;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
 
 @Entity
 @Table(name = PRICE_LIST_ITEM_TABLE_NAME)

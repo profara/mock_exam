@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.FOREIGN_KEY_CITY;
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.FOREIGN_KEY_TYPE_OF_SCHOOL;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_CITY;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_TYPE_OF_SCHOOL;
 
 @Entity
 public class School {

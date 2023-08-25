@@ -1,10 +1,10 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.user.role.entity;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.USER_ROLE_TABLE_NAME;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.USER_ROLE_TABLE_NAME;
 
 @Entity
 @Table(name = USER_ROLE_TABLE_NAME)

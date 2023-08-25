@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.Year;
 import java.util.Objects;
 
-import static rs.ac.bg.fon.silab.mock_exam.config.Constants.PRICE_LIST_TABLE_NAME;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.PRICE_LIST_TABLE_NAME;
 
 @Entity
 @Table(name = PRICE_LIST_TABLE_NAME)
