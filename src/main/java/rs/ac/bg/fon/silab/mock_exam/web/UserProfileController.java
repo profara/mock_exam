@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileRequestDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileRequestUpdateDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileUpdateRoleRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.service.UserProfileService;
 
 @RestController
@@ -41,8 +43,13 @@ public class UserProfileController {
         userProfileService.delete(id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserProfileResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserProfileRequestDTO userProfileDTO){
+    @PatchMapping("/changeRole/{id}")
+    public ResponseEntity<UserProfileResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserProfileUpdateRoleRequestDTO userProfileDTO){
+        return ResponseEntity.ok(userProfileService.updateUserRole(id,userProfileDTO));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserProfileResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserProfileRequestUpdateDTO userProfileDTO){
         return ResponseEntity.ok(userProfileService.update(id,userProfileDTO));
     }
 }
