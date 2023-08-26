@@ -7,7 +7,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.user.role.dto.UserRoleResponseDTO;
 
 public interface UserRoleService {
 
-    UserRoleResponseDTO save(UserRoleRequestDTO userRole);
+    UserRoleResponseDTO save(UserRoleRequestDTO userRoleDTO);
 
     UserRoleResponseDTO getById(Long id);
 

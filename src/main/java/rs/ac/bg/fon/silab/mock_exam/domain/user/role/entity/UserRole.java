@@ -13,7 +13,7 @@ public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "VARCHAR(45)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(45)", nullable = false,unique = true)
     private String name;
 
     public UserRole(){

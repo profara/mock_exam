@@ -23,8 +23,8 @@ public class UserRoleController {
     }
 
     @PostMapping
-    public ResponseEntity<UserRoleResponseDTO> save(@Valid @RequestBody UserRoleRequestDTO userRole){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRoleService.save(userRole));
+    public ResponseEntity<UserRoleResponseDTO> save(@Valid @RequestBody UserRoleRequestDTO userRoleDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(userRoleService.save(userRoleDTO));
     }
 
     @GetMapping("/{id}")
@@ -44,7 +44,7 @@ public class UserRoleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserRoleResponseDTO> update(@PathVariable Long id,@Valid @RequestBody UserRoleRequestDTO userRole){
-        return ResponseEntity.ok(userRoleService.update(id, userRole));
+    public ResponseEntity<UserRoleResponseDTO> update(@PathVariable Long id,@Valid @RequestBody UserRoleRequestDTO userRoleDTO){
+        return ResponseEntity.ok(userRoleService.update(id, userRoleDTO));
     }
 }

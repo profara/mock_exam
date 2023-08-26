@@ -1,4 +1,4 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.user.profile.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.user.role.entity.UserRole;
@@ -14,7 +14,7 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(100)", nullable = false, unique = true)
     private String email;
     @Column(columnDefinition = "VARCHAR(100)", nullable = false)
     private String password;
