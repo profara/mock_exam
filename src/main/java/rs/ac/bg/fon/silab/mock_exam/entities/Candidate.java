@@ -1,6 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.entities;
 
 import jakarta.persistence.*;
+import rs.ac.bg.fon.silab.mock_exam.domain.school.entity.School;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 
 import java.util.Objects;

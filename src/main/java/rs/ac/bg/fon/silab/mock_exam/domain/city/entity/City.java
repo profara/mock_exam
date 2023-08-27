@@ -10,23 +10,23 @@ import java.util.Objects;
 public class City {
 
     @Id
-    private int zipCode;
+    private Long zipCode;
     @Column(columnDefinition = "VARCHAR(45)", nullable = false)
     private String name;
 
     public City() {
     }
 
-    public City(int zipCode, String name) {
+    public City(Long zipCode, String name) {
         this.zipCode = zipCode;
         this.name = name;
     }
 
-    public int getZipCode() {
+    public Long getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(int zipCode) {
+    public void setZipCode(Long zipCode) {
         this.zipCode = zipCode;
     }
 

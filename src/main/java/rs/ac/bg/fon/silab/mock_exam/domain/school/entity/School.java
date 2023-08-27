@@ -1,4 +1,4 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.school.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.entity.City;
@@ -13,7 +13,7 @@ import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREI
 public class School {
 
     @Id
-    private int code;
+    private Long code;
     @Column(columnDefinition = "VARCHAR(100)",nullable = false)
     private String name;
     @ManyToOne(optional = false)
@@ -26,18 +26,18 @@ public class School {
     public School() {
     }
 
-    public School(int code, String name, TypeOfSchool typeOfSchool, City city) {
+    public School(Long code, String name, TypeOfSchool typeOfSchool, City city) {
         this.code = code;
         this.name = name;
         this.typeOfSchool = typeOfSchool;
         this.city = city;
     }
 
-    public int getCode() {
+    public Long getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Long code) {
         this.code = code;
     }
 

@@ -9,6 +9,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.entity.City;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.mapper.CityMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.repository.CityRepository;
+import rs.ac.bg.fon.silab.mock_exam.domain.typeofschool.entity.TypeOfSchool;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 @Service
@@ -25,6 +26,7 @@ public class CityServiceImpl implements CityService{
     @Override
     public CityResponseDTO save(CityRequestDTO cityDTO) {
         City city = mapper.map(cityDTO);
+
 
         cityRepository.save(city);
 
