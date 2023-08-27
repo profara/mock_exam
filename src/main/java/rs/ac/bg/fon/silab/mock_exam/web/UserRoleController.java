@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.role.dto.UserRoleRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.role.dto.UserRoleResponseDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.role.service.UserRoleService;
+import rs.ac.bg.fon.silab.mock_exam.domain.userrole.dto.UserRoleRequestDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userrole.dto.UserRoleResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userrole.service.UserRoleService;
 
 
 

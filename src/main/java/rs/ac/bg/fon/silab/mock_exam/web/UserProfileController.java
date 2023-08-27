@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileRequestUpdateDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileResponseDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.dto.UserProfileUpdateRoleRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.user.profile.service.UserProfileService;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileUpdateRoleRequestDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.service.UserProfileService;
 
 @RestController
 @RequestMapping("/api/userProfiles")
