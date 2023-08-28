@@ -3,7 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.entities.composite.keys;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import rs.ac.bg.fon.silab.mock_exam.entities.PriceList;
+import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
 
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_PRICE_LIST;
 import java.io.Serializable;
