@@ -6,9 +6,11 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestDTO
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileUpdateRoleRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 
 public interface UserProfileService {
 
+    UserProfile findByEmail(String email);
     UserProfileResponseDTO save(UserProfileRequestDTO userProfileDTO);
 
     UserProfileResponseDTO getById(Long id);

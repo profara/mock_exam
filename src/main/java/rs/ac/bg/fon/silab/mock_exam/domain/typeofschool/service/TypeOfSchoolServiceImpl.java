@@ -22,6 +22,11 @@ public class TypeOfSchoolServiceImpl implements TypeOfSchoolService{
     }
 
     @Override
+    public TypeOfSchool findByName(String name) {
+        return typeOfSchoolRepository.findByName(name);
+    }
+
+    @Override
     public TypeOfSchoolResponseDTO save(TypeOfSchoolRequestDTO typeOfSchoolDTO) {
         TypeOfSchool typeOfSchool = mapper.map(typeOfSchoolDTO);
 

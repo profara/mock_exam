@@ -22,6 +22,11 @@ public class UserRoleServiceImpl implements UserRoleService{
     }
 
     @Override
+    public UserRole findByName(String name) {
+        return userRoleRepository.findByName(name);
+    }
+
+    @Override
     public UserRoleResponseDTO save(UserRoleRequestDTO userRoleDTO) {
         UserRole userRole = mapper.map(userRoleDTO);
 

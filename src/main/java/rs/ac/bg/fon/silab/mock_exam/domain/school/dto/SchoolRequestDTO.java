@@ -5,10 +5,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.city.entity.City;
+import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CitySimpleRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.typeofschool.dto.TypeOfSchoolRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.typeofschool.entity.TypeOfSchool;
 
 public record SchoolRequestDTO(
         @NotNull(message = "School code is mandatory")
@@ -22,7 +20,7 @@ public record SchoolRequestDTO(
         TypeOfSchoolRequestDTO typeOfSchool,
         @NotNull(message = "City is mandatory")
         @Valid
-        CityRequestDTO city
+        CitySimpleRequestDTO city
 
 ) {
 }

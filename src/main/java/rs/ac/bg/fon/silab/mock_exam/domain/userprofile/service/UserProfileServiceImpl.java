@@ -10,30 +10,27 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileUpdateRole
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.repository.UserProfileRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper.UserProfileMapper;
-import rs.ac.bg.fon.silab.mock_exam.domain.userrole.entity.UserRole;
-import rs.ac.bg.fon.silab.mock_exam.domain.userrole.repository.UserRoleRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService{
 
     private final UserProfileRepository userProfileRepository;
-    private final UserRoleRepository userRoleRepository;
     private final UserProfileMapper mapper;
 
-    public UserProfileServiceImpl(UserProfileRepository userProfileRepository, UserRoleRepository userRoleRepository, UserProfileMapper mapper) {
+    public UserProfileServiceImpl(UserProfileRepository userProfileRepository, UserProfileMapper mapper) {
         this.userProfileRepository = userProfileRepository;
-        this.userRoleRepository = userRoleRepository;
         this.mapper = mapper;
+    }
+
+    @Override
+    public UserProfile findByEmail(String email) {
+        return userProfileRepository.findByEmail(email);
     }
 
     @Override
     public UserProfileResponseDTO save(UserProfileRequestDTO userProfileDTO) {
         UserProfile userProfile = mapper.map(userProfileDTO);
-
-        UserRole userRole = userRoleRepository.findByName(userProfileDTO.userRole().name());
-
-        userProfile.setUserRole(userRole);
 
         userProfileRepository.save(userProfile);
 
@@ -67,10 +64,6 @@ public class UserProfileServiceImpl implements UserProfileService{
         var userProfile = userProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(UserProfile.class.getSimpleName(), "id", id));
 
-
-        UserRole userRole = userRoleRepository.findByName(userProfileDTO.userRole().name());
-
-        userProfile.setUserRole(userRole);
 
         mapper.updateUserRole(userProfile, userProfileDTO);
 

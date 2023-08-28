@@ -24,6 +24,14 @@ public class CityServiceImpl implements CityService{
     }
 
     @Override
+    public City getById(Long zipCode) {
+        var city = cityRepository.findById(zipCode)
+                .orElseThrow(() -> new EntityNotFoundException(City.class.getSimpleName(), "zip code", zipCode));
+
+        return city;
+    }
+
+    @Override
     public CityResponseDTO save(CityRequestDTO cityDTO) {
         City city = mapper.map(cityDTO);
 

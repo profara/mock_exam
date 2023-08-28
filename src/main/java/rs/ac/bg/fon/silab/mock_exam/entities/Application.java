@@ -1,6 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.entities;
 
 import jakarta.persistence.*;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
 import java.util.ArrayList;
 import java.util.Date;

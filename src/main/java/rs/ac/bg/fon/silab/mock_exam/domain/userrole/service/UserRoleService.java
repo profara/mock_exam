@@ -4,8 +4,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.dto.UserRoleRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.dto.UserRoleResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userrole.entity.UserRole;
 
 public interface UserRoleService {
+
+    UserRole findByName(String name);
 
     UserRoleResponseDTO save(UserRoleRequestDTO userRoleDTO);
 
