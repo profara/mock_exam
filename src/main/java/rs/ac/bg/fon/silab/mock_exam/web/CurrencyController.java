@@ -46,4 +46,5 @@ public class CurrencyController {
                                                       @Valid @RequestBody CurrencyRequestDTO currencyDTO){
         return ResponseEntity.ok(currencyService.update(id,currencyDTO));
     }
+
 }

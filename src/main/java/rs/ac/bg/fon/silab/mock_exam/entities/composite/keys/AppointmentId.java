@@ -1,7 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.entities.composite.keys;
 
 import jakarta.persistence.*;
-import rs.ac.bg.fon.silab.mock_exam.entities.Exam;
+import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 
 import java.io.Serializable;
 import java.util.Objects;
