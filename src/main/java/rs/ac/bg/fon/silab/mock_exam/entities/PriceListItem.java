@@ -1,6 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.entities;
 
 import jakarta.persistence.*;
+import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 import rs.ac.bg.fon.silab.mock_exam.entities.composite.keys.PriceListItemId;
 
 import java.math.BigDecimal;
