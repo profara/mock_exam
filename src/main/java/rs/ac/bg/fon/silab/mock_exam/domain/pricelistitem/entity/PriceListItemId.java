@@ -1,8 +1,6 @@
-package rs.ac.bg.fon.silab.mock_exam.entities.composite.keys;
+package rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity;
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
 
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_PRICE_LIST;
@@ -11,7 +9,7 @@ import java.util.Objects;
 
 @Embeddable
 public class PriceListItemId implements Serializable {
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)

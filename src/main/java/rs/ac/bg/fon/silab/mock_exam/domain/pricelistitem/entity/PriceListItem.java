@@ -1,9 +1,9 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity;
 
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
-import rs.ac.bg.fon.silab.mock_exam.entities.composite.keys.PriceListItemId;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
 
 @Entity
 @Table(name = PRICE_LIST_ITEM_TABLE_NAME)
-public class PriceListItem {
+public class PriceListItem   {
 
     @EmbeddedId
     private PriceListItemId priceListItemId;
@@ -108,4 +108,7 @@ public class PriceListItem {
                 ", exam=" + exam +
                 '}';
     }
+
+
+
 }

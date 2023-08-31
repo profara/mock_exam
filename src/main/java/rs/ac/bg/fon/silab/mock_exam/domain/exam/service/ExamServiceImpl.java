@@ -22,6 +22,11 @@ public class ExamServiceImpl implements ExamService{
     }
 
     @Override
+    public Exam findByName(String name) {
+        return examRepository.findByName(name);
+    }
+
+    @Override
     public ExamResponseDTO save(ExamRequestDTO examDTO) {
         Exam exam = mapper.map(examDTO);
 

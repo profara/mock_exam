@@ -22,6 +22,11 @@ public class CurrencyServiceImpl implements CurrencyService{
     }
 
     @Override
+    public Currency findByCode(String code) {
+        return currencyRepository.findByCode(code);
+    }
+
+    @Override
     public CurrencyResponseDTO save(CurrencyRequestDTO currencyDTO) {
         Currency currency = mapper.map(currencyDTO);
 

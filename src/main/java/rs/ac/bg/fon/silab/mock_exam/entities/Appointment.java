@@ -20,8 +20,8 @@ public class Appointment {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = APPLICATION_APPOINTMENT_TABLE_NAME,
             joinColumns = {
-            @JoinColumn(name = FOREIGN_KEY_APPOINTMENT),
-            @JoinColumn(name = FOREIGN_KEY_EXAM)
+                    @JoinColumn(name = FOREIGN_KEY_APPOINTMENT),
+                    @JoinColumn(name = FOREIGN_KEY_EXAM)
             },
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_APPLICATION)
     )

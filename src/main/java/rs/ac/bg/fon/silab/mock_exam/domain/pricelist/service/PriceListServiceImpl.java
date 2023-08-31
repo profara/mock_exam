@@ -10,6 +10,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.mapper.PriceListMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.repository.PriceListRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.time.Year;
+
 @Service
 public class PriceListServiceImpl implements PriceListService{
 
@@ -19,6 +21,11 @@ public class PriceListServiceImpl implements PriceListService{
     public PriceListServiceImpl(PriceListRepository priceListRepository, PriceListMapper mapper) {
         this.priceListRepository = priceListRepository;
         this.mapper = mapper;
+    }
+
+    @Override
+    public PriceList findByYear(Year year) {
+        return priceListRepository.findByYear(year);
     }
 
     @Override
