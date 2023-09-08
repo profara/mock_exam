@@ -9,6 +9,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 public interface ExamService {
 
     Exam findByName(String name);
+
+    Exam findById(Long id);
     ExamResponseDTO save(ExamRequestDTO examDTO);
 
     ExamResponseDTO getById(Long id);

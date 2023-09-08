@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 
 public record CurrencyCodeRequestDTO(
         @NotBlank(message = "Currency code is mandatory")
-        @Size(min = 3,max = 3, message = "Currency code must have 3 characters")
+        @Size(min = 3, max = 3, message = "Currency code must have 3 characters")
         String code
 ) {
 }

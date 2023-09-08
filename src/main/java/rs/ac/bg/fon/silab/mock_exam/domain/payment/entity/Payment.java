@@ -1,4 +1,4 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.payment.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;

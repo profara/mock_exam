@@ -27,6 +27,12 @@ public class ExamServiceImpl implements ExamService{
     }
 
     @Override
+    public Exam findById(Long id) {
+        return examRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Exam.class.getSimpleName(), "id", id));
+    }
+
+    @Override
     public ExamResponseDTO save(ExamRequestDTO examDTO) {
         Exam exam = mapper.map(examDTO);
 
