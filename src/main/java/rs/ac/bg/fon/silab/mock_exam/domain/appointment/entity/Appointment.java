@@ -1,30 +1,30 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
-import rs.ac.bg.fon.silab.mock_exam.entities.composite.keys.AppointmentId;
+import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
-import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREIGN_KEY_APPLICATION;
 
 @Entity
 public class Appointment {
-    @EmbeddedId
-    private AppointmentId appointmentId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = FOREIGN_KEY_EXAM)
+    private Exam exam;
+
     @Column(name = APPOINTMENT_DATE_COLUMN_NAME, nullable = false)
     private Date appointmentDate;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = APPLICATION_APPOINTMENT_TABLE_NAME,
-            joinColumns = {
-                    @JoinColumn(name = FOREIGN_KEY_APPOINTMENT),
-                    @JoinColumn(name = FOREIGN_KEY_EXAM)
-            },
-            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_APPLICATION)
-    )
+
+    @ManyToMany(mappedBy = "appointments")
     private List<Application> applications;
     public Appointment() {
     }
@@ -33,17 +33,26 @@ public class Appointment {
         this.appointmentDate = appointmentDate;
     }
 
-    public Appointment(AppointmentId appointmentId, Date appointmentDate) {
-        this.appointmentId = appointmentId;
+    public Appointment(Exam exam, Date appointmentDate, List<Application> applications) {
+        this.exam = exam;
         this.appointmentDate = appointmentDate;
+        this.applications = applications;
     }
 
-    public AppointmentId getAppointmentId() {
-        return appointmentId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAppointmentId(AppointmentId appointmentId) {
-        this.appointmentId = appointmentId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
     }
 
     public Date getAppointmentDate() {
@@ -54,24 +63,34 @@ public class Appointment {
         this.appointmentDate = appointmentDate;
     }
 
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return Objects.equals(appointmentId, that.appointmentId);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(appointmentId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Appointment{" +
-                "appointmentId=" + appointmentId +
+                "id=" + id +
+                ", exam=" + exam +
                 ", appointmentDate=" + appointmentDate +
+                ", applications=" + applications +
                 '}';
     }
 }

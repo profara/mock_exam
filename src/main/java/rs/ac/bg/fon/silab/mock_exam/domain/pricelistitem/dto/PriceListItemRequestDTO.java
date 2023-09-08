@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public record PriceListItemRequestDTO(
         @Valid
         @NotNull
-        PriceListItemIdRequestDTO priceList,
+        PriceListRequestDTO priceList,
         @NotNull
         @Min(value = 1)
         BigDecimal price,

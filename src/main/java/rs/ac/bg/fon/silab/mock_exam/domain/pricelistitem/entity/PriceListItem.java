@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
+import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -14,8 +15,12 @@ import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
 @Table(name = PRICE_LIST_ITEM_TABLE_NAME)
 public class PriceListItem   {
 
-    @EmbeddedId
-    private PriceListItemId priceListItemId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = FOREIGN_KEY_PRICE_LIST)
+    private PriceList priceList;
     @Column(columnDefinition = "DECIMAL(15,2)", nullable = false)
     private BigDecimal price;
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
@@ -30,27 +35,33 @@ public class PriceListItem   {
     public PriceListItem() {
     }
 
-    public PriceListItem(BigDecimal price, boolean privileged, Currency currency, Exam exam) {
+    public PriceListItem(BigDecimal price, boolean privileged) {
+        this.price = price;
+        this.privileged = privileged;
+    }
+
+    public PriceListItem(PriceList priceList, BigDecimal price, boolean privileged, Currency currency, Exam exam) {
+        this.priceList = priceList;
         this.price = price;
         this.privileged = privileged;
         this.currency = currency;
         this.exam = exam;
     }
 
-    public PriceListItem(PriceListItemId priceListItemId, BigDecimal price, boolean privileged, Currency currency, Exam exam) {
-        this.priceListItemId = priceListItemId;
-        this.price = price;
-        this.privileged = privileged;
-        this.currency = currency;
-        this.exam = exam;
+    public Long getId() {
+        return id;
     }
 
-    public PriceListItemId getPriceListItemId() {
-        return priceListItemId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setPriceListItemId(PriceListItemId priceListItemId) {
-        this.priceListItemId = priceListItemId;
+    public PriceList getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(PriceList priceList) {
+        this.priceList = priceList;
     }
 
     public BigDecimal getPrice() {
@@ -90,25 +101,23 @@ public class PriceListItem   {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PriceListItem that = (PriceListItem) o;
-        return Objects.equals(priceListItemId, that.priceListItemId);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(priceListItemId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "PriceListItem{" +
-                "priceListItemId=" + priceListItemId +
+                "id=" + id +
+                ", priceList=" + priceList +
                 ", price=" + price +
                 ", privileged=" + privileged +
                 ", currency=" + currency +
                 ", exam=" + exam +
                 '}';
     }
-
-
-
 }

@@ -1,16 +1,19 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.dto;
 
-import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
-import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
-import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItemId;
+import rs.ac.bg.fon.silab.mock_exam.domain.currency.dto.CurrencyResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.exam.dto.ExamResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.dto.PriceListResponseDTO;
 
 import java.math.BigDecimal;
 
 public record PriceListItemResponseDTO(
-        PriceListItemIdResponseDTO id,
+        Long id,
+
+        PriceListResponseDTO priceList,
+
         BigDecimal price,
         boolean privileged,
-        Currency currency,
-        Exam exam
+        CurrencyResponseDTO currency,
+        ExamResponseDTO exam
 ) {
 }

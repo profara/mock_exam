@@ -24,6 +24,13 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
+    public Candidate findById(Long id) {
+        return candidateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(),"id", id));
+
+    }
+
+    @Override
     public CandidateResponseDTO save(CandidateRequestDTO candidateDTO) {
         Candidate candidate = mapper.map(candidateDTO);
 

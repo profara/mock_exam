@@ -1,7 +1,8 @@
-package rs.ac.bg.fon.silab.mock_exam.entities;
+package rs.ac.bg.fon.silab.mock_exam.domain.application.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
+import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,8 +24,13 @@ public class Application {
     @OneToOne(optional = false)
     @JoinColumn(name = FOREIGN_KEY_CANDIDATE)
     private Candidate candidate;
-    @ManyToMany(mappedBy = "applications")
-    private List<Appointment> appointments = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = APPLICATION_APPOINTMENT_TABLE_NAME,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_APPLICATION),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_APPOINTMENT)
+    )
+    private List<Appointment> appointments= new ArrayList<>();
 
     public Application() {
     }
@@ -33,6 +39,27 @@ public class Application {
         this.applicationDate = applicationDate;
         this.privileged = privileged;
         this.candidate = candidate;
+    }
+
+    public void addAppointment(Appointment appointment){
+        if(appointments == null){
+            appointments = new ArrayList<>();
+        }
+        appointments.add(appointment);
+        appointment.getApplications().add(this);
+    }
+
+    public void removeAppointment(Appointment appointment){
+        appointments.remove(appointment);
+        appointment.getApplications().remove(this);
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public Long getId() {
