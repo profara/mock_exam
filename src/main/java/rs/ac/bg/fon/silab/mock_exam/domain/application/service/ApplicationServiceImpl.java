@@ -25,6 +25,12 @@ public class ApplicationServiceImpl implements ApplicationService{
     }
 
     @Override
+    public Application findById(Long id) {
+        return applicationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Application.class.getSimpleName(), "id", id));
+    }
+
+    @Override
     public ApplicationResponseDTO save(ApplicationRequestDTO applicationDTO) {
         Application application = mapper.map(applicationDTO);
 
