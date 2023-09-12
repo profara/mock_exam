@@ -1,8 +1,13 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.entity.UserRole;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.USER_PROFILE_TABLE_NAME;
@@ -10,7 +15,7 @@ import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.FOREI
 
 @Entity
 @Table(name = USER_PROFILE_TABLE_NAME)
-public class UserProfile {
+public class UserProfile implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +28,11 @@ public class UserProfile {
     private UserRole userRole;
 
     public UserProfile() {
+    }
+
+    public UserProfile(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public UserProfile(String email, String password, UserRole userRole) {
@@ -47,8 +57,38 @@ public class UserProfile {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userRole.getName()));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {

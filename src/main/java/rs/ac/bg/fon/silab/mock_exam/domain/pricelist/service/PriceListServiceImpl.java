@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.pricelist.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.dto.PriceListRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.dto.PriceListResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
@@ -24,11 +25,13 @@ public class PriceListServiceImpl implements PriceListService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PriceList findByYear(Year year) {
         return priceListRepository.findByYear(year);
     }
 
     @Override
+    @Transactional
     public PriceListResponseDTO save(PriceListRequestDTO priceListDTO) {
         PriceList priceList = mapper.map(priceListDTO);
 
@@ -38,6 +41,7 @@ public class PriceListServiceImpl implements PriceListService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PriceListResponseDTO getById(Long id) {
         var priceList = priceListRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PriceList.class.getSimpleName(), "id", id));
@@ -46,11 +50,13 @@ public class PriceListServiceImpl implements PriceListService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<PriceListResponseDTO> get(Pageable pageable) {
         return priceListRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if(!priceListRepository.existsById(id)){
             throw new EntityNotFoundException(PriceList.class.getSimpleName(), "id", id);
@@ -60,6 +66,7 @@ public class PriceListServiceImpl implements PriceListService{
     }
 
     @Override
+    @Transactional
     public PriceListResponseDTO update(Long id, PriceListRequestDTO priceListDTO) {
         var priceList = priceListRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PriceList.class.getSimpleName(), "id", id));

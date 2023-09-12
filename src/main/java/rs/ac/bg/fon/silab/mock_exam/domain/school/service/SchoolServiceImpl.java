@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.school.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolUpdateRequestDTO;
@@ -23,12 +24,14 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public School findById(Long code) {
         return schoolRepository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(School.class.getSimpleName(),"code",code));
     }
 
     @Override
+    @Transactional
     public SchoolResponseDTO save(SchoolRequestDTO schoolDTO) {
         School school = mapper.map(schoolDTO);
 
@@ -38,6 +41,7 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public SchoolResponseDTO getById(Long code) {
         var school = schoolRepository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(School.class.getSimpleName(),"code",code));
@@ -46,11 +50,13 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<SchoolResponseDTO> get(Pageable pageable) {
         return schoolRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long code) {
         if(!schoolRepository.existsById(code)){
             throw new EntityNotFoundException(School.class.getSimpleName(),"code",code);
@@ -60,6 +66,7 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
+    @Transactional
     public SchoolResponseDTO update(Long code, SchoolUpdateRequestDTO schoolDTO) {
         var school = schoolRepository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(School.class.getSimpleName(),"code", code));

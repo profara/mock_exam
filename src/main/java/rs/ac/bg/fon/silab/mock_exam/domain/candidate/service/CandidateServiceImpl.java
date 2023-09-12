@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.candidate.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
@@ -24,6 +25,7 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Candidate findById(Long id) {
         return candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(),"id", id));
@@ -31,6 +33,7 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
+    @Transactional
     public CandidateResponseDTO save(CandidateRequestDTO candidateDTO) {
         Candidate candidate = mapper.map(candidateDTO);
 
@@ -40,6 +43,7 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CandidateResponseDTO getById(Long id) {
         var candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(),"id", id));
@@ -48,11 +52,13 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<CandidateResponseDTO> get(Pageable pageable) {
         return candidateRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if(!candidateRepository.existsById(id)){
             throw new EntityNotFoundException(Candidate.class.getSimpleName(),"id",id);
@@ -62,6 +68,7 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
+    @Transactional
     public CandidateResponseDTO update(Long id, CandidateUpdateRequestDTO candidateDTO) {
         var candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "id", id));

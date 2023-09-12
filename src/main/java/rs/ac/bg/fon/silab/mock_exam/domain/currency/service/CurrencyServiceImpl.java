@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.currency.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.dto.CurrencyRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.dto.CurrencyResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
@@ -22,11 +23,13 @@ public class CurrencyServiceImpl implements CurrencyService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Currency findByCode(String code) {
         return currencyRepository.findByCode(code);
     }
 
     @Override
+    @Transactional
     public CurrencyResponseDTO save(CurrencyRequestDTO currencyDTO) {
         Currency currency = mapper.map(currencyDTO);
 
@@ -36,6 +39,7 @@ public class CurrencyServiceImpl implements CurrencyService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CurrencyResponseDTO getById(Long id) {
         var currency = currencyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Currency.class.getSimpleName(),"id", id));
@@ -44,11 +48,13 @@ public class CurrencyServiceImpl implements CurrencyService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<CurrencyResponseDTO> get(Pageable pageable) {
         return currencyRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if(!currencyRepository.existsById(id)){
             throw new EntityNotFoundException(Currency.class.getSimpleName(), "id", id);
@@ -58,6 +64,7 @@ public class CurrencyServiceImpl implements CurrencyService{
     }
 
     @Override
+    @Transactional
     public CurrencyResponseDTO update(Long id, CurrencyRequestDTO currencyDTO) {
         var currency = currencyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Currency.class.getSimpleName(),"id",id));

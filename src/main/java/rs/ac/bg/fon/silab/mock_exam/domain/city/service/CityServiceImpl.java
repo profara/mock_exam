@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.city.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityRequestUpdateDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityResponseDTO;
@@ -24,6 +25,7 @@ public class CityServiceImpl implements CityService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public City getById(Long zipCode) {
         var city = cityRepository.findById(zipCode)
                 .orElseThrow(() -> new EntityNotFoundException(City.class.getSimpleName(), "zip code", zipCode));
@@ -32,9 +34,9 @@ public class CityServiceImpl implements CityService{
     }
 
     @Override
+    @Transactional
     public CityResponseDTO save(CityRequestDTO cityDTO) {
         City city = mapper.map(cityDTO);
-
 
         cityRepository.save(city);
 
@@ -42,6 +44,7 @@ public class CityServiceImpl implements CityService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CityResponseDTO getByZipCode(Long zipCode) {
         var city = cityRepository.findById(zipCode)
                 .orElseThrow(() -> new EntityNotFoundException(City.class.getSimpleName(),"zip code",zipCode));
@@ -50,11 +53,13 @@ public class CityServiceImpl implements CityService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<CityResponseDTO> get(Pageable pageable) {
         return cityRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long zipCode) {
         if(!cityRepository.existsById(zipCode)){
             throw new EntityNotFoundException(City.class.getSimpleName(),"zip code",zipCode);
@@ -64,6 +69,7 @@ public class CityServiceImpl implements CityService{
     }
 
     @Override
+    @Transactional
     public CityResponseDTO update(Long zipCode, CityRequestUpdateDTO cityDTO) {
         var city = cityRepository.findById(zipCode)
                 .orElseThrow(() -> new EntityNotFoundException(City.class.getSimpleName(),"zip code", zipCode));

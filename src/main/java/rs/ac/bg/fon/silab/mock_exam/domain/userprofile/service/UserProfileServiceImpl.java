@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.userprofile.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
@@ -24,11 +25,13 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserProfile findByEmail(String email) {
         return userProfileRepository.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public UserProfileResponseDTO save(UserProfileRequestDTO userProfileDTO) {
         UserProfile userProfile = mapper.map(userProfileDTO);
 
@@ -38,6 +41,7 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserProfileResponseDTO getById(Long id) {
         var userProfile = userProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(UserProfile.class.getSimpleName(), "id", id));
@@ -46,11 +50,13 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<UserProfileResponseDTO> get(Pageable pageable) {
         return userProfileRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if(!userProfileRepository.existsById(id)){
             throw new EntityNotFoundException(UserProfile.class.getSimpleName(),"id",id);
@@ -60,10 +66,10 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
+    @Transactional
     public UserProfileResponseDTO updateUserRole(Long id, UserProfileUpdateRoleRequestDTO userProfileDTO) {
         var userProfile = userProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(UserProfile.class.getSimpleName(), "id", id));
-
 
         mapper.updateUserRole(userProfile, userProfileDTO);
 
@@ -73,6 +79,7 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
+    @Transactional
     public UserProfileResponseDTO update(Long id, UserProfileRequestUpdateDTO userProfileDTO) {
         var userProfile = userProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(UserProfile.class.getSimpleName(),"id",id));

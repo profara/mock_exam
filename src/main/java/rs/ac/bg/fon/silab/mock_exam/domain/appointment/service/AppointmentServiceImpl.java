@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.appointment.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
@@ -22,6 +23,7 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Appointment getById(Long id) {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id));
@@ -29,6 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional
     public AppointmentResponseDTO save(AppointmentRequestDTO appointmentRequestDTO) {
         Appointment appointment = mapper.map(appointmentRequestDTO);
 
@@ -38,6 +41,7 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AppointmentResponseDTO findById(Long id) {
         var appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id));
@@ -46,11 +50,13 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AppointmentResponseDTO> get(Pageable pageable) {
         return appointmentRepository.findAll(pageable).map(mapper::map);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if(!appointmentRepository.existsById(id)){
             throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id);
@@ -60,6 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional
     public AppointmentResponseDTO update(Long id, AppointmentRequestDTO appointmentRequestDTO) {
         var appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id));

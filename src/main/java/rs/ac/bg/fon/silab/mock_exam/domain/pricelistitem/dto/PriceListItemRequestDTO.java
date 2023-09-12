@@ -12,17 +12,17 @@ import java.math.BigDecimal;
 
 public record PriceListItemRequestDTO(
         @Valid
-        @NotNull
+        @NotNull(message = "Price list is mandatory")
         PriceListRequestDTO priceList,
-        @NotNull
+        @NotNull(message = "Price is mandatory")
         @Min(value = 1)
         BigDecimal price,
         boolean privileged,
         @Valid
-        @NotNull
+        @NotNull(message = "Currency is mandatory")
         CurrencyCodeRequestDTO currency,
         @Valid
-        @NotNull
+        @NotNull(message = "Exam is mandatory")
         ExamRequestDTO exam
 ) {
 }
