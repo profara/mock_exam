@@ -19,4 +19,6 @@ public interface CandidateService {
     void delete(Long id);
 
     CandidateResponseDTO update(Long id, CandidateUpdateRequestDTO candidateDTO);
+
+    CandidateResponseDTO getByEmail(String email);
 }

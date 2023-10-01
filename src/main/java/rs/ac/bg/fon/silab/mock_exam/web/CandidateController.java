@@ -10,6 +10,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -29,6 +30,11 @@ public class CandidateController {
     @GetMapping("/{id}")
     public ResponseEntity<CandidateResponseDTO> getById(@PathVariable Long id){
         return ResponseEntity.ok(candidateService.getById(id));
+    }
+
+    @GetMapping(params = "email")
+    public ResponseEntity<CandidateResponseDTO> getByEmail(@RequestParam String email){
+        return ResponseEntity.ok(candidateService.getByEmail(email));
     }
 
     @GetMapping

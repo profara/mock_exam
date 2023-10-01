@@ -79,4 +79,12 @@ public class CandidateServiceImpl implements CandidateService{
 
         return mapper.map(candidate);
     }
+
+    @Override
+    public CandidateResponseDTO getByEmail(String email) {
+        var candidate = candidateRepository.findByUserProfile_Email(email)
+                .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "email", email));
+
+        return mapper.map(candidate);
+    }
 }

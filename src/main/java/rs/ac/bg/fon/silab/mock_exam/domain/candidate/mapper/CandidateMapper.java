@@ -12,7 +12,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.service.UserProfileServic
 
 @Mapper(componentModel = "spring",uses = {SchoolService.class, UserProfileService.class})
 public interface CandidateMapper {
-    @Mapping(source = "school.code",target = "school")
+    @Mapping(source = "school",target = "school")
     @Mapping(source = "userProfile.email", target = "userProfile" )
     Candidate map(CandidateRequestDTO candidateDTO);
 
