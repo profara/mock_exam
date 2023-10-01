@@ -2,52 +2,42 @@ package rs.ac.bg.fon.silab.mock_exam.infrastructure.security.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
-import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.repository.UserProfileRepository;
-import rs.ac.bg.fon.silab.mock_exam.domain.userrole.repository.UserRoleRepository;
-import rs.ac.bg.fon.silab.mock_exam.infrastructure.security.config.JwtService;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper.UserProfileMapper;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.jwt.JWTUtil;
 
 @Service
 public class AuthenticationService {
 
-    private final UserProfileRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserRoleRepository userRoleRepository;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final JWTUtil jwtUtil;
+    private final UserProfileMapper userProfileMapper;
 
-    public AuthenticationService(UserProfileRepository repository, PasswordEncoder passwordEncoder, UserRoleRepository userRoleRepository, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-        this.userRoleRepository = userRoleRepository;
-        this.jwtService = jwtService;
+    public AuthenticationService(AuthenticationManager authenticationManager, JWTUtil jwtUtil, UserProfileMapper userProfileMapper) {
         this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.userProfileMapper = userProfileMapper;
     }
 
+    public AuthenticationResponseDTO login(UserProfileRequestUpdateDTO request){
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        UserProfile userProfile = new UserProfile(
-                request.getEmail(),
-                passwordEncoder.encode(request.getPassword()),
-                userRoleRepository.findByName("user")
-        );
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.email(),
+                            request.password()
+                    )
+            );
+            UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
-        repository.save(userProfile);
-        var jwtToken = jwtService.generateToken(userProfile);
-        return new AuthenticationResponse(jwtToken);
-    }
+            UserProfileResponseDTO userProfileResponseDTO = userProfileMapper.map(userProfile);
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var userProfile = repository.findByEmail(request.getEmail());
-        var jwtToken = jwtService.generateToken(userProfile);
-        return new AuthenticationResponse(jwtToken);
+            String token = jwtUtil.issueToken(userProfileResponseDTO.email(), userProfileResponseDTO.userRole().name());
+
+            return new AuthenticationResponseDTO(token, userProfileResponseDTO);
     }
 }
