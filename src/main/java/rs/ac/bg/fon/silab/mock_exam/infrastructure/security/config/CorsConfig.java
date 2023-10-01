@@ -1,4 +1,4 @@
-package rs.ac.bg.fon.silab.mock_exam.infrastructure.security;
+package rs.ac.bg.fon.silab.mock_exam.infrastructure.security.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
