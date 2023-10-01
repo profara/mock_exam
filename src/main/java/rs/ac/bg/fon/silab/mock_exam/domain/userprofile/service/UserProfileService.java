@@ -10,7 +10,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 public interface UserProfileService {
 
     UserProfile findByEmail(String email);
-    UserProfileResponseDTO save(UserProfileRequestDTO userProfileDTO);
+    UserProfileResponseDTO save(UserProfileRequestUpdateDTO userProfileDTO);
 
     UserProfileResponseDTO getById(Long id);
 
@@ -21,4 +21,6 @@ public interface UserProfileService {
     UserProfileResponseDTO updateUserRole(Long id, UserProfileUpdateRoleRequestDTO userProfileDTO);
 
     UserProfileResponseDTO update(Long id, UserProfileRequestUpdateDTO userProfileDTO);
+
+    UserProfileResponseDTO getByEmail(String email);
 }

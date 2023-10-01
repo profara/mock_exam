@@ -19,4 +19,6 @@ public interface UserProfileMapper {
     void updateUserRole(@MappingTarget UserProfile userProfile, UserProfileUpdateRoleRequestDTO dto);
 
     void update(@MappingTarget UserProfile userProfile, UserProfileRequestUpdateDTO dto);
+
+    UserProfile map(UserProfileRequestUpdateDTO userProfileDTO);
 }

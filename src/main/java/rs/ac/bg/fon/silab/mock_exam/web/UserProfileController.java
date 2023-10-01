@@ -3,29 +3,38 @@ package rs.ac.bg.fon.silab.mock_exam.web;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileUpdateRoleRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.service.UserProfileService;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.jwt.JWTUtil;
 
 @RestController
 @RequestMapping("/api/userProfiles")
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
+    private final JWTUtil jwtUtil;
 
-    public UserProfileController(UserProfileService userProfileService) {
+    public UserProfileController(UserProfileService userProfileService, JWTUtil jwtUtil) {
         this.userProfileService = userProfileService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
-    public ResponseEntity<UserProfileResponseDTO> save(@Valid @RequestBody UserProfileRequestDTO userProfileDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userProfileService.save(userProfileDTO));
+    public ResponseEntity<?> save(@Valid @RequestBody UserProfileRequestUpdateDTO userProfileDTO){
+        UserProfileResponseDTO userProfileResponseDTO = userProfileService.save(userProfileDTO);
+        String jwtToken = jwtUtil.issueToken(userProfileDTO.email(), userProfileResponseDTO.userRole().name());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwtToken)
+                .build();
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserProfileResponseDTO> getById(@PathVariable Long id){
@@ -35,6 +44,11 @@ public class UserProfileController {
     @GetMapping
     public ResponseEntity<Page<UserProfileResponseDTO>> get(Pageable pageable){
         return ResponseEntity.ok(userProfileService.get(pageable));
+    }
+
+    @GetMapping(params = "email")
+    public ResponseEntity<UserProfileResponseDTO> getByEmail(@RequestParam String email){
+        return ResponseEntity.ok(userProfileService.getByEmail(email));
     }
 
     @DeleteMapping("/{id}")

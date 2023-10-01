@@ -27,4 +27,6 @@ public class Constants {
     public static final String CREDITOR_ACCOUNT_COLUMN_NAME = "creditor_account";
     public static final String PAYMENT_PURPOSE_COLUMN_NAME = "payment_purpose";
     public static final String APPOINTMENT_DATE_COLUMN_NAME = "appointment_date";
+
+    public static final String USER_ROLE = "user";
 }

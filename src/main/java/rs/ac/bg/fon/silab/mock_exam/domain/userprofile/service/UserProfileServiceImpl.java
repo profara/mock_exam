@@ -12,6 +12,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.exception.DuplicateUserEx
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.repository.UserProfileRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper.UserProfileMapper;
+import rs.ac.bg.fon.silab.mock_exam.domain.userrole.entity.UserRole;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.repository.UserRoleRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
