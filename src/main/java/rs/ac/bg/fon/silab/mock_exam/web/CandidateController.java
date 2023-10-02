@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateAllRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
@@ -52,5 +53,11 @@ public class CandidateController {
     public ResponseEntity<CandidateResponseDTO> update(@PathVariable Long id,
                                                        @Valid @RequestBody CandidateUpdateRequestDTO candidateDTO){
         return ResponseEntity.ok(candidateService.update(id,candidateDTO));
+    }
+
+    @PatchMapping("/{id}/updateAll")
+    public ResponseEntity<CandidateResponseDTO> updateAll(@PathVariable Long id,
+                                                          @Valid @RequestBody CandidateUpdateAllRequestDTO candidateDTO){
+        return ResponseEntity.ok(candidateService.updateAll(id, candidateDTO));
     }
 }

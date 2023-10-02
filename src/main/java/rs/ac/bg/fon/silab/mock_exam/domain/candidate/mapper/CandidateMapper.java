@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateAllRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.service.SchoolService;
@@ -19,4 +20,6 @@ public interface CandidateMapper {
     CandidateResponseDTO map(Candidate candidate);
 
     void update(@MappingTarget Candidate candidate, CandidateUpdateRequestDTO candidateDTO);
+
+    void updateAll(@MappingTarget Candidate candidate, CandidateUpdateAllRequestDTO candidateDTO);
 }

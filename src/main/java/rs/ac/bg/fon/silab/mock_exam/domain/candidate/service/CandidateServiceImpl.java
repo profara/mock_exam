@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateAllRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.mapper.CandidateMapper;
@@ -84,6 +85,18 @@ public class CandidateServiceImpl implements CandidateService{
     public CandidateResponseDTO getByEmail(String email) {
         var candidate = candidateRepository.findByUserProfile_Email(email)
                 .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "email", email));
+
+        return mapper.map(candidate);
+    }
+
+    @Override
+    public CandidateResponseDTO updateAll(Long id, CandidateUpdateAllRequestDTO candidateDTO) {
+        var candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "id", id));
+
+        mapper.updateAll(candidate, candidateDTO);
+
+        candidateRepository.save(candidate);
 
         return mapper.map(candidate);
     }
