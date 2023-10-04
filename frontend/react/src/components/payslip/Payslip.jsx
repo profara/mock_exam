@@ -3,7 +3,13 @@ import Input from "./Input.jsx";
 import Textarea from "./Textarea.jsx";
 import { deviceBrakepoints } from "./config/device-brakepoints.jsx"
 import {useAuth} from "../context/AuthContext.jsx";
-import {CREDITOR_ACCOUNT, PAYMENT_PURPOSE, REFERENCE_NUMBER} from "./config/constants.js";
+import {
+    CREDITOR_ACCOUNT,
+    PAY_CODE,
+    PAYMENT_PURPOSE,
+    RECEIVER_DESCRIPTION,
+    REFERENCE_NUMBER
+} from "./config/constants.js";
 
 
 
@@ -30,15 +36,14 @@ function Payslip() {
                 <Textarea
                     label='Svrha uplate'
                     id='paymentPurpose'
-                    value={PAYMENT_PURPOSE}
                     disabled={true}
+                    value={PAYMENT_PURPOSE}
                 />
                 <Textarea label='Primalac'
                           id='receiverDescription'
-                          help='receiverDescriptionHelp'
-                          helpText='U ovo polje upišite podatke osobe koja je Primalac.'
-                          value={"Fakultet organizacionih nauka, Jove Ilića 154, 11000 Beograd"}
                           disabled={true}
+                          value={RECEIVER_DESCRIPTION}
+
                 />
             </LeftSide>
             <RightSide>
@@ -47,20 +52,15 @@ function Payslip() {
                     width={23}
                     label='Sifra Pacanja'
                     id='payCode'
-                    help='payCodeHelp'
-                    helpText='Upisite sifru placanja'
-                    value={189}
-                    disabled={true}
                     readOnly
-
+                    disabled={true}
+                    value={PAY_CODE}
                 />
                 <Input
                     width={23}
                     disabled={true}
                     label='Valuta'
                     id='valuta'
-                    help='valutaHelp'
-                    helpText='Ovo polje je onemogućeno jer valuta mora biti RSD.'
                     value={"RSD"}
                     readOnly
                 />
