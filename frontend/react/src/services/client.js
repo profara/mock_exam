@@ -55,6 +55,14 @@ export const saveCandidate = async (candidate) => {
     )
 }
 
+export const saveApplication = async (application) => {
+    return await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/applications`,
+        application,
+        getAuthConfig()
+    )
+}
+
 export const updateCandidate = async (id, candidate) => {
     return await axios.patch(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates/${id}/updateAll`,

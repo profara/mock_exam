@@ -1,9 +1,9 @@
 import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {getAppointments} from "./services/client.js";
+import {getAppointments, saveApplication} from "./services/client.js";
 import Card from "./components/Card.jsx";
-import {errorNotification} from "./services/notification.js";
+import {errorNotification, successNotification} from "./services/notification.js";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
 import {useCard} from "./components/context/SelectedCardsContext.jsx";
@@ -16,18 +16,56 @@ const App = () => {
     const [err, setError] = useState("");
     const navigate = useNavigate();
     const {candidate} = useAuth();
+    const serbiaDate = getCurrentDateInSerbiaTimeZone();
 
     let matematikaCount = 0;
     let opstaInformisanostCount = 0;
+
+    function getCurrentDateInSerbiaTimeZone() {
+        const now = new Date();
+
+        const serbiaDate = new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Europe/Belgrade'
+        }).format(now);
+
+        const [month, day, year] = serbiaDate.split('/');
+        const isoString = `${year}-${month}-${day}`;
+
+        return isoString;
+    }
 
 
 
     const handlePrijaviClick = (candidate) => {
         if(candidate){
-            navigate("/uplatnica");
+            const application = {
+                applicationDate: serbiaDate,
+                privileged: candidate.attendedPreparation,
+                candidate: candidate.id,
+                appointmentIds: [...selectedCards]
+            }
+            saveApplication(application)
+                .then(res => {
+                    console.log(res)
+                    successNotification(
+                        "Uspesno sacuvana prijava",
+                        ""
+                    )
+                    navigate("/uplatnica");
+                }).catch(err => {
+                console.log(err)
+                errorNotification(
+                    err.code,
+                    err?.response.data.violations[0].error
+                )
+            })
         } else{
             navigate("/profil")
         }
+
     }
     const toogleCardSelection = (id) => {
         setSelectedCards(prevState => {

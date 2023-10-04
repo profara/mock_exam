@@ -1,162 +1,21 @@
 import styled from 'styled-components'
-
 import Input from "./Input.jsx";
 import Textarea from "./Textarea.jsx";
 import { deviceBrakepoints } from "./config/device-brakepoints.jsx"
-import { useReducer } from 'react'
-import { useLocation } from 'react-router-dom'
-import {Button} from "@chakra-ui/react";
+import {useAuth} from "../context/AuthContext.jsx";
 
 
-//TODO: change value param to string or vice versa
 
-
-const initialState = {
-    payer: '',
-    paymentDescription: '',
-    receiver: '',
-    payCode: '',
-    currencyCode: 'RSD',
-    totalAmount: '',
-    bankNumber: '123',
-    accountNumber: '0000000002341',
-    controlNumber: '99',
-    accountReceivable: '',
-    modelCode: '',
-    paymentNumber: '',
-    currentTemplate: {},
-    modalIsOpen: false,
-    saveCurrentTemplateModalContent: false,
-    allTemplatesModalIsContent: false,
-}
-
-const ACTIONS = {
-    PAYER_CHANGED: 'payer-change',
-    PAYMENT_DESCRIPTION: 'payment-description-change',
-    RECEIVER_CHANGED: 'receiver-change',
-    PAYCODE_CHANGED: 'pay-code-change',
-    CURRENCY_CHANGED: 'currency-change',
-    TOTAL_AMOUNT: 'total-amount-change',
-    BANK_NUMBER_CHANGE: 'bank-number-change',
-    ACCOUNT_NUMBER_CHANGE: 'account-number-change',
-    CONTROL_NUMBER_CHANGE: 'control-number-change',
-    MODEL_CODE: 'model-code-change',
-    PAYMENT_NUMBER: 'payment-number-change',
-    RESET_VALUES: 'reset-values',
-    USE_SELECTED_TEMPLATE: 'use-selected-template',
-    CURRENT_TEMPLATE: 'current-template',
-    MODAL_IS_OPEN: 'modal-is-open',
-    SAVE_CURRENT_TEMPLATE_MODAL_CONTENT: 'save-template-modal-is-open',
-    ALL_TEMPLATES_MODAL_CONTENT: 'all-templates-modal-is-open',
-}
-
-const init = () => initialState
-
-const reducer = (state, action) => {
-    switch (action.type) {
-        case ACTIONS.PAYER_CHANGED:
-            return {
-                ...state,
-                payer: action.payload
-            }
-        case ACTIONS.PAYMENT_DESCRIPTION:
-            return {
-                ...state,
-                paymentDescription: action.payload
-            }
-        case ACTIONS.RECEIVER_CHANGED:
-            return {
-                ...state,
-                receiver: action.payload
-            }
-        case ACTIONS.PAYCODE_CHANGED:
-            return {
-                ...state,
-                payCode: action.payload
-            }
-        case ACTIONS.CURRENCY_CHANGED:
-            return {
-                ...state,
-                currencyCode: action.payload
-            }
-        case ACTIONS.TOTAL_AMOUNT:
-            return {
-                ...state,
-                totalAmount: action.payload
-            }
-        case ACTIONS.BANK_NUMBER_CHANGE:
-            return {
-                ...state,
-                bankNumber: action.payload,
-                accountReceivable: state.bankNumber + state.accountNumber + state.controlNumber
-            }
-        case ACTIONS.ACCOUNT_NUMBER_CHANGE:
-            return {
-                ...state,
-                accountNumber: action.payload,
-                accountReceivable: state.bankNumber + state.accountNumber + state.controlNumber
-            }
-        case ACTIONS.CONTROL_NUMBER_CHANGE:
-            return {
-                ...state,
-                controlNumber: action.payload,
-                accountReceivable: state.bankNumber + state.accountNumber + state.controlNumber
-            }
-        case ACTIONS.MODEL_CODE:
-            return {
-                ...state,
-                modelCode: action.payload
-            }
-        case ACTIONS.PAYMENT_NUMBER:
-            return {
-                ...state,
-                paymentNumber: action.payload
-            }
-        case ACTIONS.CURRENT_TEMPLATE:
-            return {
-                ...state,
-                currentTemplate: action.payload,
-            }
-        case ACTIONS.MODAL_IS_OPEN:
-            return {
-                ...state,
-                modalIsOpen: action.payload,
-            }
-        case ACTIONS.SAVE_CURRENT_TEMPLATE_MODAL_CONTENT:
-            return {
-                ...state,
-                saveCurrentTemplateModalContent: action.payload,
-            }
-        case ACTIONS.ALL_TEMPLATES_MODAL_CONTENT:
-            return {
-                ...state,
-                allTemplatesModalIsContent: action.payload,
-            }
-        case ACTIONS.USE_SELECTED_TEMPLATE:
-            return {
-                ...state,
-                ...action.payload,
-            }
-        case ACTIONS.RESET_VALUES:
-            return init()
-        default:
-            console.error('Action.type must be ' + action.type)
-            return state
-    }
-}
 
 function Payslip() {
-    const [state, dispatch] = useReducer(reducer, initialState, init)
-    const params = new URLSearchParams(useLocation().search)
 
-
+    const {candidate} = useAuth();
     const printPayslip = () => {
         window.print()
     }
 
-
     return (
-        <><Container>
+        <StyledWrapper><Container>
             <BankSlipTitle>Nalog Za Uplatu</BankSlipTitle>
             <LeftSide >
                 <Textarea label='Platilac'
@@ -165,22 +24,21 @@ function Payslip() {
                           helpText='U ovo polje upišite podatke osobe koja je Platilac.'
                           readOnly
                           disabled={true}
-                          value={state.payer}
-
+                          value={`${candidate.name} ${candidate.surname}`}
                 />
                 <Textarea
                     label='Svrha uplate'
                     id='paymentDescription'
                     help='paymentDescriptionHelp'
                     helpText='U ovo polje upišite svrhu uplate.'
-                    value={state.paymentDescription}
+                    value={"Probni prijemni ispit"}
                     disabled={true}
                 />
                 <Textarea label='Primalac'
                           id='receiverDescription'
                           help='receiverDescriptionHelp'
                           helpText='U ovo polje upišite podatke osobe koja je Primalac.'
-                          value={state.receiver}
+                          value={"Fakultet organizacionih nauka, Jove Ilića 154, 11000 Beograd"}
                           disabled={true}
                 />
             </LeftSide>
@@ -192,8 +50,9 @@ function Payslip() {
                     id='payCode'
                     help='payCodeHelp'
                     helpText='Upisite sifru placanja'
-                    value={state.payCode}
+                    value={189}
                     disabled={true}
+                    readOnly
 
                 />
                 <Input
@@ -203,7 +62,7 @@ function Payslip() {
                     id='valuta'
                     help='valutaHelp'
                     helpText='Ovo polje je onemogućeno jer valuta mora biti RSD.'
-                    value={state.currencyCode}
+                    value={"RSD"}
                     readOnly
                 />
                 <Input
@@ -213,18 +72,18 @@ function Payslip() {
                     id='totalAmount'
                     help='totalAmountHelp'
                     helpText='Ovde upišite brojevima ukupan iznos koji zelite da uplatite.'
-                    value={state.totalAmount}
+                    value={10000}
                     readOnly
                     disabled={true}
                 />
                 <Input
                     type='text'
                     width={100}
-                    label='Poziv na broj'
+                    label='Racun primaoca'
                     id='paymentNumber'
                     help='paymentNumberHelp'
                     helpText='Ovde upišite brojevima poziv na broj na koji zelite da uplatite.'
-                    value={state.totalAmount}
+                    value={"840-0000001344666-69"}
                     readOnly
                     disabled={true}
                 />
@@ -236,26 +95,28 @@ function Payslip() {
                     id='modelCode'
                     help='modelCodeHelp'
                     helpText='Ovde upisite brojevima model'
-                    value={state.modelCode}
+                    value=""
                     disabled={true}
+                    readOnly
                 />
                 <Input
-                    type='number'
+                    type='text'
                     width={75}
                     label='Poziv na broj'
                     id='paymentNumber'
                     help='paymentNumberHelp'
                     helpText='Ovde upišite brojevima poziv na broj za ovu uplatnicu.'
-                    value={state.paymentNumber}
+                    value={"742121-500"}
                     disabled={true}
+                    readOnly
                 />
 
             </RightSide>
         </Container>
                 <Button onClick={printPayslip}>
-                    Odstampaj uplatnicu
+                    Odštampaj uplatnicu
                 </Button>
-        </>
+        </StyledWrapper>
     )
 }
 
@@ -313,3 +174,53 @@ const RightSide = styled.div`
 `
 
 export default Payslip
+
+const Button = styled.button`
+    @media print {
+        display: none;
+    }
+`
+
+const StyledWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  --color-primary: white;
+  --color-secondary: black;
+  
+    max-width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+ 
+
+  button {
+    padding: 0.5rem;
+    
+    margin-left: 0.5rem;
+    
+  }
+
+  @media (prefers-color-scheme: light) {
+     
+      color: #213547;
+      background-color: #ffffff;
+      --color-primary: black;
+      --color-secondary: white;
+    
+  }
+
+`;
