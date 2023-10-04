@@ -3,6 +3,7 @@ import Input from "./Input.jsx";
 import Textarea from "./Textarea.jsx";
 import { deviceBrakepoints } from "./config/device-brakepoints.jsx"
 import {useAuth} from "../context/AuthContext.jsx";
+import {CREDITOR_ACCOUNT, PAYMENT_PURPOSE, REFERENCE_NUMBER} from "./config/constants.js";
 
 
 
@@ -28,10 +29,8 @@ function Payslip() {
                 />
                 <Textarea
                     label='Svrha uplate'
-                    id='paymentDescription'
-                    help='paymentDescriptionHelp'
-                    helpText='U ovo polje upišite svrhu uplate.'
-                    value={"Probni prijemni ispit"}
+                    id='paymentPurpose'
+                    value={PAYMENT_PURPOSE}
                     disabled={true}
                 />
                 <Textarea label='Primalac'
@@ -80,10 +79,8 @@ function Payslip() {
                     type='text'
                     width={100}
                     label='Racun primaoca'
-                    id='paymentNumber'
-                    help='paymentNumberHelp'
-                    helpText='Ovde upišite brojevima poziv na broj na koji zelite da uplatite.'
-                    value={"840-0000001344666-69"}
+                    id='creditorAccount'
+                    value={CREDITOR_ACCOUNT}
                     readOnly
                     disabled={true}
                 />
@@ -103,10 +100,8 @@ function Payslip() {
                     type='text'
                     width={75}
                     label='Poziv na broj'
-                    id='paymentNumber'
-                    help='paymentNumberHelp'
-                    helpText='Ovde upišite brojevima poziv na broj za ovu uplatnicu.'
-                    value={"742121-500"}
+                    id='referenceNumber'
+                    value={REFERENCE_NUMBER}
                     disabled={true}
                     readOnly
                 />
