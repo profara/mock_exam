@@ -12,6 +12,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.mapper.PriceListItemMap
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.repository.PriceListItemRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.util.List;
+
 @Service
 public class PriceListItemServiceImpl implements PriceListItemService{
 
@@ -69,5 +71,10 @@ public class PriceListItemServiceImpl implements PriceListItemService{
         priceListItemRepository.save(priceListItem);
 
         return mapper.map(priceListItem);
+    }
+
+    @Override
+    public List<PriceListItem> findByPriceList(Long id) {
+        return priceListItemRepository.findByPriceList_Id(id);
     }
 }

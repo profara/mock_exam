@@ -23,5 +23,5 @@ public interface CandidateService {
 
     CandidateResponseDTO getByEmail(String email);
 
-    CandidateResponseDTO updateAll(Long id, CandidateUpdateAllRequestDTO candidateDTO);
+    CandidateResponseDTO updateAll(Long id, CandidateRequestDTO candidateDTO);
 }

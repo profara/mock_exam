@@ -90,11 +90,11 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
-    public CandidateResponseDTO updateAll(Long id, CandidateUpdateAllRequestDTO candidateDTO) {
+    public CandidateResponseDTO updateAll(Long id, CandidateRequestDTO candidateDTO) {
         var candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "id", id));
 
-        mapper.updateAll(candidate, candidateDTO);
+        mapper.update(candidate, candidateDTO);
 
         candidateRepository.save(candidate);
 

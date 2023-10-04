@@ -57,7 +57,7 @@ public class CandidateController {
 
     @PatchMapping("/{id}/updateAll")
     public ResponseEntity<CandidateResponseDTO> updateAll(@PathVariable Long id,
-                                                          @Valid @RequestBody CandidateUpdateAllRequestDTO candidateDTO){
+                                                          @Valid @RequestBody CandidateRequestDTO candidateDTO){
         return ResponseEntity.ok(candidateService.updateAll(id, candidateDTO));
     }
 }

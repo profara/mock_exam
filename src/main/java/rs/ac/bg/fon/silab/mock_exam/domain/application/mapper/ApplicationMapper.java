@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {CandidateService.class, AppointmentService.class})
 public interface ApplicationMapper {
     @Mapping(source = "appointmentIds", target = "appointments")
-    @Mapping(source = "candidate.id", target = "candidate")
+    @Mapping(source = "candidate", target = "candidate")
     Application map(ApplicationRequestDTO applicationDTO);
 
     List<Appointment> map(List<Long> appointmentIds);
