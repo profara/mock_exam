@@ -2,6 +2,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.payment.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
+import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -25,17 +26,21 @@ public class Payment {
     @OneToOne(optional = false)
     @JoinColumn(name = FOREIGN_KEY_APPLICATION)
     private Application application;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = FOREIGN_KEY_CURRENCY)
+    private Currency currency;
 
     public Payment() {
     }
 
-    public Payment(String referenceNumber, String creditorAccount, BigDecimal amount, String paymentPurpose, int model, Application application) {
+    public Payment(String referenceNumber, String creditorAccount, BigDecimal amount, String paymentPurpose, int model, Application application, Currency currency) {
         this.referenceNumber = referenceNumber;
         this.creditorAccount = creditorAccount;
         this.amount = amount;
         this.paymentPurpose = paymentPurpose;
         this.model = model;
         this.application = application;
+        this.currency = currency;
     }
 
     public Long getId() {
@@ -94,6 +99,14 @@ public class Payment {
         this.application = application;
     }
 
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,6 +130,7 @@ public class Payment {
                 ", paymentPurpose='" + paymentPurpose + '\'' +
                 ", model=" + model +
                 ", application=" + application +
+                ", currency=" + currency +
                 '}';
     }
 }

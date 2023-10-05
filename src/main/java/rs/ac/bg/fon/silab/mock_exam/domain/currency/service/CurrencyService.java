@@ -7,6 +7,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.currency.dto.CurrencyResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 
 public interface CurrencyService {
+
+    Currency findById(Long id);
     Currency findByCode(String code);
     CurrencyResponseDTO save(CurrencyRequestDTO currencyDTO);
 

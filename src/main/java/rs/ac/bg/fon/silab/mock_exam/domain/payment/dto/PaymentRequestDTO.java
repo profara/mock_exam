@@ -13,7 +13,9 @@ public record PaymentRequestDTO(
         String paymentPurpose,
         int model,
         @NotNull(message = "Application is mandatory")
-        Long applicationId
+        Long applicationId,
+        @NotNull(message = "Currency is mandatory")
+        Long currencyId
 
 ) {
 }

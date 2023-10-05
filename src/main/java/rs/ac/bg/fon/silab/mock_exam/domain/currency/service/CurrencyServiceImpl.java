@@ -23,6 +23,12 @@ public class CurrencyServiceImpl implements CurrencyService{
     }
 
     @Override
+    public Currency findById(Long id) {
+        return currencyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Currency.class.getSimpleName(),"id", id));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Currency findByCode(String code) {
         return currencyRepository.findByCode(code);
