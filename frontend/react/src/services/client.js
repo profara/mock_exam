@@ -40,6 +40,13 @@ export const getSchools = async () => {
         );
 }
 
+export const getCurrencies = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/currencies`,
+        getAuthConfig()
+    );
+}
+
 export const saveUserProfile = async (user) => {
     return await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/userProfiles`,
