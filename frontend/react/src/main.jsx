@@ -13,6 +13,8 @@ import UpdateCandidateProfileForm from "./components/candidate/UpdateCandidatePr
 import SelectedCardsProvider from "./components/context/SelectedCardsContext.jsx";
 import Payslip from "./components/payslip/Payslip.jsx";
 import Currency from "./components/currency/Currency.jsx";
+import ApplicationProvider from "./components/context/ApplicationContext.jsx";
+import CurrencyProvider from "./components/context/CurrencyContext.jsx";
 
 
 
@@ -34,7 +36,8 @@ const router = createBrowserRouter([
     },
     {
         path: "/valuta",
-        element:<Currency/>
+        element: <Currency/>
+
     },
 
     {
@@ -54,17 +57,21 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-      <ChakraProvider>
-          <SelectedCardsProvider>
-          <AuthProvider>
+    <React.StrictMode>
+        <ChakraProvider>
+            <ApplicationProvider>
+                <CurrencyProvider>
+                    <SelectedCardsProvider>
+                        <AuthProvider>
 
-                <RouterProvider router={router}/>
+                            <RouterProvider router={router}/>
 
-          </AuthProvider>
+                        </AuthProvider>
 
-          <ToastContainer/>
-          </SelectedCardsProvider>
-      </ChakraProvider>
-  </React.StrictMode>,
+                        <ToastContainer/>
+                    </SelectedCardsProvider>
+                </CurrencyProvider>
+            </ApplicationProvider>
+        </ChakraProvider>
+    </React.StrictMode>,
 )

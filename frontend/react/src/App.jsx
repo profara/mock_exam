@@ -1,13 +1,14 @@
 import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {getAppointments, saveApplication, savePayment} from "./services/client.js";
+import {getAppointments, saveApplication} from "./services/client.js";
 import Card from "./components/Card.jsx";
 import {errorNotification, successNotification} from "./services/notification.js";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
 import {useCard} from "./components/context/SelectedCardsContext.jsx";
-import {CREDITOR_ACCOUNT, PAYMENT_PURPOSE, REFERENCE_NUMBER} from "./components/payslip/config/constants.js";
+import {useApplication} from "./components/context/ApplicationContext.jsx";
+
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
     const navigate = useNavigate();
     const {candidate} = useAuth();
     const serbiaDate = getCurrentDateInSerbiaTimeZone();
+    const {setApplication} = useApplication();
 
     let matematikaCount = 0;
     let opstaInformisanostCount = 0;
@@ -55,18 +57,7 @@ const App = () => {
                         "Uspesno sacuvana prijava",
                         ""
                     )
-                    // const payment = {
-                    //     referenceNumber: REFERENCE_NUMBER,
-                    //     creditorAccount: CREDITOR_ACCOUNT,
-                    //     paymentPurpose: PAYMENT_PURPOSE,
-                    //     applicationId: res.data.id
-                    // }
-                    // savePayment(payment)
-                    //     .then(res => {
-                    //         console.log(res)
-                    //     }).catch(err => {
-                    //     console.log(err)
-                    // })
+                    setApplication(res.data);
                     navigate("/valuta");
                 }).catch(err => {
                 console.log(err)

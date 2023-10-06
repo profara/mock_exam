@@ -10,6 +10,7 @@ import {
     RECEIVER_DESCRIPTION,
     REFERENCE_NUMBER
 } from "./config/constants.js";
+import {useCurrency} from "../context/CurrencyContext.jsx";
 
 
 
@@ -17,9 +18,12 @@ import {
 function Payslip() {
 
     const {candidate} = useAuth();
+    const {currency} = useCurrency();
     const printPayslip = () => {
         window.print()
     }
+
+    console.log(currency)
 
     return (
         <StyledWrapper><Container>
@@ -61,7 +65,7 @@ function Payslip() {
                     disabled={true}
                     label='Valuta'
                     id='valuta'
-                    value={"RSD"}
+                    value={currency.code}
                     readOnly
                 />
                 <Input
