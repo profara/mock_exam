@@ -55,19 +55,19 @@ const App = () => {
                         "Uspesno sacuvana prijava",
                         ""
                     )
-                    const payment = {
-                        referenceNumber: REFERENCE_NUMBER,
-                        creditorAccount: CREDITOR_ACCOUNT,
-                        paymentPurpose: PAYMENT_PURPOSE,
-                        applicationId: res.data.id
-                    }
-                    savePayment(payment)
-                        .then(res => {
-                            console.log(res)
-                        }).catch(err => {
-                        console.log(err)
-                    })
-                    navigate("/uplatnica");
+                    // const payment = {
+                    //     referenceNumber: REFERENCE_NUMBER,
+                    //     creditorAccount: CREDITOR_ACCOUNT,
+                    //     paymentPurpose: PAYMENT_PURPOSE,
+                    //     applicationId: res.data.id
+                    // }
+                    // savePayment(payment)
+                    //     .then(res => {
+                    //         console.log(res)
+                    //     }).catch(err => {
+                    //     console.log(err)
+                    // })
+                    navigate("/valuta");
                 }).catch(err => {
                 console.log(err)
                 errorNotification(
