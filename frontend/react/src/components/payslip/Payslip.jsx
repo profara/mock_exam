@@ -3,6 +3,13 @@ import Input from "./Input.jsx";
 import Textarea from "./Textarea.jsx";
 import { deviceBrakepoints } from "./config/device-brakepoints.jsx"
 import {useAuth} from "../context/AuthContext.jsx";
+import {
+    CREDITOR_ACCOUNT,
+    PAY_CODE,
+    PAYMENT_PURPOSE,
+    RECEIVER_DESCRIPTION,
+    REFERENCE_NUMBER
+} from "./config/constants.js";
 
 
 
@@ -28,18 +35,15 @@ function Payslip() {
                 />
                 <Textarea
                     label='Svrha uplate'
-                    id='paymentDescription'
-                    help='paymentDescriptionHelp'
-                    helpText='U ovo polje upišite svrhu uplate.'
-                    value={"Probni prijemni ispit"}
+                    id='paymentPurpose'
                     disabled={true}
+                    value={PAYMENT_PURPOSE}
                 />
                 <Textarea label='Primalac'
                           id='receiverDescription'
-                          help='receiverDescriptionHelp'
-                          helpText='U ovo polje upišite podatke osobe koja je Primalac.'
-                          value={"Fakultet organizacionih nauka, Jove Ilića 154, 11000 Beograd"}
                           disabled={true}
+                          value={RECEIVER_DESCRIPTION}
+
                 />
             </LeftSide>
             <RightSide>
@@ -48,20 +52,15 @@ function Payslip() {
                     width={23}
                     label='Sifra Pacanja'
                     id='payCode'
-                    help='payCodeHelp'
-                    helpText='Upisite sifru placanja'
-                    value={189}
-                    disabled={true}
                     readOnly
-
+                    disabled={true}
+                    value={PAY_CODE}
                 />
                 <Input
                     width={23}
                     disabled={true}
                     label='Valuta'
                     id='valuta'
-                    help='valutaHelp'
-                    helpText='Ovo polje je onemogućeno jer valuta mora biti RSD.'
                     value={"RSD"}
                     readOnly
                 />
@@ -80,10 +79,8 @@ function Payslip() {
                     type='text'
                     width={100}
                     label='Racun primaoca'
-                    id='paymentNumber'
-                    help='paymentNumberHelp'
-                    helpText='Ovde upišite brojevima poziv na broj na koji zelite da uplatite.'
-                    value={"840-0000001344666-69"}
+                    id='creditorAccount'
+                    value={CREDITOR_ACCOUNT}
                     readOnly
                     disabled={true}
                 />
@@ -103,10 +100,8 @@ function Payslip() {
                     type='text'
                     width={75}
                     label='Poziv na broj'
-                    id='paymentNumber'
-                    help='paymentNumberHelp'
-                    helpText='Ovde upišite brojevima poziv na broj za ovu uplatnicu.'
-                    value={"742121-500"}
+                    id='referenceNumber'
+                    value={REFERENCE_NUMBER}
                     disabled={true}
                     readOnly
                 />

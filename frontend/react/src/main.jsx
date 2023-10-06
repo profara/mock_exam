@@ -12,6 +12,7 @@ import CreateCandidateProfileForm from "./components/candidate/CreateCandidatePr
 import UpdateCandidateProfileForm from "./components/candidate/UpdateCandidateProfileForm.jsx";
 import SelectedCardsProvider from "./components/context/SelectedCardsContext.jsx";
 import Payslip from "./components/payslip/Payslip.jsx";
+import Currency from "./components/currency/Currency.jsx";
 
 
 
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
       path: "/uplatnica",
       element: <Payslip/>
     },
+    {
+        path: "/valuta",
+        element:<Currency/>
+    },
+
     {
         path: "/updateProfil",
         element:<UpdateCandidateProfileForm />
