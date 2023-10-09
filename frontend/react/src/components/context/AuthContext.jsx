@@ -76,6 +76,7 @@ const AuthProvider = ({children}) => {
         setUser(null)
         setCandidate(null)
         setSelectedCards([])
+        localStorage.removeItem("selectedCurrency");
     }
 
     const isUserAuthenticated = () => {

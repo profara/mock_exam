@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 
 
-export default function Card({id,exam, appointmentDate, count, toogleCardSelection}) {
+export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected}) {
 
     return (
         <Center py={6}>
@@ -32,6 +32,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                     size={'lg'}
                     colorScheme="green"
                     onChange={toogleCardSelection}
+                    isChecked={isSelected}
                 />
                 <Stack
                     textAlign={'center'}

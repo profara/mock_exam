@@ -90,7 +90,7 @@ const CreateCandidateProfileForm = () => {
         if(selectedCards.length === 0){
             navigate("/termini")
         } else{
-            navigate("/uplatnica")
+            navigate("/valuta")
         }
     }
 
