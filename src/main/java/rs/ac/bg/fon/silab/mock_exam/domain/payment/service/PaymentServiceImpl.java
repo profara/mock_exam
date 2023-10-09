@@ -110,7 +110,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         if(exams.contains(MATH_EXAM_ID) && exams.contains(OPSTA_INF_EXAM_ID)){
             if(!privileged) {
-                BigDecimal decreasePercentage = new BigDecimal(0.0909);
+                BigDecimal decreasePercentage = new BigDecimal(0.083333333333);
                 BigDecimal amountToSubtract = amount.multiply(decreasePercentage);
                 amount = amount.subtract(amountToSubtract);
             } else{
