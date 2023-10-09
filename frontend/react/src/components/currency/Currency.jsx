@@ -11,6 +11,7 @@ import {CREDITOR_ACCOUNT, PAYMENT_PURPOSE, REFERENCE_NUMBER} from "../payslip/co
 import {useApplication} from "../context/ApplicationContext.jsx";
 import {useNavigate} from "react-router-dom";
 import {useCurrency} from "../context/CurrencyContext.jsx";
+import {usePayment} from "../context/PaymentContext.jsx";
 
 
 const Currency = () => {
@@ -20,6 +21,7 @@ const Currency = () => {
     const {application} = useApplication();
     const navigate = useNavigate();
     const {setCurrency} = useCurrency();
+    const {setPayment} = usePayment();
 
     useEffect(() => {
         setLoading(true);
@@ -47,7 +49,6 @@ const Currency = () => {
     };
 
     const handleConfirmClick = () => {
-        console.log(application)
         const payment = {
             referenceNumber: REFERENCE_NUMBER,
             creditorAccount: CREDITOR_ACCOUNT,
@@ -61,6 +62,7 @@ const Currency = () => {
                 successNotification(
                     "Uspesno kreirana uplatnica"
                 )
+                setPayment(res.data);
                 navigate("/uplatnica");
             }).catch(err => {
             console.log(err)

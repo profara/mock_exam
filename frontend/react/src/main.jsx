@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react'
+import {ChakraProvider, createStandaloneToast} from '@chakra-ui/react'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Login from "./components/login/Login.jsx";
 import Signup from "./components/signup/Signup.jsx";
@@ -15,11 +15,10 @@ import Payslip from "./components/payslip/Payslip.jsx";
 import Currency from "./components/currency/Currency.jsx";
 import ApplicationProvider from "./components/context/ApplicationContext.jsx";
 import CurrencyProvider from "./components/context/CurrencyContext.jsx";
+import PaymentProvider from "./components/context/PaymentContext.jsx";
 
 
-
-
-const { ToastContainer } = createStandaloneToast()
+const {ToastContainer} = createStandaloneToast()
 
 const router = createBrowserRouter([
     {
@@ -27,12 +26,12 @@ const router = createBrowserRouter([
         element: <Login/>
     },
     {
-      path: "/profil",
-      element: <CreateCandidateProfileForm/>
+        path: "/profil",
+        element: <CreateCandidateProfileForm/>
     },
     {
-      path: "/uplatnica",
-      element: <Payslip/>
+        path: "/uplatnica",
+        element: <Payslip/>
     },
     {
         path: "/valuta",
@@ -42,36 +41,38 @@ const router = createBrowserRouter([
 
     {
         path: "/updateProfil",
-        element:<UpdateCandidateProfileForm />
+        element: <UpdateCandidateProfileForm/>
     },
     {
-        path:"/registracija",
+        path: "/registracija",
         element: <Signup/>
     },
     {
         path: "termini",
         element: <ProtectedRoute>
-                     <App/>
-                </ProtectedRoute>
+            <App/>
+        </ProtectedRoute>
     }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <ChakraProvider>
-            <ApplicationProvider>
-                <CurrencyProvider>
-                    <SelectedCardsProvider>
-                        <AuthProvider>
+            <PaymentProvider>
+                <ApplicationProvider>
+                    <CurrencyProvider>
+                        <SelectedCardsProvider>
+                            <AuthProvider>
 
-                            <RouterProvider router={router}/>
+                                <RouterProvider router={router}/>
 
-                        </AuthProvider>
+                            </AuthProvider>
 
-                        <ToastContainer/>
-                    </SelectedCardsProvider>
-                </CurrencyProvider>
-            </ApplicationProvider>
+                            <ToastContainer/>
+                        </SelectedCardsProvider>
+                    </CurrencyProvider>
+                </ApplicationProvider>
+            </PaymentProvider>
         </ChakraProvider>
     </React.StrictMode>,
 )
