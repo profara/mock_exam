@@ -11,6 +11,7 @@ import {
     REFERENCE_NUMBER
 } from "./config/constants.js";
 import {useCurrency} from "../context/CurrencyContext.jsx";
+import {usePayment} from "../context/PaymentContext.jsx";
 
 
 
@@ -19,6 +20,7 @@ function Payslip() {
 
     const {candidate} = useAuth();
     const {currency} = useCurrency();
+    const {payment} = usePayment();
     const printPayslip = () => {
         window.print()
     }
@@ -75,7 +77,7 @@ function Payslip() {
                     id='totalAmount'
                     help='totalAmountHelp'
                     helpText='Ovde upišite brojevima ukupan iznos koji zelite da uplatite.'
-                    value={10000}
+                    value={payment.amount}
                     readOnly
                     disabled={true}
                 />
