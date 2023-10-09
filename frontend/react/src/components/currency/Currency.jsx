@@ -23,11 +23,29 @@ const Currency = () => {
     const {setCurrency} = useCurrency();
     const {setPayment} = usePayment();
 
+    const updateSelectedCurrency = (currencyId) => {
+        const selectedCurrencyObject = currencies.find(currency => currency.id === parseInt(currencyId));
+
+        console.log(selectedCurrencyObject);
+
+        setCurrency(selectedCurrencyObject);
+
+        setSelectedCurrency(Number(currencyId));
+    };
+
     useEffect(() => {
+        const savedCurrency = localStorage.getItem('selectedCurrency');
+
+
+
         setLoading(true);
         getCurrencies().then(res => {
             setCurrencies(res.data.content);
             console.log(res.data.content)
+
+            if(savedCurrency){
+                setSelectedCurrency(savedCurrency);
+            }
         }).catch(err => {
             errorNotification(
                 err.code,
@@ -40,12 +58,15 @@ const Currency = () => {
 
     const handleCurrencyChange = (event) => {
         const selectedCurrencyId = event.target.value;
-        setSelectedCurrency(selectedCurrencyId);
+        updateSelectedCurrency(selectedCurrencyId);
 
-        const selectedCurrencyObject = currencies.find(currency => currency.id === parseInt(selectedCurrencyId));
 
-        console.log(selectedCurrencyObject)
-        setCurrency(selectedCurrencyObject);
+        // const selectedCurrencyObject = currencies.find(currency => currency.id === parseInt(selectedCurrencyId));
+        //
+        // console.log(selectedCurrencyObject)
+        // setCurrency(selectedCurrencyObject);
+
+        localStorage.setItem('selectedCurrency', selectedCurrencyId);
     };
 
     const handleConfirmClick = () => {
@@ -94,7 +115,7 @@ const Currency = () => {
                     <Flex flexDirection="column" alignItems="center">
                         <Box marginBottom="1.5rem">Izaberite
                             željenu valutu:</Box>
-                        <Select onChange={handleCurrencyChange} placeholder="Izaberite valutu">
+                        <Select value={selectedCurrency} onChange={handleCurrencyChange} placeholder="Izaberite valutu">
                             {(currencies.map(currency =>
                                 <option key={currency.id} value={currency.id}>
                                     {currency.code}

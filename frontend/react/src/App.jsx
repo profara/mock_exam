@@ -78,6 +78,7 @@ const App = () => {
             } else{
                 return [...prevState, id];
             }
+
         });
     }
 
@@ -143,7 +144,7 @@ const App = () => {
                         <WrapItem key={index}>
 
                             <Card
-                                {...appointment} count={count} toogleCardSelection={() => toogleCardSelection(appointment.id)}
+                                {...appointment} count={count} toogleCardSelection={() => toogleCardSelection(appointment.id)} isSelected={selectedCards.includes(appointment.id)}
                             />
                         </WrapItem>
                     );

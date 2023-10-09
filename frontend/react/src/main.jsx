@@ -35,7 +35,10 @@ const router = createBrowserRouter([
     },
     {
         path: "/valuta",
-        element: <Currency/>
+        element:
+            <ProtectedRoute>
+                <Currency/>
+            </ProtectedRoute>
 
     },
 
@@ -50,8 +53,8 @@ const router = createBrowserRouter([
     {
         path: "termini",
         element: <ProtectedRoute>
-            <App/>
-        </ProtectedRoute>
+                    <App/>
+                </ProtectedRoute>
     }
 ]);
 
