@@ -16,6 +16,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service.PriceListItemService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Year;
 import java.util.List;
 
@@ -120,6 +121,6 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
-        return amount;
+        return amount.setScale(2, RoundingMode.HALF_UP);
     }
 }
