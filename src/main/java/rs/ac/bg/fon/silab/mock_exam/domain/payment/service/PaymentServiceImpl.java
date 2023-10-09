@@ -42,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentResponseDTO save(PaymentRequestDTO paymentRequestDTO) {
         Payment payment = mapper.map(paymentRequestDTO);
 
-        BigDecimal amount = calculateAmount(payment.getApplication());
+        BigDecimal amount = calculateAmount(payment);
         payment.setAmount(amount);
 
         paymentRepository.save(payment);
@@ -90,7 +90,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-    private BigDecimal calculateAmount(Application application) {
+    private BigDecimal calculateAmount(Payment payment) {
+        Application application = payment.getApplication();
+
         boolean privileged = application.getCandidate().isAttendedPreparation();
         List<Long> exams = application.getAppointments().stream()
                 .map(appointment -> appointment.getExam().getId())
@@ -102,11 +104,20 @@ public class PaymentServiceImpl implements PaymentService {
         BigDecimal amount = priceListItems.stream()
                 .filter(priceListItem -> privileged == priceListItem.isPrivileged())
                 .filter(priceListItem -> exams.contains(priceListItem.getExam().getId()))
+                .filter(priceListItem -> payment.getCurrency().equals(priceListItem.getCurrency()))
                 .map(PriceListItem::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if(exams.contains(MATH_EXAM_ID) && exams.contains(OPSTA_INF_EXAM_ID)){
-            amount = amount.subtract(new BigDecimal(500));
+            if(!privileged) {
+                BigDecimal decreasePercentage = new BigDecimal(0.0909);
+                BigDecimal amountToSubtract = amount.multiply(decreasePercentage);
+                amount = amount.subtract(amountToSubtract);
+            } else{
+                BigDecimal decreasePercentage = new BigDecimal(0.10);
+                BigDecimal amountToSubtract = amount.multiply(decreasePercentage);
+                amount = amount.subtract(amountToSubtract);
+            }
         }
 
         return amount;
