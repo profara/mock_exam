@@ -7,6 +7,7 @@ public record CandidateResponseDTO(
         Long id,
         String name,
         String surname,
+        String address,
         boolean attendedPreparation,
         UserProfileResponseDTO userProfile,
         SchoolResponseDTO school

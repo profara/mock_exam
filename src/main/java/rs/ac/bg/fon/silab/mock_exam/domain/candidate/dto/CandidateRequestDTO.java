@@ -13,6 +13,8 @@ public record CandidateRequestDTO(
         String name,
         @NotBlank(message = "Surname is mandatory")
         String surname,
+        @NotBlank(message = "Address is mandatory")
+        String address,
         @NotNull(message = "Attended preparation is mandatory")
         boolean attendedPreparation,
         @Valid

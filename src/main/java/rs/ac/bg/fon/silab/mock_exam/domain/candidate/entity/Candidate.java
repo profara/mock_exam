@@ -20,6 +20,8 @@ public class Candidate {
     private String surname;
     @Column(name = ATTENDED_PREPARATION_COLUMN_NAME,columnDefinition = "TINYINT(1)", nullable = false)
     private boolean attendedPreparation;
+    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
+    private String address;
     @OneToOne(optional = false)
     @JoinColumn(name = FOREIGN_KEY_USER_PROFILE)
     private UserProfile userProfile;
@@ -30,12 +32,13 @@ public class Candidate {
     public Candidate() {
     }
 
-    public Candidate(String name, String surname, boolean attendedPreparation, UserProfile userProfile, School school) {
+    public Candidate(String name, String surname, boolean attendedPreparation, UserProfile userProfile, School school, String address) {
         this.name = name;
         this.surname = surname;
         this.attendedPreparation = attendedPreparation;
         this.userProfile = userProfile;
         this.school = school;
+        this.address = address;
     }
 
     public Long getId() {
@@ -60,6 +63,12 @@ public class Candidate {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isAttendedPreparation() {
@@ -106,6 +115,7 @@ public class Candidate {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", attendedPreparation=" + attendedPreparation +
+                ", address='" + address + '\'' +
                 ", userProfile=" + userProfile +
                 ", school=" + school +
                 '}';

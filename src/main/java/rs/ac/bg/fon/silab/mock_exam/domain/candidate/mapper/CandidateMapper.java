@@ -19,9 +19,6 @@ public interface CandidateMapper {
 
     CandidateResponseDTO map(Candidate candidate);
 
-    void update(@MappingTarget Candidate candidate, CandidateUpdateRequestDTO candidateDTO);
-
-    void updateAll(@MappingTarget Candidate candidate, CandidateUpdateAllRequestDTO candidateDTO);
 
     void update(@MappingTarget Candidate candidate, CandidateRequestDTO candidateDTO);
 }

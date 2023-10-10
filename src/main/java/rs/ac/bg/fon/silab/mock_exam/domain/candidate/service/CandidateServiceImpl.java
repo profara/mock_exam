@@ -70,7 +70,7 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Override
     @Transactional
-    public CandidateResponseDTO update(Long id, CandidateUpdateRequestDTO candidateDTO) {
+    public CandidateResponseDTO update(Long id, CandidateRequestDTO candidateDTO) {
         var candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "id", id));
 
@@ -89,15 +89,4 @@ public class CandidateServiceImpl implements CandidateService{
         return mapper.map(candidate);
     }
 
-    @Override
-    public CandidateResponseDTO updateAll(Long id, CandidateRequestDTO candidateDTO) {
-        var candidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Candidate.class.getSimpleName(), "id", id));
-
-        mapper.update(candidate, candidateDTO);
-
-        candidateRepository.save(candidate);
-
-        return mapper.map(candidate);
-    }
 }

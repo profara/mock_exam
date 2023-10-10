@@ -4,8 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateAllRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
 public interface CandidateService {
@@ -19,9 +17,8 @@ public interface CandidateService {
 
     void delete(Long id);
 
-    CandidateResponseDTO update(Long id, CandidateUpdateRequestDTO candidateDTO);
+    CandidateResponseDTO update(Long id, CandidateRequestDTO candidateDTO);
 
     CandidateResponseDTO getByEmail(String email);
 
-    CandidateResponseDTO updateAll(Long id, CandidateRequestDTO candidateDTO);
 }
