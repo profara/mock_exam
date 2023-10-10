@@ -40,7 +40,7 @@ export const getSchools = async () => {
         );
 }
 
-export const getCitites = async () => {
+export const getCities = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/cities`,
         getAuthConfig()

@@ -37,7 +37,7 @@ function Payslip() {
                           helpText='U ovo polje upišite podatke osobe koja je Platilac.'
                           readOnly
                           disabled={true}
-                          value={`${candidate.name} ${candidate.surname}`}
+                          value={`${candidate.name} ${candidate.surname}, ${candidate.address}`}
                 />
                 <Textarea
                     label='Svrha uplate'
