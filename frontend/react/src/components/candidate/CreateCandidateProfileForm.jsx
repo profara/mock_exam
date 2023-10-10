@@ -15,7 +15,7 @@ import {
     Image,
     Spinner,
 } from "@chakra-ui/react";
-import {getSchools, saveCandidate} from "../../services/client.js";
+import {getSchools, saveCandidate, getCitites} from "../../services/client.js";
 import {successNotification, errorNotification} from "../../services/notification.js";
 import {useAuth} from "../context/AuthContext.jsx";
 import {useEffect, useState} from "react";
@@ -104,6 +104,8 @@ const CreateCandidateProfileForm = () => {
         })
     }, [])
 
+
+
     if(!user){
         return <Spinner
             thickness='4px'
@@ -131,6 +133,7 @@ const CreateCandidateProfileForm = () => {
                 initialValues={{
                     name: '',
                     surname: '',
+                    address: '',
                     attendedPreparation: false,
                     userProfile: user,
                     school: ''
@@ -141,11 +144,14 @@ const CreateCandidateProfileForm = () => {
                         .required("Ime je obavezno"),
                     surname: Yup.string()
                         .required("Prezime je obavezno"),
+                    address: Yup.string()
+                        .required("Adresa je obavezna"),
                     attendedPreparation: Yup.boolean()
                         .required("Morate oznaciti da li ste isli na pripremu"),
                     school: Yup.number()
                         .oneOf(schools.map(school => school.code), "Greska")
-                        .required("Morate izabrati skolu")
+                        .required("Morate izabrati skolu"),
+
                 })}
                 onSubmit={(candidate, { setSubmitting }) => {
                     setSubmitting(true)
@@ -184,6 +190,13 @@ const CreateCandidateProfileForm = () => {
                                 name={"surname"}
                                 type={"text"}
                                 placeholder={"Markovic"}
+                            />
+
+                            <MyTextInput
+                                label={"Adresa"}
+                                name={"address"}
+                                type={"text"}
+                                placeholder={"Unesite svoju adresu"}
                             />
 
                             <MyCheckbox label="Isao sam na pripremnu nastavu na fakultetu" name="attendedPreparation">

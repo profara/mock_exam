@@ -137,6 +137,7 @@ const UpdateCandidateProfileForm = () => {
                     initialValues={{
                         name: candidate.name,
                         surname: candidate.surname,
+                        address: candidate.address,
                         attendedPreparation: candidate.attendedPreparation,
                         userProfile: user,
                         school: candidate.school
@@ -147,6 +148,8 @@ const UpdateCandidateProfileForm = () => {
                             .required("Ime je obavezno"),
                         surname: Yup.string()
                             .required("Prezime je obavezno"),
+                        address: Yup.string()
+                            .required("Adresa je obavezna"),
                         attendedPreparation: Yup.boolean()
                             .required("Morate oznaciti da li ste isli na pripremu"),
                         school: Yup.number()
@@ -188,6 +191,13 @@ const UpdateCandidateProfileForm = () => {
                                     name={"surname"}
                                     type={"text"}
                                     placeholder={"Markovic"}
+                                />
+
+                                <MyTextInput
+                                    label={"Adresa"}
+                                    name={"addressa"}
+                                    type={"text"}
+                                    placeholder={"Unesite svoju adresu"}
                                 />
 
                                 <MyCheckbox label="Isao sam na pripremnu nastavu na fakultetu" name="attendedPreparation">
