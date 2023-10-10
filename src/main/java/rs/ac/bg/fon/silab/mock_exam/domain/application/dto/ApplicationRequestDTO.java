@@ -1,9 +1,6 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.application.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateSimpleRequestDTO;
 
 import java.util.Date;
 import java.util.List;

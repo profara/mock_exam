@@ -21,6 +21,7 @@ public class Constants {
     public static final String FOREIGN_KEY_PRICE_LIST = "price_list_id";
     public static final String FOREIGN_KEY_CURRENCY = "currency_id";
 
+
     public static final String ATTENDED_PREPARATION_COLUMN_NAME = "attended_preparation";
     public static final String APPLICATION_DATE_COLUMN_NAME = "application_date";
     public static final String REFERENCE_NUMBER_COLUMN_NAME = "reference_number";

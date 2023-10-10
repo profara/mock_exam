@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateAllRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.mapper.CandidateMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.repository.CandidateRepository;

@@ -1,6 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity;
 
 import jakarta.persistence.*;
+import rs.ac.bg.fon.silab.mock_exam.domain.city.entity.City;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.entity.School;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 
@@ -28,17 +29,21 @@ public class Candidate {
     @ManyToOne(optional = false)
     @JoinColumn(name = FOREIGN_KEY_SCHOOL)
     private School school;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = FOREIGN_KEY_CITY)
+    private City city;
 
     public Candidate() {
     }
 
-    public Candidate(String name, String surname, boolean attendedPreparation, UserProfile userProfile, School school, String address) {
+    public Candidate(String name, String surname, boolean attendedPreparation, UserProfile userProfile, School school, String address, City city) {
         this.name = name;
         this.surname = surname;
         this.attendedPreparation = attendedPreparation;
         this.userProfile = userProfile;
         this.school = school;
         this.address = address;
+        this.city = city;
     }
 
     public Long getId() {
@@ -95,6 +100,14 @@ public class Candidate {
         this.school = school;
     }
 
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,6 +131,7 @@ public class Candidate {
                 ", address='" + address + '\'' +
                 ", userProfile=" + userProfile +
                 ", school=" + school +
+                ", city=" + city +
                 '}';
     }
 }
