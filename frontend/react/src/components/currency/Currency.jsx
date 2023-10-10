@@ -17,7 +17,7 @@ import {usePayment} from "../context/PaymentContext.jsx";
 const Currency = () => {
     const [currencies, setCurrencies] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState(null);
+    const [selectedCurrency, setSelectedCurrency] = useState("");
     const {application} = useApplication();
     const navigate = useNavigate();
     const {setCurrency} = useCurrency();

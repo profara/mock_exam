@@ -77,7 +77,7 @@ function Payslip() {
                     id='totalAmount'
                     help='totalAmountHelp'
                     helpText='Ovde upišite brojevima ukupan iznos koji zelite da uplatite.'
-                    value={payment.amount}
+                    value={payment ? payment.amount : ""}
                     readOnly
                     disabled={true}
                 />

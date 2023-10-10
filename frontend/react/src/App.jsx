@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
 import {useCard} from "./components/context/SelectedCardsContext.jsx";
 import {useApplication} from "./components/context/ApplicationContext.jsx";
+import {createApplication, getCurrentDateInSerbiaTimeZone} from "./utils/appUtils.js";
 
 
 const App = () => {
@@ -24,48 +25,11 @@ const App = () => {
     let matematikaCount = 0;
     let opstaInformisanostCount = 0;
 
-    function getCurrentDateInSerbiaTimeZone() {
-        const now = new Date();
-
-        const serbiaDate = new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            timeZone: 'Europe/Belgrade'
-        }).format(now);
-
-        const [month, day, year] = serbiaDate.split('/');
-        const isoString = `${year}-${month}-${day}`;
-
-        return isoString;
-    }
-
 
 
     const handlePrijaviClick = (candidate) => {
         if(candidate){
-            const application = {
-                applicationDate: serbiaDate,
-                privileged: candidate.attendedPreparation,
-                candidate: candidate.id,
-                appointmentIds: [...selectedCards]
-            }
-            saveApplication(application)
-                .then(res => {
-                    console.log(res)
-                    successNotification(
-                        "Uspesno sacuvana prijava",
-                        ""
-                    )
-                    setApplication(res.data);
-                    navigate("/valuta");
-                }).catch(err => {
-                console.log(err)
-                errorNotification(
-                    err.code,
-                    err?.response.data.violations[0].error
-                )
-            })
+           createApplication(candidate,serbiaDate,selectedCards,setApplication, navigate);
         } else{
             navigate("/profil")
         }
