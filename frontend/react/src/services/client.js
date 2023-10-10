@@ -40,6 +40,13 @@ export const getSchools = async () => {
         );
 }
 
+export const getCitites = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/cities`,
+        getAuthConfig()
+    )
+}
+
 export const getCurrencies = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/currencies`,
@@ -80,7 +87,7 @@ export const savePayment = async (payment) => {
 
 export const updateCandidate = async (id, candidate) => {
     return await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/${id}/updateAll`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/${id}`,
         candidate,
         getAuthConfig()
     )
