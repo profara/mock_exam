@@ -21,6 +21,8 @@ import {useAuth} from "../context/AuthContext.jsx";
 import {useEffect, useState} from "react";
 import {useCard} from "../context/SelectedCardsContext.jsx";
 import {useNavigate} from "react-router-dom";
+import {createApplication, getCurrentDateInSerbiaTimeZone} from "../../utils/appUtils.js";
+import {useApplication} from "../context/ApplicationContext.jsx";
 
 
 
@@ -81,18 +83,29 @@ const MySelect = ({ label, ...props }) => {
 };
 
 const CreateCandidateProfileForm = () => {
-    const {user, loadCandidate} = useAuth();
+    const {user, loadCandidate, candidate} = useAuth();
     const [schools, setSchools] = useState([]);
     const {selectedCards} = useCard();
     const navigate = useNavigate();
+    const serbiaDate = getCurrentDateInSerbiaTimeZone();
+    const {setApplication} = useApplication();
 
     const handleConfirmClick = () => {
         if(selectedCards.length === 0){
             navigate("/termini")
         } else{
-            navigate("/valuta")
+            if(candidate) {
+                console.log(candidate);
+                createApplication(candidate, serbiaDate, selectedCards, setApplication, navigate);
+            }
         }
     }
+
+    useEffect(() => {
+        if(candidate){
+            handleConfirmClick();
+        }
+    }, [candidate])
 
     useEffect(() => {
         getSchools()
@@ -156,9 +169,9 @@ const CreateCandidateProfileForm = () => {
                 onSubmit={(candidate, { setSubmitting }) => {
                     setSubmitting(true)
                     saveCandidate(candidate)
-                        .then(res => {
+                        .then(async res => {
                             console.log(res)
-                            loadCandidate()
+                            await loadCandidate()
                             successNotification(
                                 "Uspesno potvrdjen kandidat",
                                 ""

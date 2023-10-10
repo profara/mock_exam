@@ -20,9 +20,6 @@ import {successNotification, errorNotification} from "../../services/notificatio
 import {useAuth} from "../context/AuthContext.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {useCard} from "../context/SelectedCardsContext.jsx";
-
-
 
 const MyTextInput = ({ label, ...props }) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -84,14 +81,9 @@ const UpdateCandidateProfileForm = () => {
     const {user, candidate} = useAuth();
     const [schools, setSchools] = useState([]);
     const navigate = useNavigate();
-    const {selectedCards} = useCard();
 
     const handleConfirmClick = () => {
-        if(selectedCards.length === 0){
             navigate("/termini")
-        } else{
-            navigate("/valuta")
-        }
     }
 
 
@@ -140,7 +132,7 @@ const UpdateCandidateProfileForm = () => {
                         address: candidate.address,
                         attendedPreparation: candidate.attendedPreparation,
                         userProfile: user,
-                        school: candidate.school
+                        school: candidate.school || ""
 
                     }}
                     validationSchema={Yup.object({
@@ -195,7 +187,7 @@ const UpdateCandidateProfileForm = () => {
 
                                 <MyTextInput
                                     label={"Adresa"}
-                                    name={"addressa"}
+                                    name={"address"}
                                     type={"text"}
                                     placeholder={"Unesite svoju adresu"}
                                 />
