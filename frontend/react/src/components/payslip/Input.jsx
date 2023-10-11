@@ -1,6 +1,7 @@
 import Label from './Label.jsx'
 import S from 'styled-components'
 import { deviceBrakepoints } from "./config/device-brakepoints.jsx"
+import React from "react";
 
 const Input = ({ type = 'text', id, help, helpText, disabled, width, label, value}) => (
     <Container width={width} >
@@ -41,4 +42,4 @@ const InnerInput = S.input`
    }
 `
 
-export default Input
+export default React.memo(Input);

@@ -12,20 +12,20 @@ import {
 } from "./config/constants.js";
 import {useCurrency} from "../context/CurrencyContext.jsx";
 import {usePayment} from "../context/PaymentContext.jsx";
-
+import React from "react";
 
 
 
 function Payslip() {
+    console.log("Payslip mounted")
 
-    const {candidate} = useAuth();
+    const {candidate, logOut} = useAuth();
     const {currency} = useCurrency();
     const {payment} = usePayment();
+
     const printPayslip = () => {
         window.print()
     }
-
-    console.log(currency)
 
     return (
         <StyledWrapper><Container>
@@ -37,7 +37,7 @@ function Payslip() {
                           helpText='U ovo polje upišite podatke osobe koja je Platilac.'
                           readOnly
                           disabled={true}
-                          value={`${candidate.name} ${candidate.surname}, ${candidate.address}`}
+                          value={`${candidate.name} ${candidate.surname}, ${candidate.address}, ${candidate.city.zipCode} ${candidate.city.name}`}
                 />
                 <Textarea
                     label='Svrha uplate'
@@ -174,7 +174,7 @@ const RightSide = styled.div`
     }
 `
 
-export default Payslip
+export default React.memo(Payslip);
 
 const Button = styled.button`
     @media print {
