@@ -5,7 +5,6 @@ import {
     Flex,
     Avatar,
     HStack,
-    Text,
     IconButton,
     Button,
     Menu,
@@ -23,7 +22,7 @@ import {useAuth} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
 
 
-const Links = ['Dashboard', 'Projects', 'Team']
+// const Links = ['Dashboard', 'Projects', 'Team']
 
 const NavLink = (props) => {
     const { children } = props
@@ -76,11 +75,11 @@ export default function Simple(props) {
                                 alt='fon'
                             />
                         </Box>
-                        <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-                            {Links.map((link) => (
-                                <NavLink key={link}>{link}</NavLink>
-                            ))}
-                        </HStack>
+                        {/*<HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>*/}
+                        {/*    {Links.map((link) => (*/}
+                        {/*        <NavLink key={link}>{link}</NavLink>*/}
+                        {/*    ))}*/}
+                        {/*</HStack>*/}
                     </HStack>
                     <Flex alignItems={'center'}>
                         <Menu>

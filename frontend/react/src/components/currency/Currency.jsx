@@ -34,9 +34,7 @@ const Currency = () => {
     };
 
     useEffect(() => {
-        const savedCurrency = localStorage.getItem('selectedCurrency');
-
-
+        const savedCurrency = parseInt(localStorage.getItem('selectedCurrency'), 10);
 
         setLoading(true);
         getCurrencies().then(res => {
@@ -45,7 +43,12 @@ const Currency = () => {
 
             if(savedCurrency){
                 setSelectedCurrency(savedCurrency);
+                const savedCurrencyObject = res.data.content.find(currency => currency.id === parseInt(savedCurrency));
+                if(savedCurrencyObject){
+                    setCurrency(savedCurrencyObject);
+                }
             }
+
         }).catch(err => {
             errorNotification(
                 err.code,
@@ -59,12 +62,6 @@ const Currency = () => {
     const handleCurrencyChange = (event) => {
         const selectedCurrencyId = event.target.value;
         updateSelectedCurrency(selectedCurrencyId);
-
-
-        // const selectedCurrencyObject = currencies.find(currency => currency.id === parseInt(selectedCurrencyId));
-        //
-        // console.log(selectedCurrencyObject)
-        // setCurrency(selectedCurrencyObject);
 
         localStorage.setItem('selectedCurrency', selectedCurrencyId);
     };
@@ -84,6 +81,7 @@ const Currency = () => {
                     "Uspesno kreirana uplatnica"
                 )
                 setPayment(res.data);
+                localStorage.setItem("payment", JSON.stringify(res.data));
                 navigate("/uplatnica");
             }).catch(err => {
             console.log(err)

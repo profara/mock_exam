@@ -12,22 +12,34 @@ import {
 } from "./config/constants.js";
 import {useCurrency} from "../context/CurrencyContext.jsx";
 import {usePayment} from "../context/PaymentContext.jsx";
-
-
+import Simple from "../shared/NavBar.jsx";
+import {Spinner} from "@chakra-ui/react";
 
 
 function Payslip() {
 
-    const {candidate} = useAuth();
-    const {currency} = useCurrency();
-    const {payment} = usePayment();
+    const {candidate, loadingAuth} = useAuth();
+    const {currency, loadingCurrency} = useCurrency();
+    const {payment, loadingPayment} = usePayment();
+
     const printPayslip = () => {
         window.print()
     }
 
-    console.log(currency)
+
+    if(loadingAuth || loadingCurrency || loadingPayment){
+        return <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'>
+
+        </Spinner>
+    }
 
     return (
+        <Simple>
         <StyledWrapper><Container>
             <BankSlipTitle>Nalog Za Uplatu</BankSlipTitle>
             <LeftSide >
@@ -37,7 +49,7 @@ function Payslip() {
                           helpText='U ovo polje upišite podatke osobe koja je Platilac.'
                           readOnly
                           disabled={true}
-                          value={`${candidate.name} ${candidate.surname}, ${candidate.address}`}
+                          value={`${candidate.name} ${candidate.surname}, ${candidate.address}, ${candidate.city.zipCode} ${candidate.city.name}`}
                 />
                 <Textarea
                     label='Svrha uplate'
@@ -118,6 +130,7 @@ function Payslip() {
                     Odštampaj uplatnicu
                 </Button>
         </StyledWrapper>
+        </Simple>
     )
 }
 
@@ -174,7 +187,7 @@ const RightSide = styled.div`
     }
 `
 
-export default Payslip
+export default Payslip;
 
 const Button = styled.button`
     @media print {

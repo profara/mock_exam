@@ -1,4 +1,5 @@
 import S from 'styled-components'
+import React from "react";
 
 const Label = ({ label }) => <StyledLabel htmlFor={label}>{label}</StyledLabel>
 
@@ -10,4 +11,4 @@ const StyledLabel = S.label`
     margin-bottom: 0.2em;
 `
 
-export default Label
+export default React.memo(Label);

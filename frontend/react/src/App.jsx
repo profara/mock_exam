@@ -1,9 +1,9 @@
 import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {getAppointments, saveApplication} from "./services/client.js";
+import {getAppointments} from "./services/client.js";
 import Card from "./components/Card.jsx";
-import {errorNotification, successNotification} from "./services/notification.js";
+import {errorNotification} from "./services/notification.js";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
 import {useCard} from "./components/context/SelectedCardsContext.jsx";

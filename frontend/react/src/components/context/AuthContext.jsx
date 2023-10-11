@@ -9,6 +9,7 @@ const AuthProvider = ({children}) => {
     const [user,setUser] = useState(null);
     const [candidate, setCandidate] = useState(null);
     const {selectedCards, setSelectedCards} = useCard();
+    const [loadingAuth, setLoadingAuth] = useState(true);
 
     const loadUser = async () => {
         let token = localStorage.getItem("access_token");
@@ -44,8 +45,12 @@ const AuthProvider = ({children}) => {
     }
 
     useEffect(() => {
-
-        loadCandidate();
+        async function fetchData(){
+            await loadUser();
+            await loadCandidate();
+            setLoadingAuth(false);
+        }
+        fetchData();
     }, []);
 
     useEffect(() => {
@@ -100,7 +105,8 @@ const AuthProvider = ({children}) => {
             login,
             logOut,
             isUserAuthenticated,
-            loadUser
+            loadUser,
+            loadingAuth
         }}>
 
             {children}
