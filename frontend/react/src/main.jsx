@@ -31,7 +31,10 @@ const router = createBrowserRouter([
     },
     {
         path: "/uplatnica",
-        element: <Payslip/>
+        element:
+            <ProtectedRoute>
+                <Payslip/>
+            </ProtectedRoute>
     },
     {
         path: "/valuta",

@@ -12,12 +12,11 @@ import {
 } from "./config/constants.js";
 import {useCurrency} from "../context/CurrencyContext.jsx";
 import {usePayment} from "../context/PaymentContext.jsx";
-import React from "react";
-
+import Simple from "../shared/NavBar.jsx";
 
 
 function Payslip() {
-    console.log("Payslip mounted")
+    console.log('Payslip rendered at', new Date().toLocaleTimeString());
 
     const {candidate, logOut} = useAuth();
     const {currency} = useCurrency();
@@ -27,7 +26,29 @@ function Payslip() {
         window.print()
     }
 
+
+
+
+
+    // useEffect(() => {
+    //     const timeoutId = setTimeout(() => {
+    //         logOut();
+    //     }, 5 * 1000);
+    //
+    //     const resetTimeout = () => clearTimeout(timeoutId);
+    //
+    //     window.addEventListener('mousemove', resetTimeout);
+    //     window.addEventListener('keydown', resetTimeout);
+    //
+    //     return () => {
+    //         clearTimeout(timeoutId);
+    //         window.removeEventListener('mousemove', resetTimeout);
+    //         window.removeEventListener('keydown', resetTimeout);
+    //     };
+    // }, []);
+
     return (
+        <Simple>
         <StyledWrapper><Container>
             <BankSlipTitle>Nalog Za Uplatu</BankSlipTitle>
             <LeftSide >
@@ -118,6 +139,7 @@ function Payslip() {
                     Odštampaj uplatnicu
                 </Button>
         </StyledWrapper>
+        </Simple>
     )
 }
 
@@ -174,7 +196,7 @@ const RightSide = styled.div`
     }
 `
 
-export default React.memo(Payslip);
+export default Payslip;
 
 const Button = styled.button`
     @media print {

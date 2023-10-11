@@ -24,6 +24,7 @@ const Currency = () => {
     const {setPayment} = usePayment();
 
     const updateSelectedCurrency = (currencyId) => {
+        console.log("Drugo")
         const selectedCurrencyObject = currencies.find(currency => currency.id === parseInt(currencyId));
 
         console.log(selectedCurrencyObject);
@@ -34,7 +35,8 @@ const Currency = () => {
     };
 
     useEffect(() => {
-        const savedCurrency = localStorage.getItem('selectedCurrency');
+        console.log("Prvo")
+        const savedCurrency = parseInt(localStorage.getItem('selectedCurrency'), 10);
 
 
 
@@ -45,7 +47,12 @@ const Currency = () => {
 
             if(savedCurrency){
                 setSelectedCurrency(savedCurrency);
+                const savedCurrencyObject = res.data.content.find(currency => currency.id === parseInt(savedCurrency));
+                if(savedCurrencyObject){
+                    setCurrency(savedCurrencyObject);
+                }
             }
+
         }).catch(err => {
             errorNotification(
                 err.code,
@@ -57,6 +64,7 @@ const Currency = () => {
     }, [])
 
     const handleCurrencyChange = (event) => {
+        console.log("trece")
         const selectedCurrencyId = event.target.value;
         updateSelectedCurrency(selectedCurrencyId);
 

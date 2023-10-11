@@ -15,7 +15,7 @@ import {
     Image,
     Spinner
 } from "@chakra-ui/react";
-import {getSchools, updateCandidate} from "../../services/client.js";
+import {getCities, getSchools, updateCandidate} from "../../services/client.js";
 import {successNotification, errorNotification} from "../../services/notification.js";
 import {useAuth} from "../context/AuthContext.jsx";
 import {useEffect, useState} from "react";
@@ -81,6 +81,7 @@ const UpdateCandidateProfileForm = () => {
     const {user, candidate} = useAuth();
     const [schools, setSchools] = useState([]);
     const navigate = useNavigate();
+    const [cities, setCities] = useState([]);
 
     const handleConfirmClick = () => {
             navigate("/termini")
@@ -94,6 +95,16 @@ const UpdateCandidateProfileForm = () => {
                 setSchools(res.data.content);
             }).catch(err => {
             console.error("Greska prilikom fecovanja skola", err);
+        })
+    }, [])
+
+    useEffect(() => {
+        getCities()
+            .then(res => {
+                console.log(res);
+                setCities(res.data.content);
+            }).catch(err => {
+            console.error("Greska prilikom fecovanja gradova", err);
         })
     }, [])
 
@@ -132,7 +143,8 @@ const UpdateCandidateProfileForm = () => {
                         address: candidate.address,
                         attendedPreparation: candidate.attendedPreparation,
                         userProfile: user,
-                        school: candidate.school || ""
+                        school: candidate.school.code || "",
+                        city: candidate.city.zipCode || ""
 
                     }}
                     validationSchema={Yup.object({
@@ -146,7 +158,10 @@ const UpdateCandidateProfileForm = () => {
                             .required("Morate oznaciti da li ste isli na pripremu"),
                         school: Yup.number()
                             .oneOf(schools.map(school => school.code), "Greska")
-                            .required("Morate izabrati skolu")
+                            .required("Morate izabrati skolu"),
+                        city: Yup.number()
+                            .oneOf(cities.map(city => city.zipCode), "Greska")
+                            .required("Morate izabrati grad!")
                     })}
                     onSubmit={(candidateData, { setSubmitting }) => {
                         setSubmitting(true)
@@ -154,9 +169,10 @@ const UpdateCandidateProfileForm = () => {
                             .then(res => {
                                 console.log(res)
                                 successNotification(
-                                    "Uspesna potvrdjen kandidat",
+                                    "Uspesno potvrdjen kandidat",
                                     ""
                                 )
+                                handleConfirmClick();
                             }).catch(err => {
                             console.log(err)
                             errorNotification(
@@ -192,6 +208,14 @@ const UpdateCandidateProfileForm = () => {
                                     placeholder={"Unesite svoju adresu"}
                                 />
 
+                                <MySelect label="Grad" name="city">
+                                    {cities.map((city) => (
+                                        <option key={city.zipCode} value={city.zipCode}>
+                                            {city.name}
+                                        </option>
+                                    ))}
+                                </MySelect>
+
                                 <MyCheckbox label="Isao sam na pripremnu nastavu na fakultetu" name="attendedPreparation">
                                     Isao sam na pripremnu nastavu na fakultetu
                                 </MyCheckbox>
@@ -204,7 +228,7 @@ const UpdateCandidateProfileForm = () => {
                                     ))}
                                 </MySelect>
 
-                                <Button type="submit" colorScheme='teal' onClick={handleConfirmClick}>
+                                <Button type="submit" colorScheme='teal'>
                                     Potvrdi
                                 </Button>
                             </Stack>
