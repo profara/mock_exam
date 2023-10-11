@@ -13,39 +13,30 @@ import {
 import {useCurrency} from "../context/CurrencyContext.jsx";
 import {usePayment} from "../context/PaymentContext.jsx";
 import Simple from "../shared/NavBar.jsx";
+import {Spinner} from "@chakra-ui/react";
 
 
 function Payslip() {
-    console.log('Payslip rendered at', new Date().toLocaleTimeString());
 
-    const {candidate, logOut} = useAuth();
-    const {currency} = useCurrency();
-    const {payment} = usePayment();
+    const {candidate, loadingAuth} = useAuth();
+    const {currency, loadingCurrency} = useCurrency();
+    const {payment, loadingPayment} = usePayment();
 
     const printPayslip = () => {
         window.print()
     }
 
 
+    if(loadingAuth || loadingCurrency || loadingPayment){
+        return <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'>
 
-
-
-    // useEffect(() => {
-    //     const timeoutId = setTimeout(() => {
-    //         logOut();
-    //     }, 5 * 1000);
-    //
-    //     const resetTimeout = () => clearTimeout(timeoutId);
-    //
-    //     window.addEventListener('mousemove', resetTimeout);
-    //     window.addEventListener('keydown', resetTimeout);
-    //
-    //     return () => {
-    //         clearTimeout(timeoutId);
-    //         window.removeEventListener('mousemove', resetTimeout);
-    //         window.removeEventListener('keydown', resetTimeout);
-    //     };
-    // }, []);
+        </Spinner>
+    }
 
     return (
         <Simple>
