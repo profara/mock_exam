@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Year;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.MATH_EXAM_ID;
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.OPSTA_INF_EXAM_ID;
@@ -102,12 +105,18 @@ public class PaymentServiceImpl implements PaymentService {
         PriceList priceList = priceListService.findByYear(Year.now());
         List<PriceListItem> priceListItems = priceListItemService.findByPriceList(priceList.getId());
 
+        Map<Long, Long> examsCount = application.getAppointments().stream()
+                .map(appointment -> appointment.getExam().getId())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
         BigDecimal amount = priceListItems.stream()
                 .filter(priceListItem -> privileged == priceListItem.isPrivileged())
                 .filter(priceListItem -> exams.contains(priceListItem.getExam().getId()))
                 .filter(priceListItem -> payment.getCurrency().equals(priceListItem.getCurrency()))
-                .map(PriceListItem::getPrice)
+                .map(priceListItem -> priceListItem.getPrice().multiply(new BigDecimal(examsCount.get(priceListItem.getExam().getId()))))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
 
         if(exams.contains(MATH_EXAM_ID) && exams.contains(OPSTA_INF_EXAM_ID)){
             if(!privileged) {
