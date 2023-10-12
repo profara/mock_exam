@@ -61,6 +61,16 @@ export const getCurrency = async (currencyId) => {
     );
 }
 
+export const getPriceListItem = async (criteria) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/priceListItems/search`,
+        {
+            params: criteria,
+            ...getAuthConfig()
+        }
+    );
+}
+
 export const saveUserProfile = async (user) => {
     return await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/userProfiles`,
