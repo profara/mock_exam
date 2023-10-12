@@ -2,10 +2,12 @@ package rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.dto.PriceListItemCriteriaRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.dto.PriceListItemRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.dto.PriceListItemResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 
+import java.time.Year;
 import java.util.List;
 
 public interface PriceListItemService {
@@ -20,4 +22,6 @@ public interface PriceListItemService {
     PriceListItemResponseDTO update(Long id, PriceListItemRequestDTO priceListItemDTO);
 
     List<PriceListItem> findByPriceList(Long id);
+
+    PriceListItemResponseDTO getByCriteria(PriceListItemCriteriaRequestDTO criteriaDTO);
 }
