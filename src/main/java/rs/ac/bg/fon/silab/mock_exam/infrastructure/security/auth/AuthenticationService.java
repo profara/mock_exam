@@ -1,8 +1,10 @@
 package rs.ac.bg.fon.silab.mock_exam.infrastructure.security.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
@@ -25,19 +27,22 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseDTO login(UserProfileRequestUpdateDTO request){
+            try {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.email(),
+                                request.password()
+                        )
+                );
+                UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.email(),
-                            request.password()
-                    )
-            );
-            UserProfile userProfile = (UserProfile) authentication.getPrincipal();
+                UserProfileResponseDTO userProfileResponseDTO = userProfileMapper.map(userProfile);
 
-            UserProfileResponseDTO userProfileResponseDTO = userProfileMapper.map(userProfile);
+                String token = jwtUtil.issueToken(userProfileResponseDTO.email(), userProfileResponseDTO.userRole().name());
 
-            String token = jwtUtil.issueToken(userProfileResponseDTO.email(), userProfileResponseDTO.userRole().name());
-
-            return new AuthenticationResponseDTO(token, userProfileResponseDTO);
+                return new AuthenticationResponseDTO(token, userProfileResponseDTO);
+            } catch(AuthenticationException ex){
+                throw new BadCredentialsException("Pogresan email/lozinka");
+            }
     }
 }
