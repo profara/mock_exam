@@ -53,18 +53,11 @@ const AuthProvider = ({children}) => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-
-        loadUser();
-    }, []);
-
-
     const login = async (emailAndPassword) => {
         return new Promise((resolve,reject) => {
             performLogin(emailAndPassword).then(res => {
                 const jwtToken = res.headers["authorization"];
                 localStorage.setItem("access_token", jwtToken);
-                console.log(jwtToken)
                 setUser({
                     ...res.data.userProfileDTO
                 })

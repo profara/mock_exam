@@ -26,7 +26,6 @@ export const createApplication = (candidate, serbiaDate, selectedCards, setAppli
     }
     saveApplication(application)
         .then(res => {
-            console.log(res)
             successNotification(
                 "Uspesno sacuvana prijava",
                 ""
@@ -34,7 +33,6 @@ export const createApplication = (candidate, serbiaDate, selectedCards, setAppli
             setApplication(res.data);
             navigate("/valuta");
         }).catch(err => {
-        console.log(err)
         errorNotification(
             err.code,
             err?.response.data.violations[0].error

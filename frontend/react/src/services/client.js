@@ -13,6 +13,13 @@ export const getAppointments = async () => {
         )
 }
 
+export const getExams = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/exams`,
+        getAuthConfig()
+    )
+}
+
 export const getUserProfile = async (email) => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/userProfiles`,
@@ -57,6 +64,23 @@ export const getCurrencies = async () => {
 export const getCurrency = async (currencyId) => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/currencies/${currencyId}`,
+        getAuthConfig()
+    );
+}
+
+export const getPriceListItem = async (criteria) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/priceListItems/search`,
+        {
+            params: criteria,
+            ...getAuthConfig()
+        }
+    );
+}
+
+export const getPriceListItems = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/priceListItems`,
         getAuthConfig()
     );
 }

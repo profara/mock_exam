@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 
 
-export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected}) {
+export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected, priceListItem}) {
 
     return (
         <Center py={6}>
@@ -66,6 +66,10 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                                 const year = date.getFullYear();
                                 return `Datum: ${day}.${month}.${year}`;
                             })()}
+                        </ListItem>
+
+                        <ListItem>
+                            Cena: {priceListItem.price} {priceListItem.currency.code}
                         </ListItem>
                     </List>
                 </Box>

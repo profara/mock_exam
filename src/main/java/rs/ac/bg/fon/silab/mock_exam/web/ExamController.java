@@ -35,6 +35,7 @@ public class ExamController {
         return ResponseEntity.ok(examService.get(pageable));
     }
 
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
@@ -45,4 +46,6 @@ public class ExamController {
     public ResponseEntity<ExamResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ExamRequestDTO examDTO){
         return ResponseEntity.ok(examService.update(id,examDTO));
     }
+
+
 }

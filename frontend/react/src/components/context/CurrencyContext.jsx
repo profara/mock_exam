@@ -20,7 +20,6 @@ const CurrencyProvider = ({children}) => {
             if (currencyId && !currency) {
                 await getCurrency(currencyId)
                     .then(res => {
-                        console.log(res);
                         setCurrency(res.data);
                     }).catch(err => {
                     errorNotification(
