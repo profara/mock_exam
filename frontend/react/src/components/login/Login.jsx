@@ -61,7 +61,6 @@ const LoginForm = () => {
                 setSubmitting(true);
                 login(values).then(res =>{
                     navigate("/termini")
-                    console.log("Successfully logged in", res)
                 }).catch(err =>{
                     errorNotification(err.code, err.response.data.message);
                 }).finally(() => {

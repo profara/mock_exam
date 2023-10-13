@@ -26,7 +26,6 @@ const Currency = () => {
     const updateSelectedCurrency = (currencyId) => {
         const selectedCurrencyObject = currencies.find(currency => currency.id === parseInt(currencyId));
 
-        console.log(selectedCurrencyObject);
 
         setCurrency(selectedCurrencyObject);
 
@@ -39,7 +38,6 @@ const Currency = () => {
         setLoading(true);
         getCurrencies().then(res => {
             setCurrencies(res.data.content);
-            console.log(res.data.content)
 
             if(savedCurrency){
                 setSelectedCurrency(savedCurrency);
@@ -76,7 +74,6 @@ const Currency = () => {
         }
         savePayment(payment)
             .then(res => {
-                console.log(res)
                 successNotification(
                     "Uspesno kreirana uplatnica"
                 )
@@ -84,7 +81,6 @@ const Currency = () => {
                 localStorage.setItem("payment", JSON.stringify(res.data));
                 navigate("/uplatnica");
             }).catch(err => {
-            console.log(err)
             errorNotification(
                 err.code,
                 err?.response.data.violations[0].error

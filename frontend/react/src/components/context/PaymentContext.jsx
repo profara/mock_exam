@@ -13,7 +13,6 @@ const PaymentProvider = ({children}) => {
         const storedPayment = localStorage.getItem("payment");
         if(storedPayment && !payment){
             setPayment(JSON.parse(storedPayment));
-            console.log(payment);
         }
 
         setLoadingPayment(false);
