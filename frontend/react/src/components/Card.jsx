@@ -9,9 +9,11 @@ import {
     ListItem,
     useColorModeValue, Checkbox,
 } from '@chakra-ui/react'
+import {useAuth} from "./context/AuthContext.jsx";
 
 
 export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected, priceListItem}) {
+    const {isAdmin} = useAuth();
 
     return (
         <Center py={6}>
@@ -25,6 +27,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                 boxShadow={'2xl'}
                 rounded={'md'}
                 overflow={'hidden'}>
+                {!isAdmin() && (
                 <Checkbox
                     position={'absolute'}
                     top={2}
@@ -34,6 +37,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                     onChange={toogleCardSelection}
                     isChecked={isSelected}
                 />
+                )}
                 <Stack
                     textAlign={'center'}
                     p={6}

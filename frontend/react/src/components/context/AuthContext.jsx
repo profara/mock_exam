@@ -11,6 +11,10 @@ const AuthProvider = ({children}) => {
     const {selectedCards, setSelectedCards} = useCard();
     const [loadingAuth, setLoadingAuth] = useState(true);
 
+    const isAdmin = () => {
+        return user && user.userRole.name === "admin";
+    }
+
     const loadUser = async () => {
         let token = localStorage.getItem("access_token");
         if (token) {
@@ -99,7 +103,8 @@ const AuthProvider = ({children}) => {
             logOut,
             isUserAuthenticated,
             loadUser,
-            loadingAuth
+            loadingAuth,
+            isAdmin
         }}>
 
             {children}

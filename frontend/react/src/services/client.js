@@ -108,6 +108,14 @@ export const saveApplication = async (application) => {
     )
 }
 
+export const saveAppointment = async (appointment) => {
+    return await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/appointments`,
+        appointment,
+        getAuthConfig()
+    )
+}
+
 export const savePayment = async (payment) => {
     return await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/payments`,

@@ -9,6 +9,7 @@ import {useCard} from "./components/context/SelectedCardsContext.jsx";
 import {useApplication} from "./components/context/ApplicationContext.jsx";
 import {createApplication, getCurrentDateInSerbiaTimeZone} from "./utils/appUtils.js";
 import {DEFAULT_CURRENCY_CODE} from "./components/payslip/config/constants.js";
+import DrawerForm from "./components/DrawerForm.jsx";
 
 
 const App = () => {
@@ -18,7 +19,7 @@ const App = () => {
     const {selectedCards, setSelectedCards} = useCard();
     const [err, setError] = useState("");
     const navigate = useNavigate();
-    const {candidate} = useAuth();
+    const {candidate, isAdmin} = useAuth();
     const serbiaDate = getCurrentDateInSerbiaTimeZone();
     const {setApplication} = useApplication();
     const [examNames, setExamNames] = useState([]);
@@ -122,6 +123,9 @@ const App = () => {
 
     return (
         <Simple>
+            {isAdmin && (
+                <DrawerForm/>
+            )}
             <Wrap justify={"center"} spacing={"30px"}>
                 {appointments.map((appointment, index) => {
                     const examName = appointment.exam.name;
@@ -143,12 +147,14 @@ const App = () => {
                 })}
 
             </Wrap>
+            {!isAdmin() && (
             <Center mt={10}>
                 <Button colorScheme="green" size="lg" isDisabled={selectedCards.length === 0}
                         onClick={() => handlePrijaviClick(candidate)}>
                     Prijavi
                 </Button>
             </Center>
+            ) }
         </Simple>
     )
 }
