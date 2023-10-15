@@ -5,3 +5,7 @@ export const RECEIVER_DESCRIPTION = "Fakultet organizacionih nauka, Jove Ilića 
 export const PAY_CODE = 189;
 
 export const DEFAULT_CURRENCY_CODE = "RSD";
+
+export const ADD_ICON = "+";
+
+export const CLOSE_ICON = "x";

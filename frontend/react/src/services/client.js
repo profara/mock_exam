@@ -108,6 +108,14 @@ export const saveApplication = async (application) => {
     )
 }
 
+export const saveAppointment = async (appointment) => {
+    return await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/appointments`,
+        appointment,
+        getAuthConfig()
+    )
+}
+
 export const savePayment = async (payment) => {
     return await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/payments`,
@@ -116,10 +124,25 @@ export const savePayment = async (payment) => {
     )
 }
 
+export const deleteAppointment = async (id) => {
+    return await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/appointments/${id}`,
+        getAuthConfig()
+    )
+}
+
 export const updateCandidate = async (id, candidate) => {
     return await axios.patch(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates/${id}`,
         candidate,
+        getAuthConfig()
+    )
+}
+
+export const updateAppointment = async (id, appointment) => {
+    return await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/appointments/${id}`,
+        appointment,
         getAuthConfig()
     )
 }
