@@ -2,14 +2,14 @@ import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
 import {getAppointments, getExams, getPriceListItems} from "./services/client.js";
-import Card from "./components/Card.jsx";
+import Card from "./components/appointment/Card.jsx";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
 import {useCard} from "./components/context/SelectedCardsContext.jsx";
 import {useApplication} from "./components/context/ApplicationContext.jsx";
 import {createApplication, getCurrentDateInSerbiaTimeZone} from "./utils/appUtils.js";
 import {DEFAULT_CURRENCY_CODE} from "./components/payslip/config/constants.js";
-import DrawerForm from "./components/DrawerForm.jsx";
+import CreateAppointmentDrawer from "./components/appointment/CreateAppointmentDrawer.jsx";
 
 
 const App = () => {
@@ -53,41 +53,47 @@ const App = () => {
         return acc;
     }, {});
 
+    const fetchAppointments = () => {
+        setLoading(true);
+
+        Promise.all([getExams(), getAppointments(), getPriceListItems()])
+            .then(([examsRes, appointmentsRes, priceListItemsRes]) => {
+
+                examResponse = examsRes.data.content.map(exam => exam.name);
+                appointmentsResponse = appointmentsRes.data.content;
+
+                const priceMap = {};
+                appointmentsResponse.forEach(appointment => {
+
+                    const matchingPriceItem = priceListItemsRes.data.content.find(item =>
+                        item.priceList.year === currentYear &&
+                        item.privileged === candidate?.attendedPreparation &&
+                        item.exam.id === appointment.exam.id &&
+                        item.currency.code === DEFAULT_CURRENCY_CODE
+                    );
+                    if (matchingPriceItem) {
+                        priceMap[appointment.id] = matchingPriceItem;
+                    }
+
+                });
+
+                setExamNames(examResponse);
+                setAppointments(appointmentsResponse);
+                setPriceListItem(priceMap);
+            }).catch(err => {
+            setError(err.response.data.message);
+        }).finally(() => {
+            setLoading(false);
+        })
+
+    }
+
+
 
 
     useEffect(() => {
         if (candidate) {
-            setLoading(true);
-
-            Promise.all([getExams(), getAppointments(), getPriceListItems()])
-                .then(([examsRes, appointmentsRes, priceListItemsRes]) => {
-
-                    examResponse = examsRes.data.content.map(exam => exam.name);
-                    appointmentsResponse = appointmentsRes.data.content;
-
-                    const priceMap = {};
-                    appointmentsResponse.forEach(appointment => {
-
-                        const matchingPriceItem = priceListItemsRes.data.content.find(item =>
-                            item.priceList.year === currentYear &&
-                            item.privileged === candidate?.attendedPreparation &&
-                            item.exam.id === appointment.exam.id &&
-                            item.currency.code === DEFAULT_CURRENCY_CODE
-                        );
-                        if (matchingPriceItem) {
-                            priceMap[appointment.id] = matchingPriceItem;
-                        }
-
-                    });
-
-                    setExamNames(examResponse);
-                    setAppointments(appointmentsResponse);
-                    setPriceListItem(priceMap);
-                }).catch(err => {
-                setError(err.response.data.message);
-            }).finally(() => {
-                setLoading(false);
-            })
+            fetchAppointments();
         }
     }, [candidate]);
 
@@ -116,15 +122,22 @@ const App = () => {
     if (appointments.length <= 0 || !priceListItem) {
         return (
             <Simple>
-                <Text>Nema dostupnih termina</Text>
+                {isAdmin() && (
+                    <CreateAppointmentDrawer
+                    fetchAppointments={fetchAppointments}
+                    />
+                )}
+                <Text mt={5}>Nema dostupnih termina</Text>
             </Simple>
         )
     }
 
     return (
         <Simple>
-            {isAdmin && (
-                <DrawerForm/>
+            {isAdmin() && (
+                <CreateAppointmentDrawer
+                    fetchAppointments={fetchAppointments}
+                />
             )}
             <Wrap justify={"center"} spacing={"30px"}>
                 {appointments.map((appointment, index) => {
@@ -141,6 +154,7 @@ const App = () => {
                                 priceListItem={priceListItem[appointment.id]}
                                 toogleCardSelection={() => toogleCardSelection(appointment.id)}
                                 isSelected={selectedCards.includes(appointment.id)}
+                                fetchAppointments={fetchAppointments}
                             />
                         </WrapItem>
                     );

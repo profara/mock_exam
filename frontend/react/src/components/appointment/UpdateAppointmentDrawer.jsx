@@ -8,30 +8,41 @@ import {
     DrawerOverlay,
     useDisclosure
 } from "@chakra-ui/react";
-import {ADD_ICON, CLOSE_ICON} from "./payslip/config/constants.js";
-import CreateAppointmentForm from "./appointment/CreateAppointmentForm.jsx";
+import {ADD_ICON, CLOSE_ICON} from "../payslip/config/constants.js";
+import CreateAppointmentForm from "./CreateAppointmentForm.jsx";
+import UpdateAppointmentForm from "./UpdateAppointmentForm.jsx";
 
 const AddIcon = () => ADD_ICON;
 const CloseIcon = () => CLOSE_ICON;
-const DrawerForm = () => {
+const UpdateAppointmentDrawer = ({ fetchAppointments, initialValues, appointmentId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return <>
+
         <Button
-            leftIcon={<AddIcon/>}
-            colorScheme={"teal"}
+            bg={'teal'}
+            color={'white'}
+            rounded={'full'}
+            _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: 'lg'
+            }}
             onClick={onOpen}
         >
-            Dodaj termin
+            Izmeni
         </Button>
         <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
             <DrawerOverlay />
             <DrawerContent>
                 <DrawerCloseButton />
-                <DrawerHeader>Dodaj novi termin</DrawerHeader>
+                <DrawerHeader>Izmena termina</DrawerHeader>
 
                 <DrawerBody>
-                    <CreateAppointmentForm/>
+                    <UpdateAppointmentForm
+                        fetchAppointments={fetchAppointments}
+                        initialValues={initialValues}
+                        appointmentId={appointmentId}
+                    />
                 </DrawerBody>
 
                 <DrawerFooter>
@@ -48,4 +59,4 @@ const DrawerForm = () => {
     </>
 }
 
-export default DrawerForm;
+export default UpdateAppointmentDrawer;

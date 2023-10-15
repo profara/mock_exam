@@ -108,9 +108,8 @@ const UpdateCandidateProfileForm = () => {
         })
     }, [])
 
-    if(candidate){
-        console.log(candidate);
-    }
+
+    console.log(candidate)
 
 
     if(!user){

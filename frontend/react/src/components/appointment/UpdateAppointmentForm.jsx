@@ -2,7 +2,7 @@ import {Formik, Form, useField, useFormikContext} from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Select, Stack} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
-import {getExams, saveAppointment} from "../../services/client.js";
+import {getExams, saveAppointment, updateAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -47,7 +47,7 @@ const MyDateInput = ({label, ...props}) => {
         </Box>
     );
 };
-const CreateAppointmentForm = ({fetchAppointments}) => {
+const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}) => {
     const [exams, setExams] = useState([]);
 
     useEffect(() => {
@@ -60,14 +60,13 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
         })
     }, [])
 
-
     return (
         <>
             <Formik
                 validateOnMount={true}
                 initialValues={{
-                    examId: '',
-                    appointmentDate: new Date()
+                    examId: initialValues.exam.id,
+                    appointmentDate: initialValues.appointmentRealDate
                 }}
                 validationSchema={Yup.object({
                     examId: Yup.number()
@@ -76,13 +75,13 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
                     appointmentDate: Yup.date()
                         .required('Morate izabrati datum')
                 })}
-                onSubmit={(appointment, {setSubmitting}) => {
+                onSubmit={(updatedAppointment, {setSubmitting}) => {
                     setSubmitting(true);
-                    saveAppointment(appointment)
+                    updateAppointment(appointmentId, updatedAppointment)
                         .then(async res => {
                             console.log(res)
                             successNotification(
-                                "Uspesno sacuvan termin",
+                                "Uspesno izmenjen termin",
                                 ""
                             )
                             fetchAppointments();
@@ -97,7 +96,7 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
                     })
                 }}
             >
-                {({isValid, isSubmitting}) => (
+                {({isValid, isSubmitting, dirty}) => (
 
                     <Form>
                         <Stack spacing={"24px"}>
@@ -116,7 +115,7 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
                             />
 
 
-                            <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme='teal'>
+                            <Button isDisabled={!(isValid && dirty) || isSubmitting} type="submit" colorScheme='teal'>
                                 Potvrdi
                             </Button>
                         </Stack>
@@ -129,4 +128,4 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
         ;
 };
 
-export default CreateAppointmentForm;
+export default UpdateAppointmentForm;
