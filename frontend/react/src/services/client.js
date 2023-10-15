@@ -25,7 +25,7 @@ export const getUserProfile = async (email) => {
         `${import.meta.env.VITE_API_BASE_URL}/api/userProfiles`,
         {
             params: email ? {email: email} : {},
-            headers: {Authorization: `Bearer ${localStorage.getItem("access_token")}`}
+            ...getAuthConfig()
         }
     );
 }
@@ -35,7 +35,7 @@ export const getCandidate = async (email) => {
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates`,
         {
             params: email ? {email: email} : {},
-            headers: {Authorization: `Bearer ${localStorage.getItem("access_token")}`}
+            ...getAuthConfig()
         }
     );
 }

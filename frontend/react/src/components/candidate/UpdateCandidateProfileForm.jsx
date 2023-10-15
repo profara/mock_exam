@@ -109,8 +109,6 @@ const UpdateCandidateProfileForm = () => {
     }, [])
 
 
-    console.log(candidate)
-
 
     if(!user){
         return <Spinner

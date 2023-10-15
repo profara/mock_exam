@@ -2,6 +2,7 @@ import {createContext, useContext, useEffect, useState} from "react";
 import {getCandidate, getUserProfile, login as performLogin} from "../../services/client.js"
 import jwtDecode from "jwt-decode";
 import {useCard} from "./SelectedCardsContext.jsx";
+import {ROLE_ADMIN} from "../payslip/config/constants.js";
 
 const AuthContext = createContext({});
 
@@ -12,7 +13,7 @@ const AuthProvider = ({children}) => {
     const [loadingAuth, setLoadingAuth] = useState(true);
 
     const isAdmin = () => {
-        return user && user.userRole.name === "admin";
+        return user && user.userRole.name === ROLE_ADMIN;
     }
 
     const loadUser = async () => {

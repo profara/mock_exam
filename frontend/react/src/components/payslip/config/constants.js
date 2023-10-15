@@ -9,3 +9,5 @@ export const DEFAULT_CURRENCY_CODE = "RSD";
 export const ADD_ICON = "+";
 
 export const CLOSE_ICON = "x";
+
+export const ROLE_ADMIN = "ROLE_ADMIN";
