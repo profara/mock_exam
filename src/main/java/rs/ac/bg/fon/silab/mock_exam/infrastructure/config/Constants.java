@@ -29,7 +29,7 @@ public class Constants {
     public static final String PAYMENT_PURPOSE_COLUMN_NAME = "payment_purpose";
     public static final String APPOINTMENT_DATE_COLUMN_NAME = "appointment_date";
 
-    public static final String USER_ROLE = "user";
+    public static final String USER_ROLE = "ROLE_USER";
 
     public static final Long MATH_EXAM_ID = 1L;
     public static final Long OPSTA_INF_EXAM_ID = 3L;
