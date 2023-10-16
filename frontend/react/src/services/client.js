@@ -40,6 +40,13 @@ export const getCandidate = async (email) => {
     );
 }
 
+export const getCandidates = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates`,
+        getAuthConfig()
+    )
+}
+
 export const getSchools = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/schools`,
