@@ -59,7 +59,7 @@ export default function Simple(props) {
     }
     return (
         <>
-            <Box bg={useColorModeValue('#084474', '#084474')} px={4}>
+            <Box bg={useColorModeValue('#084474', '#084474')} px={4} sx={{ "@media print": {display: "none"}}}>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <IconButton
                         size={'md'}
@@ -82,6 +82,9 @@ export default function Simple(props) {
                             <NavLink href="/kandidati">Kandidati</NavLink>
                         </HStack>
                         )}
+                        <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+                            <NavLink href="/termini">Termini</NavLink>
+                        </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
                         <Menu>
