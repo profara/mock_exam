@@ -16,6 +16,8 @@ import Currency from "./components/currency/Currency.jsx";
 import ApplicationProvider from "./components/context/ApplicationContext.jsx";
 import CurrencyProvider from "./components/context/CurrencyContext.jsx";
 import PaymentProvider from "./components/context/PaymentContext.jsx";
+import Candidates from "./components/candidate/Candidates.jsx";
+import AdminOnly from "./components/shared/AdminOnly.jsx";
 
 
 const {ToastContainer} = createStandaloneToast()
@@ -56,8 +58,15 @@ const router = createBrowserRouter([
     {
         path: "termini",
         element: <ProtectedRoute>
-                    <App/>
-                </ProtectedRoute>
+            <App/>
+        </ProtectedRoute>
+    },
+    {
+        path: "/kandidati",
+        element:
+            <AdminOnly>
+                <Candidates/>
+            </AdminOnly>
     }
 ]);
 

@@ -22,10 +22,9 @@ import {useAuth} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
 
 
-// const Links = ['Dashboard', 'Projects', 'Team']
-
 const NavLink = (props) => {
-    const { children } = props
+    const { children, href } = props
+    const navigate = useNavigate();
 
     return (
         <Box
@@ -38,7 +37,9 @@ const NavLink = (props) => {
                 textDecoration: 'none',
                 bg: useColorModeValue('gray.200', 'gray.700'),
             }}
-            href={'#'}>
+            onClick={() => href && navigate(href)}
+            cursor="pointer"
+        >
             {children}
         </Box>
     )
@@ -46,8 +47,9 @@ const NavLink = (props) => {
 
 export default function Simple(props) {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const {logOut, candidate} = useAuth();
+    const {logOut, candidate, isAdmin} = useAuth();
     const navigate = useNavigate();
+
     const handleProfileClick = (candidate) => {
         if(candidate){
             navigate("/updateProfil")
@@ -75,11 +77,11 @@ export default function Simple(props) {
                                 alt='fon'
                             />
                         </Box>
-                        {/*<HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>*/}
-                        {/*    {Links.map((link) => (*/}
-                        {/*        <NavLink key={link}>{link}</NavLink>*/}
-                        {/*    ))}*/}
-                        {/*</HStack>*/}
+                        {isAdmin() && (
+                        <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+                            <NavLink href="/kandidati">Kandidati</NavLink>
+                        </HStack>
+                        )}
                     </HStack>
                     <Flex alignItems={'center'}>
                         <Menu>
@@ -97,8 +99,12 @@ export default function Simple(props) {
                                 />
                             </MenuButton>
                             <MenuList>
+                                {!isAdmin() && (
+                                    <>
                                 <MenuItem onClick={() => handleProfileClick(candidate)}>Profil</MenuItem>
                                 <MenuDivider />
+                                    </>
+                                    )}
                                 <MenuItem onClick={logOut}>
                                     Odjavi se
                                 </MenuItem>
@@ -107,15 +113,7 @@ export default function Simple(props) {
                     </Flex>
                 </Flex>
 
-                {isOpen ? (
-                    <Box pb={4} display={{ md: 'none' }}>
-                        <Stack as={'nav'} spacing={4}>
-                            {Links.map((link) => (
-                                <NavLink key={link}>{link}</NavLink>
-                            ))}
-                        </Stack>
-                    </Box>
-                ) : null}
+
             </Box>
 
             <Box p={4}>{props.children}</Box>

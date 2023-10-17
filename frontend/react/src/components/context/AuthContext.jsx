@@ -38,10 +38,12 @@ const AuthProvider = ({children}) => {
         if (token) {
             try {
                 token = jwtDecode(token)
-                const res = await getCandidate(token.sub);
-                setCandidate({
-                    ...res.data
-                });
+                if(!token.scopes.includes(ROLE_ADMIN)) {
+                    const res = await getCandidate(token.sub);
+                    setCandidate({
+                        ...res.data
+                    });
+                }
             } catch(err){
                 console.error(err);
             }
@@ -52,7 +54,9 @@ const AuthProvider = ({children}) => {
     useEffect(() => {
         async function fetchData(){
             await loadUser();
-            await loadCandidate();
+            if(!isAdmin()) {
+                await loadCandidate();
+            }
             setLoadingAuth(false);
         }
         fetchData();
@@ -98,7 +102,9 @@ const AuthProvider = ({children}) => {
     return (
         <AuthContext.Provider value={{
             user,
+            setUser,
             candidate,
+            setCandidate,
             loadCandidate,
             login,
             logOut,

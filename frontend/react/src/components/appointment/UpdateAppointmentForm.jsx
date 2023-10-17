@@ -53,7 +53,6 @@ const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}
     useEffect(() => {
         getExams()
             .then(res => {
-                console.log(res)
                 setExams(res.data.content);
             }).catch(err => {
             console.error("Greska prilikom fecovanja ispita", err);

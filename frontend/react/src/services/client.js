@@ -40,6 +40,13 @@ export const getCandidate = async (email) => {
     );
 }
 
+export const getCandidates = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates`,
+        getAuthConfig()
+    )
+}
+
 export const getSchools = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/schools`,
@@ -127,6 +134,13 @@ export const savePayment = async (payment) => {
 export const deleteAppointment = async (id) => {
     return await axios.delete(
         `${import.meta.env.VITE_API_BASE_URL}/api/appointments/${id}`,
+        getAuthConfig()
+    )
+}
+
+export const deleteCandidate = async (id) => {
+    return await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/${id}`,
         getAuthConfig()
     )
 }
