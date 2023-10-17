@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDTO;
@@ -20,6 +21,7 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<AppointmentResponseDTO> save(@Valid @RequestBody AppointmentRequestDTO appointmentRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentService.save(appointmentRequestDTO));
@@ -35,12 +37,14 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.get(pageable));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         appointmentService.delete(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AppointmentResponseDTO> update(@PathVariable Long id,
                                                          @Valid @RequestBody AppointmentRequestDTO appointmentRequestDTO){

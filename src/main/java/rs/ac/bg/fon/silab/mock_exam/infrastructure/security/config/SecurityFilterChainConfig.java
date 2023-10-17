@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,6 +15,7 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.jwt.JWTAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityFilterChainConfig {
 
     private final AuthenticationProvider authenticationProvider;
@@ -32,9 +34,6 @@ public class SecurityFilterChainConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/userProfiles", "/api/auth/login")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/appointments/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/appointments/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/appointments/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

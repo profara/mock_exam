@@ -31,6 +31,8 @@ public class Constants {
 
     public static final String USER_ROLE = "ROLE_USER";
 
+    public static final String ADMIN_ROLE = "ROLE_ADMIN";
+
     public static final Long MATH_EXAM_ID = 1L;
     public static final Long OPSTA_INF_EXAM_ID = 3L;
 }
