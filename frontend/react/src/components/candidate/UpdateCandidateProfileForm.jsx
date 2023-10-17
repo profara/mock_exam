@@ -19,7 +19,7 @@ import {getCities, getSchools, updateCandidate} from "../../services/client.js";
 import {successNotification, errorNotification} from "../../services/notification.js";
 import {useAuth} from "../context/AuthContext.jsx";
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 
 const MyTextInput = ({ label, ...props }) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -78,20 +78,27 @@ const MySelect = ({ label, ...props }) => {
 };
 
 const UpdateCandidateProfileForm = () => {
-    const {user, candidate} = useAuth();
+    const {user,setUser, candidate, setCandidate, isAdmin} = useAuth();
     const [schools, setSchools] = useState([]);
     const navigate = useNavigate();
     const [cities, setCities] = useState([]);
+    const location = useLocation();
+    const selectedCandidate = location.state?.selectedCandidate;
 
     const handleConfirmClick = () => {
+        if(!isAdmin()) {
             navigate("/termini")
+        } else{
+            navigate("/kandidati")
+        }
     }
+
+
 
 
     useEffect(() => {
         getSchools()
             .then(res => {
-                console.log(res);
                 setSchools(res.data.content);
             }).catch(err => {
             console.error("Greska prilikom fecovanja skola", err);
@@ -101,7 +108,6 @@ const UpdateCandidateProfileForm = () => {
     useEffect(() => {
         getCities()
             .then(res => {
-                console.log(res);
                 setCities(res.data.content);
             }).catch(err => {
             console.error("Greska prilikom fecovanja gradova", err);
@@ -135,13 +141,13 @@ const UpdateCandidateProfileForm = () => {
                 <Formik
                     validateOnMount={true}
                     initialValues={{
-                        name: candidate.name,
-                        surname: candidate.surname,
-                        address: candidate.address,
-                        attendedPreparation: candidate.attendedPreparation,
-                        userProfile: user,
-                        school: candidate.school.code || "",
-                        city: candidate.city.zipCode || ""
+                        name: isAdmin() ? selectedCandidate.name : candidate.name,
+                        surname: isAdmin() ? selectedCandidate.surname : candidate.surname,
+                        address: isAdmin() ? selectedCandidate.address : candidate.address,
+                        attendedPreparation: isAdmin() ? selectedCandidate.attendedPreparation : candidate.attendedPreparation,
+                        userProfile: isAdmin() ? selectedCandidate.userProfile : user,
+                        school: isAdmin() ? selectedCandidate.school.code : candidate.school.code || "",
+                        city: isAdmin() ? selectedCandidate.city.zipCode : candidate.city.zipCode || ""
 
                     }}
                     validationSchema={Yup.object({
@@ -162,13 +168,15 @@ const UpdateCandidateProfileForm = () => {
                     })}
                     onSubmit={(candidateData, { setSubmitting }) => {
                         setSubmitting(true)
-                        updateCandidate(candidate.id, candidateData)
+                        updateCandidate(isAdmin() ? selectedCandidate.id : candidate.id, candidateData)
                             .then(res => {
-                                console.log(res)
                                 successNotification(
                                     "Uspesno potvrdjen kandidat",
                                     ""
                                 )
+                                if(!isAdmin()){
+                                    setCandidate(res.data);
+                                }
                                 handleConfirmClick();
                             }).catch(err => {
                             console.log(err)

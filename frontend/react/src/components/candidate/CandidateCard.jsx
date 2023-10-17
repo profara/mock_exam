@@ -1,6 +1,32 @@
 import {Flex, Text, Button, Box} from "@chakra-ui/react";
+import UpdateCandidateProfileForm from "./UpdateCandidateProfileForm.jsx";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {deleteAppointment, deleteCandidate} from "../../services/client.js";
+import {errorNotification, successNotification} from "../../services/notification.js";
 
-const CandidateCard = ({ candidate, isOdd, rowNum}) => {
+const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
+    const navigate = useNavigate();
+
+    const handleUpdateClick = () => {
+        navigate('/updateProfil', {state: {selectedCandidate: candidate}});
+    }
+
+    const handleDeleteClick = () => {
+        deleteCandidate(candidate.id).then(res =>{
+            console.log(res)
+            successNotification('Kandidat uspesno obrisan')
+        }).catch(err => {
+            console.log(err)
+            errorNotification(
+                err.code,
+                err?.response.data?.violations[0]?.error
+            )
+        }).finally(() => {
+            fetchCandidates();
+        })
+    }
+
     return (
         <Flex
             alignItems="center"
@@ -25,8 +51,12 @@ const CandidateCard = ({ candidate, isOdd, rowNum}) => {
                 <Text>{candidate.userProfile.email}</Text>
             </Box>
             <Flex w="20%" justifyContent="flex-end" mr={4}>
-                <Button colorScheme="teal" mr={2}>Update</Button>
-                <Button colorScheme="red">Delete</Button>
+                <Button colorScheme="teal" mr={2} onClick={handleUpdateClick}>
+                    Update
+                </Button>
+                <Button colorScheme="red" onClick={handleDeleteClick}>
+                    Delete
+                </Button>
             </Flex>
         </Flex>
     );

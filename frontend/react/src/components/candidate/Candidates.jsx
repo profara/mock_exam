@@ -1,4 +1,4 @@
-import {Flex, Spinner, VStack} from "@chakra-ui/react";
+import {Flex, Spinner} from "@chakra-ui/react";
 import CandidateCard from "./CandidateCard.jsx";
 import {useEffect, useState} from "react";
 import {getCandidates} from "../../services/client.js";
@@ -9,17 +9,19 @@ const CandidateList = () => {
     const [candidates, setCandidates] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const fetchCandidates = () => {
         getCandidates()
             .then(res => {
-                console.log(res)
                 setCandidates(res.data.content);
             }).catch(err => {
             console.error(err)
         }).finally(() => {
             setLoading(false);
         })
+    }
 
+    useEffect(() => {
+        fetchCandidates()
     }, [])
 
     if (loading) {
@@ -42,6 +44,7 @@ const CandidateList = () => {
                         candidate={candidate}
                         isOdd={index % 2 !== 0}
                         rowNum={index + 1}
+                        fetchCandidates={fetchCandidates}
                     />
                 ))}
             </Flex>

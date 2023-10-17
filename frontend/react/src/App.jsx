@@ -19,7 +19,7 @@ const App = () => {
     const {selectedCards, setSelectedCards} = useCard();
     const [err, setError] = useState("");
     const navigate = useNavigate();
-    const {candidate, isAdmin} = useAuth();
+    const {candidate, isAdmin, loadingAuth, user} = useAuth();
     const serbiaDate = getCurrentDateInSerbiaTimeZone();
     const {setApplication} = useApplication();
     const [examNames, setExamNames] = useState([]);
@@ -27,7 +27,6 @@ const App = () => {
     const [priceListItem, setPriceListItem] = useState(null);
     let examResponse;
     let appointmentsResponse;
-
 
     const handlePrijaviClick = (candidate) => {
         if (candidate) {
@@ -52,6 +51,24 @@ const App = () => {
         acc[name] = 0;
         return acc;
     }, {});
+
+    const fetchAppointmentsForAdmin = () => {
+        setLoading(true);
+
+        Promise.all([getExams(), getAppointments()])
+            .then(([examsRes, appointmentsRes]) => {
+                examResponse = examsRes.data.content.map(exam => exam.name);
+                appointmentsResponse = appointmentsRes.data.content;
+
+                setExamNames(examResponse);
+                setAppointments(appointmentsResponse);
+
+            }).catch(err => {
+            setError(err.response.data.message);
+        }).finally(() => {
+            setLoading(false);
+        })
+    }
 
     const fetchAppointments = () => {
         setLoading(true);
@@ -88,6 +105,11 @@ const App = () => {
 
     }
 
+    useEffect(() => {
+        if (user && isAdmin()) {
+            fetchAppointmentsForAdmin();
+        }
+    }, [user]);
 
 
 
@@ -97,7 +119,7 @@ const App = () => {
         }
     }, [candidate]);
 
-    if (loading) {
+    if (loading || loadingAuth) {
         return (
             <Simple>
                 <Spinner
@@ -119,12 +141,20 @@ const App = () => {
         )
     }
 
-    if (appointments.length <= 0 || !priceListItem) {
+    if(!isAdmin() && !priceListItem){
+        return (
+            <Simple>
+                <Text mt={5}>Nema dostupnih termina</Text>
+            </Simple>
+        )
+    }
+
+    if (appointments.length <= 0) {
         return (
             <Simple>
                 {isAdmin() && (
                     <CreateAppointmentDrawer
-                    fetchAppointments={fetchAppointments}
+                    fetchAppointments={fetchAppointmentsForAdmin}
                     />
                 )}
                 <Text mt={5}>Nema dostupnih termina</Text>
@@ -136,7 +166,7 @@ const App = () => {
         <Simple>
             {isAdmin() && (
                 <CreateAppointmentDrawer
-                    fetchAppointments={fetchAppointments}
+                    fetchAppointments={fetchAppointmentsForAdmin}
                 />
             )}
             <Wrap justify={"center"} spacing={"30px"}>
@@ -146,15 +176,15 @@ const App = () => {
 
 
                     return (
-                        <WrapItem key={index}>
+                        <WrapItem key={appointment.id}>
 
                             <Card
                                 {...appointment}
                                 count={examCounters[examName]}
-                                priceListItem={priceListItem[appointment.id]}
+                                priceListItem={isAdmin() ? null : priceListItem[appointment.id]}
                                 toogleCardSelection={() => toogleCardSelection(appointment.id)}
                                 isSelected={selectedCards.includes(appointment.id)}
-                                fetchAppointments={fetchAppointments}
+                                fetchAppointments={isAdmin() ? fetchAppointmentsForAdmin : fetchAppointments}
                             />
                         </WrapItem>
                     );

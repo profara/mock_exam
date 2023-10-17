@@ -138,11 +138,9 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                                             </Button>
                                             <Button colorScheme='red' onClick={() => {
                                                 deleteAppointment(id).then(res =>{
-                                                    console.log(res)
                                                     successNotification('Termin uspesno obrisan')
                                                     fetchAppointments();
                                                 }).catch(err => {
-                                                    console.log(err)
                                                     errorNotification(
                                                         err.code,
                                                         err?.response.data.violations[0].error

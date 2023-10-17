@@ -99,8 +99,12 @@ export default function Simple(props) {
                                 />
                             </MenuButton>
                             <MenuList>
+                                {!isAdmin() && (
+                                    <>
                                 <MenuItem onClick={() => handleProfileClick(candidate)}>Profil</MenuItem>
                                 <MenuDivider />
+                                    </>
+                                    )}
                                 <MenuItem onClick={logOut}>
                                     Odjavi se
                                 </MenuItem>

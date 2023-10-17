@@ -53,7 +53,6 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
     useEffect(() => {
         getExams()
             .then(res => {
-                console.log(res)
                 setExams(res.data.content);
             }).catch(err => {
             console.error("Greska prilikom fecovanja ispita", err);
@@ -80,7 +79,6 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
                     setSubmitting(true);
                     saveAppointment(appointment)
                         .then(async res => {
-                            console.log(res)
                             successNotification(
                                 "Uspesno sacuvan termin",
                                 ""
