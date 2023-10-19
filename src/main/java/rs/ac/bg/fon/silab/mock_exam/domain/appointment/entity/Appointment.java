@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class Appointment {
     private Date appointmentDate;
 
     @ManyToMany(mappedBy = "appointments")
-    private List<Application> applications;
+    private List<Application> applications = new ArrayList<>();
     public Appointment() {
     }
 
