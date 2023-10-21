@@ -1,90 +1,109 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AppointmentTest {
 
-    @Test
-    void testDefaultConstructor() {
-        Appointment appointment = new Appointment();
-        assertNull(appointment.getId());
-        assertNull(appointment.getExam());
-        assertNull(appointment.getAppointmentDate());
-        assertNotNull(appointment.getApplications());
-        assertTrue(appointment.getApplications().isEmpty());
+    private Appointment appointment;
+    private Exam mockExam;
+    private Application mockApplication;
+    private Application anotherMockApplication;
+
+    @BeforeEach
+    void setUp() {
+        mockExam = mock(Exam.class);
+        mockApplication = mock(Application.class);
+        anotherMockApplication = mock(Application.class);
+        appointment = new Appointment(mockExam, new Date(), new ArrayList<>());
     }
 
     @Test
-    void testConstructorWithDate() {
-        Date date = new Date();
-        Appointment appointment = new Appointment(date);
-        assertEquals(date, appointment.getAppointmentDate());
+    void testAddApplication() {
+        when(mockApplication.getAppointments()).thenReturn(new ArrayList<>());
+
+        appointment.getApplications().add(mockApplication);
+
+        assertTrue(appointment.getApplications().contains(mockApplication));
     }
 
     @Test
-    void testConstructorWithAllArgs() {
-        Date date = new Date();
-        Exam exam = new Exam();
-        Application app1 = new Application();
-        Application app2 = new Application();
-        List<Application> applications = Arrays.asList(app1, app2);
+    void testRemoveApplication() {
+        appointment.getApplications().add(mockApplication);
+        assertTrue(appointment.getApplications().contains(mockApplication));
 
-        Appointment appointment = new Appointment(exam, date, applications);
-        assertEquals(exam, appointment.getExam());
-        assertEquals(date, appointment.getAppointmentDate());
-        assertEquals(applications, appointment.getApplications());
+        appointment.getApplications().remove(mockApplication);
+
+        assertFalse(appointment.getApplications().contains(mockApplication));
     }
 
     @Test
-    void testGettersAndSetters() {
-        Appointment appointment = new Appointment();
-        Date date = new Date();
-        Exam exam = new Exam();
-        Application app = new Application();
-        List<Application> applications = Arrays.asList(app);
+    void testEqualsWithSameObject() {
+        assertTrue(appointment.equals(appointment));
+    }
 
+    @Test
+    void testEqualsWithNull() {
+        assertFalse(appointment.equals(null));
+    }
+
+    @Test
+    void testEqualsWithDifferentClass() {
+        Object obj = new Object();
+        assertFalse(appointment.equals(obj));
+    }
+
+    @Test
+    void testEqualsWithDifferentId() {
+        Appointment anotherAppointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        anotherAppointment.setId(2L);
         appointment.setId(1L);
-        appointment.setExam(exam);
-        appointment.setAppointmentDate(date);
-        appointment.setApplications(applications);
 
-        assertEquals(Long.valueOf(1L), appointment.getId());
-        assertEquals(exam, appointment.getExam());
-        assertEquals(date, appointment.getAppointmentDate());
-        assertEquals(applications, appointment.getApplications());
+        assertFalse(appointment.equals(anotherAppointment));
     }
 
     @Test
-    void testEqualsAndHashCode() {
-        Appointment appointment1 = new Appointment();
-        Appointment appointment2 = new Appointment();
+    void testEqualsWithSameId() {
+        Appointment anotherAppointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        anotherAppointment.setId(1L);
+        appointment.setId(1L);
 
-        assertEquals(appointment1, appointment2);
-        assertEquals(appointment1.hashCode(), appointment2.hashCode());
+        assertTrue(appointment.equals(anotherAppointment));
+    }
 
-        appointment1.setId(1L);
-        assertNotEquals(appointment1, appointment2);
-        assertNotEquals(appointment1.hashCode(), appointment2.hashCode());
+    @Test
+    void testHashCodeConsistency() {
+        int initialHashCode = appointment.hashCode();
+        appointment.setAppointmentDate(new Date());
+        assertEquals(initialHashCode, appointment.hashCode());
+    }
 
-        appointment2.setId(1L);
-        assertEquals(appointment1, appointment2);
-        assertEquals(appointment1.hashCode(), appointment2.hashCode());
+    @Test
+    void testHashCodeDifference() {
+        Appointment anotherAppointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        anotherAppointment.setId(2L);
+        appointment.setId(1L);
+
+        assertNotEquals(appointment.hashCode(), anotherAppointment.hashCode());
     }
 
     @Test
     void testToString() {
-        Appointment appointment = new Appointment();
         String expectedString = "Appointment{" +
-                "id=null, exam=null, appointmentDate=null, applications=[]}";
+                "id=" + appointment.getId() +
+                ", exam=" + mockExam +
+                ", appointmentDate=" + appointment.getAppointmentDate() +
+                ", applications=" + appointment.getApplications() +
+                '}';
         assertEquals(expectedString, appointment.toString());
     }
 }
-

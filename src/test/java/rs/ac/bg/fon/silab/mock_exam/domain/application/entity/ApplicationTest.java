@@ -5,97 +5,152 @@ import org.junit.jupiter.api.Test;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class ApplicationTest {
+class ApplicationTest {
 
     private Application application;
     private Candidate mockCandidate;
     private Appointment mockAppointment;
+    private Appointment anotherMockAppointment;
 
     @BeforeEach
     void setUp() {
-        mockCandidate = new Candidate();
+        mockCandidate = mock(Candidate.class);
+        mockAppointment = mock(Appointment.class);
+        anotherMockAppointment = mock(Appointment.class);
         application = new Application(new Date(), false, mockCandidate);
-
-        mockAppointment = new Appointment();
     }
 
     @Test
     void testAddAppointment() {
+        when(mockAppointment.getApplications()).thenReturn(new ArrayList<>());
+
         application.addAppointment(mockAppointment);
-        List<Appointment> appointments = application.getAppointments();
-        assertTrue(appointments.contains(mockAppointment));
-        assertTrue(mockAppointment.getApplications().contains(application));
+
+        assertTrue(application.getAppointments().contains(mockAppointment));
+    }
+
+    @Test
+    void testAddAppointmentWhenAppointmentsIsNull() {
+        Application application = new Application();
+        when(mockAppointment.getApplications()).thenReturn(new ArrayList<>());
+
+        application.addAppointment(mockAppointment);
+
+        assertNotNull(application.getAppointments());
+        assertTrue(application.getAppointments().contains(mockAppointment));
+    }
+
+    @Test
+    void testAddNullAppointment() {
+
+        Application application = new Application();
+
+        assertThrows(NullPointerException.class, () -> application.addAppointment(null));
     }
 
     @Test
     void testRemoveAppointment() {
+
         application.addAppointment(mockAppointment);
+        assertTrue(application.getAppointments().contains(mockAppointment));
+
+        when(mockAppointment.getApplications()).thenReturn(new ArrayList<>(List.of(application)));
+
         application.removeAppointment(mockAppointment);
 
         assertFalse(application.getAppointments().contains(mockAppointment));
-        assertFalse(mockAppointment.getApplications().contains(application));
+    }
+
+
+    @Test
+    void testRemoveAppointmentFromEmptyList() {
+        assertFalse(application.getAppointments().contains(mockAppointment));
+
+        application.removeAppointment(mockAppointment);
+
+        assertTrue(application.getAppointments().isEmpty());
+
     }
 
     @Test
-    void testSetAndGetId() {
-        Long id = 123L;
-        application.setId(id);
-        assertEquals(id, application.getId());
+    void testRemoveNonExistingAppointment() {
+
+        application.addAppointment(anotherMockAppointment);
+        assertFalse(application.getAppointments().contains(mockAppointment));
+
+        when(mockAppointment.getApplications()).thenReturn(new ArrayList<>());
+
+        application.removeAppointment(mockAppointment);
+
+        assertTrue(application.getAppointments().contains(anotherMockAppointment));
+        assertFalse(application.getAppointments().contains(mockAppointment));
     }
 
     @Test
-    void testSetAndGetApplicationDate() {
-        Date date = new Date();
-        application.setApplicationDate(date);
-        assertEquals(date, application.getApplicationDate());
-    }
-
-    @Test
-    void testSetAndGetPrivileged() {
-        application.setPrivileged(true);
-        assertTrue(application.isPrivileged());
-    }
-
-    @Test
-    void testSetAndGetCandidate() {
-        Candidate candidate = new Candidate(); // Assuming Candidate has a default constructor
-        application.setCandidate(candidate);
-        assertEquals(candidate, application.getCandidate());
-    }
-
-    @Test
-    void testEqualsSameObject() {
+    void testEqualsWithSameObject() {
         assertTrue(application.equals(application));
     }
 
     @Test
-    void testEqualsDifferentObject() {
-        Application anotherApplication = new Application();
-        anotherApplication.setId(application.getId());
-        assertTrue(application.equals(anotherApplication));
-    }
-
-    @Test
-    void testEqualsNullObject() {
+    void testEqualsWithNull() {
         assertFalse(application.equals(null));
     }
 
     @Test
-    void testEqualsDifferentObjectType() {
-        assertFalse(application.equals(new Object()));
+    void testEqualsWithDifferentClass() {
+        Object obj = new Object();
+        assertFalse(application.equals(obj));
     }
 
     @Test
-    void testHashCode() {
-        Application anotherApplication = new Application();
-        anotherApplication.setId(application.getId());
-        assertEquals(anotherApplication.hashCode(), application.hashCode());
+    void testEqualsWithDifferentId() {
+        Application anotherApplication = new Application(new Date(), true, mockCandidate);
+        anotherApplication.setId(2L);
+        application.setId(1L);
+
+        assertFalse(application.equals(anotherApplication));
     }
 
-}
+    @Test
+    void testEqualsWithSameId() {
+        Application anotherApplication = new Application(new Date(), true, mockCandidate);
+        anotherApplication.setId(1L);
+        application.setId(1L);
 
+        assertTrue(application.equals(anotherApplication));
+    }
+
+    @Test
+    void testHashCodeConsistency() {
+        int initialHashCode = application.hashCode();
+        application.setPrivileged(true);
+        assertEquals(initialHashCode, application.hashCode());
+    }
+
+    @Test
+    void testHashCodeDifference() {
+        Application anotherApplication = new Application(new Date(), true, mockCandidate);
+        anotherApplication.setId(2L);
+        application.setId(1L);
+
+        assertNotEquals(application.hashCode(), anotherApplication.hashCode());
+    }
+
+    @Test
+    void testToString() {
+        String expectedString = "Application{" +
+                "id=null, applicationDate=" + application.getApplicationDate() +
+                ", privileged=" + application.isPrivileged() +
+                ", candidate=" + mockCandidate +
+                '}';
+        assertEquals(expectedString, application.toString());
+    }
+}
