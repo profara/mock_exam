@@ -43,7 +43,7 @@ public class City {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         City city = (City) o;
-        return zipCode == city.zipCode;
+        return zipCode.equals(city.zipCode);
     }
 
     @Override
