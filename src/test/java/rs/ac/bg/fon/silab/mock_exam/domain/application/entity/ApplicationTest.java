@@ -8,7 +8,6 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

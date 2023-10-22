@@ -17,13 +17,11 @@ class AppointmentTest {
     private Appointment appointment;
     private Exam mockExam;
     private Application mockApplication;
-    private Application anotherMockApplication;
 
     @BeforeEach
     void setUp() {
         mockExam = mock(Exam.class);
         mockApplication = mock(Application.class);
-        anotherMockApplication = mock(Application.class);
         appointment = new Appointment(mockExam, new Date(), new ArrayList<>());
     }
 
@@ -35,6 +33,7 @@ class AppointmentTest {
 
         assertTrue(appointment.getApplications().contains(mockApplication));
     }
+
 
     @Test
     void testRemoveApplication() {
