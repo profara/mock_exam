@@ -73,7 +73,7 @@ export default function Simple(props) {
                             <Image
                                 boxSize='60px'
                                 objectFit='cover'
-                                src='http://pripremna-nastava.fon.bg.ac.rs/images/logo-fon-light-text.png'
+                                src='/logo-fon-light-text.png'
                                 alt='fon'
                             />
                         </Box>
@@ -97,7 +97,7 @@ export default function Simple(props) {
                                 <Avatar
                                     size={'sm'}
                                     src={
-                                        'https://cdn-icons-png.flaticon.com/128/1177/1177568.png'
+                                        '/avatar.png'
                                     }
                                 />
                             </MenuButton>
