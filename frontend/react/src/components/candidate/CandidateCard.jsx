@@ -1,11 +1,21 @@
-import {Flex, Text, Button, Box} from "@chakra-ui/react";
-import UpdateCandidateProfileForm from "./UpdateCandidateProfileForm.jsx";
-import {useState} from "react";
+import {
+    Flex,
+    Text,
+    Button,
+    Box,
+    useDisclosure,
+    AlertDialog,
+    AlertDialogOverlay,
+    AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter
+} from "@chakra-ui/react";
+import React from "react";
 import {useNavigate} from "react-router-dom";
-import {deleteAppointment, deleteCandidate} from "../../services/client.js";
+import {deleteCandidate} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 
 const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = React.useRef();
     const navigate = useNavigate();
 
     const handleUpdateClick = () => {
@@ -52,11 +62,39 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
             </Box>
             <Flex w="20%" justifyContent="flex-end" mr={4}>
                 <Button colorScheme="teal" mr={2} onClick={handleUpdateClick}>
-                    Update
+                    Azuriraj
                 </Button>
-                <Button colorScheme="red" onClick={handleDeleteClick}>
-                    Delete
+                <>
+                <Button colorScheme="red" onClick={onOpen}>
+                    Izbrisi
                 </Button>
+                    <AlertDialog
+                        isOpen={isOpen}
+                        leastDestructiveRef={cancelRef}
+                        onClose={onClose}
+                    >
+                        <AlertDialogOverlay>
+                            <AlertDialogContent>
+                                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                                    Brisanje kandidata
+                                </AlertDialogHeader>
+
+                                <AlertDialogBody>
+                                    Da li ste sigurni da zelite da izbrisete kandidata?
+                                </AlertDialogBody>
+
+                                <AlertDialogFooter>
+                                    <Button ref={cancelRef} onClick={onClose}>
+                                        Odustani
+                                    </Button>
+                                    <Button colorScheme='red' onClick={handleDeleteClick} ml={3}>
+                                        Izbrisi
+                                    </Button>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialogOverlay>
+                    </AlertDialog>
+                </>
             </Flex>
         </Flex>
     );
