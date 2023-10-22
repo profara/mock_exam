@@ -84,7 +84,7 @@ const App = () => {
 
                     const matchingPriceItem = priceListItemsRes.data.content.find(item =>
                         item.priceList.year === currentYear &&
-                        item.privileged === candidate?.attendedPreparation &&
+                        item.privileged === (candidate?.attendedPreparation ?? false) &&
                         item.exam.id === appointment.exam.id &&
                         item.currency.code === DEFAULT_CURRENCY_CODE
                     );
@@ -114,10 +114,10 @@ const App = () => {
 
 
     useEffect(() => {
-        if (candidate) {
+        if (!isAdmin()) {
             fetchAppointments();
         }
-    }, [candidate]);
+    }, [candidate, user]);
 
     if (loading || loadingAuth) {
         return (
