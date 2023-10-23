@@ -23,6 +23,8 @@ public class UserProfile implements UserDetails {
     private String email;
     @Column(columnDefinition = "VARCHAR(100)", nullable = false)
     private String password;
+    @Column(columnDefinition = "TINYINT(1)", nullable = false)
+    private boolean enabled;
     @ManyToOne(optional = false)
     @JoinColumn(name = FOREIGN_KEY_USER_ROLE)
     private UserRole userRole;
@@ -35,10 +37,15 @@ public class UserProfile implements UserDetails {
         this.password = password;
     }
 
-    public UserProfile(String email, String password, UserRole userRole) {
+    public UserProfile(String email, String password, boolean enabled, UserRole userRole) {
         this.email = email;
         this.password = password;
+        this.enabled = enabled;
         this.userRole = userRole;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId() {
@@ -88,7 +95,7 @@ public class UserProfile implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public void setPassword(String password) {
@@ -122,6 +129,7 @@ public class UserProfile implements UserDetails {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", enabled=" + enabled +
                 ", userRole=" + userRole +
                 '}';
     }

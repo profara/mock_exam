@@ -12,6 +12,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper.UserProfileMapper;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.jwt.JWTUtil;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.security.exception.VerificationException;
 
 @Service
 public class AuthenticationService {
@@ -41,8 +42,10 @@ public class AuthenticationService {
                 String token = jwtUtil.issueToken(userProfileResponseDTO.email(), userProfileResponseDTO.userRole().name());
 
                 return new AuthenticationResponseDTO(token, userProfileResponseDTO);
-            } catch(AuthenticationException ex){
+            } catch(BadCredentialsException ex){
                 throw new BadCredentialsException("Pogresan email/lozinka");
+            } catch (AuthenticationException ex){
+                throw new VerificationException("Nalog nije verifikovan!");
             }
     }
 }

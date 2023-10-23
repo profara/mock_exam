@@ -6,11 +6,13 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.exception.DuplicateUserException;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.security.exception.VerificationException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,6 +61,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiError> handleException(BadCredentialsException e,
+                                                    HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.UNAUTHORIZED.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(VerificationException.class)
+    public ResponseEntity<ApiError> handleAuthenticationException(VerificationException e,
                                                     HttpServletRequest request) {
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
