@@ -8,11 +8,11 @@ const Signup = () => {
     const {user, loadUser} = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if(user){
-            navigate("/termini");
-        }
-    })
+    // useEffect(() => {
+    //     if(user){
+    //         navigate("/termini");
+    //     }
+    // })
 
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
@@ -22,7 +22,8 @@ const Signup = () => {
                     <CreateUserProfileForm onSuccess={(token) => {
                         localStorage.setItem("access_token", token);
                         loadUser()
-                        navigate("/termini");
+                        // console.log(user)
+                        // navigate("/termini");
                     }}/>
                     <Link color={"blue.500"} href={"/"}>
                         Imate nalog? Ulogujte se
