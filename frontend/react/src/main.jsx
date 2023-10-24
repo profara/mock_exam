@@ -73,16 +73,16 @@ const router = createBrowserRouter([
     {
         path: "/potvrdaRegistracije",
         element:
-        <ProtectedRoute>
+
             <EmailVerificationPage/>
-        </ProtectedRoute>
+
     },
     {
         path: "/uspesnoPotvrdjen",
         element:
-        <ProtectedRoute>
+
             <EmailConfirmed/>
-        </ProtectedRoute>
+
     }
 ]);
 
