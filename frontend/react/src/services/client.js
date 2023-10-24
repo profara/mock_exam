@@ -94,7 +94,7 @@ export const getPriceListItems = async () => {
 
 export const confirmUser = async (token) => {
     return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/priceListItems/confirm?token=${token}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/userProfiles/confirm?token=${token}`,
         getAuthConfig()
     );
 }

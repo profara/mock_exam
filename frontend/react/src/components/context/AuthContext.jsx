@@ -45,7 +45,7 @@ const AuthProvider = ({children}) => {
                     });
                 }
             } catch(err){
-                console.error(err);
+                setCandidate(null);
             }
 
         }
