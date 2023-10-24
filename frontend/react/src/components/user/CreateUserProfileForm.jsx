@@ -45,17 +45,9 @@ const CreateUserProfileForm = ({onSuccess}) => {
                     saveUserProfile(user)
                         .then(res => {
                             console.log(res)
-                            successNotification(
-                                "Uspesna registracija",
-                                ""
-                            )
                             onSuccess(res.headers["authorization"]);
                         }).catch(err => {
                         console.log(err)
-                        errorNotification(
-                            err.code,
-                            err?.response.data.violations[0].error
-                        )
                         }).finally(() => {
                             setSubmitting(false);
                         })

@@ -18,6 +18,8 @@ import CurrencyProvider from "./components/context/CurrencyContext.jsx";
 import PaymentProvider from "./components/context/PaymentContext.jsx";
 import Candidates from "./components/candidate/Candidates.jsx";
 import AdminOnly from "./components/shared/AdminOnly.jsx";
+import EmailVerificationPage from "./components/signup/EmailVerificationPage.jsx";
+import EmailConfirmed from "./components/signup/EmailConfirmed.jsx";
 
 
 const {ToastContainer} = createStandaloneToast()
@@ -67,6 +69,20 @@ const router = createBrowserRouter([
             <AdminOnly>
                 <Candidates/>
             </AdminOnly>
+    },
+    {
+        path: "/potvrdaRegistracije",
+        element:
+        <ProtectedRoute>
+            <EmailVerificationPage/>
+        </ProtectedRoute>
+    },
+    {
+        path: "/uspesnoPotvrdjen",
+        element:
+        <ProtectedRoute>
+            <EmailConfirmed/>
+        </ProtectedRoute>
     }
 ]);
 

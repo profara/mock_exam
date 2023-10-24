@@ -92,6 +92,13 @@ export const getPriceListItems = async () => {
     );
 }
 
+export const confirmUser = async (token) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/priceListItems/confirm?token=${token}`,
+        getAuthConfig()
+    );
+}
+
 export const saveUserProfile = async (user) => {
     return await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/userProfiles`,
