@@ -2,23 +2,26 @@ import {Button, Flex, Heading, Text, Image} from "@chakra-ui/react";
 import {useNavigate, useLocation} from "react-router-dom";
 import {useEffect} from "react";
 import {confirmUser} from "../../services/client.js";
+import {useAuth} from "../context/AuthContext.jsx";
 
 const EmailConfirmed = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
+    const {loadUser} = useAuth();
 
     useEffect(() => {
         if(token){
+            console.log(token)
+            localStorage.setItem("access_token", token);
                confirmUser(token).then(res => {
-                   localStorage.setItem("access_token", token);
                    console.log(res)
                }).catch(err => {
                    console.error(err)
                });
         }
-    }, [])
+    }, [token])
 
     return (
         <Flex minH="100vh" direction={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="center" p={5}>
