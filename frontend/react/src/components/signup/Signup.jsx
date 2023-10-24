@@ -3,16 +3,17 @@ import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import {Flex, Heading, Image, Link, Stack} from "@chakra-ui/react";
 import CreateUserProfileForm from "../user/CreateUserProfileForm.jsx";
+import jwtDecode from "jwt-decode";
 
 const Signup = () => {
     const {user, loadUser} = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if(user){
-            navigate("/termini");
-        }
-    })
+    // useEffect(() => {
+    //     if(user){
+    //         navigate("/termini");
+    //     }
+    // })
 
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
@@ -20,9 +21,11 @@ const Signup = () => {
                 <Stack spacing={4} w={'full'} maxW={'md'}>
                     <Heading fontSize={'2xl'} mb={15}>Registracija</Heading>
                     <CreateUserProfileForm onSuccess={(token) => {
-                        localStorage.setItem("access_token", token);
-                        loadUser()
-                        navigate("/termini");
+                        const jwtToken = jwtDecode(token);
+                        const email = jwtToken.sub;
+                        navigate("/potvrdaRegistracije", {state: { email: email}});
+                        // console.log(user)
+                        // navigate("/termini");
                     }}/>
                     <Link color={"blue.500"} href={"/"}>
                         Imate nalog? Ulogujte se
