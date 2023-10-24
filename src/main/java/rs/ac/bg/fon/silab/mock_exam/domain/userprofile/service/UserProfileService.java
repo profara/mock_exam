@@ -2,6 +2,8 @@ package rs.ac.bg.fon.silab.mock_exam.domain.userprofile.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.RegistrationResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileUpdateRoleRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
@@ -10,7 +12,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 public interface UserProfileService {
 
     UserProfile findByEmail(String email);
-    UserProfileResponseDTO save(UserProfileRequestUpdateDTO userProfileDTO);
+    RegistrationResponseDTO save(UserProfileRequestUpdateDTO userProfileDTO);
 
     UserProfileResponseDTO getById(Long id);
 
@@ -23,4 +25,6 @@ public interface UserProfileService {
     UserProfileResponseDTO update(Long id, UserProfileRequestUpdateDTO userProfileDTO);
 
     UserProfileResponseDTO getByEmail(String email);
+
+    UserProfileResponseDTO enableProfile(String token);
 }

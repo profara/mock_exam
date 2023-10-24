@@ -3,10 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileRequestUpdateDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileResponseDTO;
-import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.UserProfileUpdateRoleRequestDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.service.UserRoleService;
 
@@ -21,4 +18,7 @@ public interface UserProfileMapper {
     void update(@MappingTarget UserProfile userProfile, UserProfileRequestUpdateDTO dto);
 
     UserProfile map(UserProfileRequestUpdateDTO userProfileDTO);
+
+    @Mapping(source = "userProfile", target = "userProfileDTO")
+    RegistrationResponseDTO map(UserProfile userProfile, String jwtToken);
 }

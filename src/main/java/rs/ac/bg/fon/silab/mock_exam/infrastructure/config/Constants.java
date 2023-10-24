@@ -35,4 +35,6 @@ public class Constants {
 
     public static final Long MATH_EXAM_ID = 1L;
     public static final Long OPSTA_INF_EXAM_ID = 3L;
+
+    public static final String CONFIRMATION_LINK = "http://localhost:8080/api/userProfiles/confirm?token=";
 }

@@ -13,6 +13,8 @@ import java.time.Instant;
 import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 @Service
 public class JWTUtil {
 
@@ -27,6 +29,10 @@ public class JWTUtil {
         return issueToken(subject, Map.of("scopes", scopes));
     }
 
+    public String issueShortToken(String subject, String ...scopes){
+        return issueShortToken(subject, Map.of("scopes", scopes));
+    }
+
     public String issueToken(String subject, Map<String, Object> claims){
 
         String token = Jwts
@@ -38,6 +44,25 @@ public class JWTUtil {
                 .setExpiration(
                         Date.from(
                                 Instant.now().plus(1, DAYS)
+                        )
+                )
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        return token;
+    }
+
+    public String issueShortToken(String subject, Map<String, Object> claims){
+
+        String token = Jwts
+                .builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuer("https://probni-prijemni.fon.bg.ac.rs")
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(
+                        Date.from(
+                                Instant.now().plus(15, MINUTES)
                         )
                 )
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
