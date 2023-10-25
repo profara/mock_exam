@@ -143,7 +143,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                                                 }).catch(err => {
                                                     errorNotification(
                                                         err.code,
-                                                        err?.response.data.violations[0].error
+                                                        err?.response.data.message
                                                     )
                                                 }).finally(() => {
                                                     onClose();
