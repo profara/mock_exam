@@ -17,75 +17,138 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.security.exception.Verificati
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+//@RestControllerAdvice
+//public class GlobalExceptionHandler {
+//
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ResponseEntity<ErrorResponse> handleInvalidArgument(ConstraintViolationException ex){
+//        List<Violation> violations = new ArrayList<>();
+//
+//        for(ConstraintViolation<?> violation: ex.getConstraintViolations()){
+//            violations.add(new Violation(violation.getPropertyPath().toString(), ex.getMessage(), LocalDateTime.now()));
+//        }
+//
+//        var error = new ErrorResponse(violations);
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+//    }
+//
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<ErrorResponse> handleInvalidMethodArgument(MethodArgumentNotValidException ex){
+//        List<Violation> violations = new ArrayList<>();
+//        ex.getBindingResult()
+//                .getFieldErrors()
+//                .forEach(error->
+//                        violations.add(new Violation(error.getField(), error.getDefaultMessage(), LocalDateTime.now())));
+//
+//        var error = new ErrorResponse(violations);
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+//    }
+//
+//    @ExceptionHandler(EntityNotFoundException.class)
+//    public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException ex){
+//        Violation violation = new Violation(null, ex.getMessage(), LocalDateTime.now());
+//
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(List.of(violation)));
+//    }
+//
+//    @ExceptionHandler(DuplicateUserException.class)
+//    public ResponseEntity<ApiError> handleDuplicateUserException(RuntimeException ex,
+//                                                                      HttpServletRequest request){
+////        Violation violation = new Violation(null, ex.getMessage(), LocalDateTime.now());
+////
+////        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(List.of(violation)));
+//        ApiError apiError = new ApiError(
+//                request.getRequestURI(),
+//                ex.getMessage(),
+//                HttpStatus.BAD_REQUEST.value(),
+//                LocalDateTime.now()
+//        );
+//
+//        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ExceptionHandler(BadCredentialsException.class)
+//    public ResponseEntity<ApiError> handleException(BadCredentialsException e,
+//                                                    HttpServletRequest request) {
+//        ApiError apiError = new ApiError(
+//                request.getRequestURI(),
+//                e.getMessage(),
+//                HttpStatus.UNAUTHORIZED.value(),
+//                LocalDateTime.now()
+//        );
+//
+//        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+//    }
+//
+//    @ExceptionHandler(VerificationException.class)
+//    public ResponseEntity<ApiError> handleAuthenticationException(VerificationException e,
+//                                                    HttpServletRequest request) {
+//        ApiError apiError = new ApiError(
+//                request.getRequestURI(),
+//                e.getMessage(),
+//                HttpStatus.UNAUTHORIZED.value(),
+//                LocalDateTime.now()
+//        );
+//
+//        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+//    }
+//
+//
+//    private record Violation(String field, String error, LocalDateTime timestamp){}
+//    private record ErrorResponse(List<Violation> violations){}
+//}
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidArgument(ConstraintViolationException ex){
-        List<Violation> violations = new ArrayList<>();
+    public ResponseEntity<ApiError> handleInvalidArgument(ConstraintViolationException ex, HttpServletRequest request) {
+        String errorMsg = ex.getConstraintViolations()
+                .stream()
+                .map(v -> v.getPropertyPath().toString() + ": " + v.getMessage())
+                .collect(Collectors.joining(", "));
 
-        for(ConstraintViolation<?> violation: ex.getConstraintViolations()){
-            violations.add(new Violation(violation.getPropertyPath().toString(), ex.getMessage(), LocalDateTime.now()));
-        }
-
-        var error = new ErrorResponse(violations);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return buildErrorResponse(request, HttpStatus.BAD_REQUEST, errorMsg);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidMethodArgument(MethodArgumentNotValidException ex){
-        List<Violation> violations = new ArrayList<>();
-        ex.getBindingResult()
-                .getFieldErrors()
-                .forEach(error->
-                        violations.add(new Violation(error.getField(), error.getDefaultMessage(), LocalDateTime.now())));
+    public ResponseEntity<ApiError> handleInvalidMethodArgument(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        String errorMsg = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                .collect(Collectors.joining(", "));
 
-        var error = new ErrorResponse(violations);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return buildErrorResponse(request, HttpStatus.BAD_REQUEST, errorMsg);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException ex){
-        Violation violation = new Violation(null, ex.getMessage(), LocalDateTime.now());
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(List.of(violation)));
+    public ResponseEntity<ApiError> handleNotFoundException(RuntimeException ex, HttpServletRequest request) {
+        return buildErrorResponse(request, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(DuplicateUserException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateUserException(RuntimeException ex){
-        Violation violation = new Violation(null, ex.getMessage(), LocalDateTime.now());
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(List.of(violation)));
+    public ResponseEntity<ApiError> handleDuplicateUserException(RuntimeException ex, HttpServletRequest request) {
+        return buildErrorResponse(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> handleException(BadCredentialsException e,
-                                                    HttpServletRequest request) {
+    @ExceptionHandler({BadCredentialsException.class, VerificationException.class})
+    public ResponseEntity<ApiError> handleAuthenticationExceptions(RuntimeException e, HttpServletRequest request) {
+        return buildErrorResponse(request, HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    private ResponseEntity<ApiError> buildErrorResponse(HttpServletRequest request, HttpStatus status, String errorMsg) {
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
-                e.getMessage(),
-                HttpStatus.UNAUTHORIZED.value(),
+                errorMsg,
+                status.value(),
                 LocalDateTime.now()
         );
 
-        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(apiError, status);
     }
 
-    @ExceptionHandler(VerificationException.class)
-    public ResponseEntity<ApiError> handleAuthenticationException(VerificationException e,
-                                                    HttpServletRequest request) {
-        ApiError apiError = new ApiError(
-                request.getRequestURI(),
-                e.getMessage(),
-                HttpStatus.UNAUTHORIZED.value(),
-                LocalDateTime.now()
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
-    }
-
-
-    private record Violation(String field, String error, LocalDateTime timestamp){}
-    private record ErrorResponse(List<Violation> violations){}
+    private record ApiError(String path, String error, int status, LocalDateTime timestamp) {}
 }
+
