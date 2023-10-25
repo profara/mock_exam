@@ -18,6 +18,8 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailSender;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.jwt.JWTUtil;
 
+import java.util.Optional;
+
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.CONFIRMATION_LINK;
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.USER_ROLE;
 
@@ -51,23 +53,30 @@ public class UserProfileServiceImpl implements UserProfileService{
     @Transactional
     public RegistrationResponseDTO save(UserProfileRequestUpdateDTO userProfileDTO) {
         String email = userProfileDTO.email();
-        if(userProfileRepository.existsByEmail(email)){
-            throw new DuplicateUserException("Uneti korisnik je vec registrovan!");
+
+        Optional<UserProfile> existingUser = userProfileRepository.findByEmail(email);
+
+        UserProfile userProfile;
+
+        if(existingUser.isPresent()) {
+            userProfile = existingUser.get();
+            if(userProfile.isEnabled()) {
+                throw new DuplicateUserException("Uneti email je vec registrovan");
+            }
+        } else {
+            userProfile = mapper.map(userProfileDTO);
+            userProfile.setUserRole(userRoleRepository.findByName(USER_ROLE));
+            userProfile.setPassword(passwordEncoder.encode(userProfile.getPassword()));
+            userProfileRepository.save(userProfile);
         }
-        UserProfile userProfile = mapper.map(userProfileDTO);
-        userProfile.setUserRole(userRoleRepository.findByName(USER_ROLE));
 
-        userProfile.setPassword(passwordEncoder.encode(userProfile.getPassword()));
-
-        userProfileRepository.save(userProfile);
-        String jwtToken = jwtUtil.issueShortToken(userProfileDTO.email(), userProfile.getUserRole().getName());
+        String jwtToken = jwtUtil.issueShortToken(email, userProfile.getUserRole().getName());
         String link = CONFIRMATION_LINK + jwtToken;
-        emailSender.send(
-                userProfileDTO.email(),
-                buildEmail(link));
+        emailSender.send(email, buildEmail(link));
 
         return mapper.map(userProfile, jwtToken);
     }
+
 
     @Override
     @Transactional(readOnly = true)

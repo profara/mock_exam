@@ -28,7 +28,7 @@ public class EmailService implements EmailSender{
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Potvrda email adrese");
-            helper.setFrom("probniprijemni@fon.bg.ac.rs");
+            helper.setFrom("alekbg99@gmail.com");
             mailSender.send(mimeMessage);
         } catch(MessagingException ex){
             LOGGER.error("Failed to send email", ex);
