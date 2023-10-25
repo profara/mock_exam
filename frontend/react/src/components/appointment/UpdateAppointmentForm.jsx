@@ -2,7 +2,7 @@ import {Formik, Form, useField, useFormikContext} from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Select, Stack} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
-import {getExams, saveAppointment, updateAppointment} from "../../services/client.js";
+import {getExams, updateAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -88,7 +88,7 @@ const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}
                         console.log(err)
                         errorNotification(
                             err.code,
-                            err?.response.data.violations[0].error
+                            err?.response.data.message
                         )
                     }).finally(() => {
                         setSubmitting(false);

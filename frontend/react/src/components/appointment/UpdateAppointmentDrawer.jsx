@@ -9,7 +9,6 @@ import {
     useDisclosure
 } from "@chakra-ui/react";
 import {ADD_ICON, CLOSE_ICON} from "../payslip/config/constants.js";
-import CreateAppointmentForm from "./CreateAppointmentForm.jsx";
 import UpdateAppointmentForm from "./UpdateAppointmentForm.jsx";
 
 const AddIcon = () => ADD_ICON;

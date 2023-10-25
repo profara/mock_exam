@@ -182,7 +182,7 @@ const UpdateCandidateProfileForm = () => {
                             console.log(err)
                             errorNotification(
                                 err.code,
-                                err?.response.data.violations[0].error
+                                err?.response.data.message
                             )
                         }).finally(() => {
                             setSubmitting(false);

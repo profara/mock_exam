@@ -2,7 +2,7 @@ import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Stack} from "@chakra-ui/react";
 import {saveUserProfile} from "../../services/client.js";
-import {successNotification, errorNotification} from "../../services/notification.js";
+import {useNavigate} from "react-router-dom";
 
 const MyTextInput = ({ label, ...props }) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -23,7 +23,9 @@ const MyTextInput = ({ label, ...props }) => {
     );
 };
 
-const CreateUserProfileForm = ({onSuccess}) => {
+const CreateUserProfileForm = () => {
+    const navigate = useNavigate();
+
     return (
         <>
             <Formik
@@ -41,13 +43,13 @@ const CreateUserProfileForm = ({onSuccess}) => {
                         .required("Lozinka je obavezna")
                 })}
                 onSubmit={(user, { setSubmitting }) => {
+                    navigate("/potvrdaRegistracije")
                     setSubmitting(true)
                     saveUserProfile(user)
                         .then(res => {
                             console.log(res)
-                            onSuccess(res.headers["authorization"]);
                         }).catch(err => {
-                        console.log(err)
+                        console.error(err)
                         }).finally(() => {
                             setSubmitting(false);
                         })
