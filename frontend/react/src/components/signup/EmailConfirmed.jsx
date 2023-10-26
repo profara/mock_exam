@@ -2,14 +2,12 @@ import {Button, Flex, Heading, Text, Image} from "@chakra-ui/react";
 import {useNavigate, useLocation} from "react-router-dom";
 import {useEffect} from "react";
 import {confirmUser} from "../../services/client.js";
-import {useAuth} from "../context/AuthContext.jsx";
 
 const EmailConfirmed = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
-    const {loadUser} = useAuth();
 
     useEffect(() => {
         if(token){
