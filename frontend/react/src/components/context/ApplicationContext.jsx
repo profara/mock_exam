@@ -1,6 +1,6 @@
 import {createContext, useContext, useState} from "react";
 
-const ApplicationContext = createContext();
+const ApplicationContext = createContext({});
 
 export const useApplication = () => useContext(ApplicationContext);
 

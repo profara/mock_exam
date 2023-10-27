@@ -12,9 +12,7 @@ import CreateCandidateProfileForm from "./components/candidate/CreateCandidatePr
 import UpdateCandidateProfileForm from "./components/candidate/UpdateCandidateProfileForm.jsx";
 import SelectedCardsProvider from "./components/context/SelectedCardsContext.jsx";
 import Payslip from "./components/payslip/Payslip.jsx";
-import Currency from "./components/currency/Currency.jsx";
 import ApplicationProvider from "./components/context/ApplicationContext.jsx";
-import CurrencyProvider from "./components/context/CurrencyContext.jsx";
 import PaymentProvider from "./components/context/PaymentContext.jsx";
 import Candidates from "./components/candidate/Candidates.jsx";
 import AdminOnly from "./components/shared/AdminOnly.jsx";
@@ -40,15 +38,6 @@ const router = createBrowserRouter([
                 <Payslip/>
             </ProtectedRoute>
     },
-    {
-        path: "/valuta",
-        element:
-            <ProtectedRoute>
-                <Currency/>
-            </ProtectedRoute>
-
-    },
-
     {
         path: "/updateProfil",
         element: <UpdateCandidateProfileForm/>
@@ -91,17 +80,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <ChakraProvider>
             <PaymentProvider>
                 <ApplicationProvider>
-                    <CurrencyProvider>
                         <SelectedCardsProvider>
                             <AuthProvider>
-
                                 <RouterProvider router={router}/>
 
                             </AuthProvider>
-
                             <ToastContainer/>
                         </SelectedCardsProvider>
-                    </CurrencyProvider>
                 </ApplicationProvider>
             </PaymentProvider>
         </ChakraProvider>

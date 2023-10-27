@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 
-const PaymentContext = createContext();
+const PaymentContext = createContext({});
 
 export const usePayment = () => useContext(PaymentContext);
 
