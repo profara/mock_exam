@@ -60,4 +60,4 @@ dist-ssr
 *.sln
 *.sw?
 
-application.properties
+src/main/resources/application.properties
