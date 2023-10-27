@@ -119,7 +119,7 @@ function Payslip() {
                     width={75}
                     label='Poziv na broj'
                     id='referenceNumber'
-                    value={REFERENCE_NUMBER}
+                    value={`${REFERENCE_NUMBER}-${candidate.id}`}
                     disabled={true}
                     readOnly
                 />
