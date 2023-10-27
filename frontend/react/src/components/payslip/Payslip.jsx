@@ -10,7 +10,6 @@ import {
     RECEIVER_DESCRIPTION,
     REFERENCE_NUMBER
 } from "./config/constants.js";
-import {usePayment} from "../context/PaymentContext.jsx";
 import Simple from "../shared/NavBar.jsx";
 import {Spinner} from "@chakra-ui/react";
 import {useEffect} from "react";

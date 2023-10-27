@@ -13,7 +13,6 @@ import UpdateCandidateProfileForm from "./components/candidate/UpdateCandidatePr
 import SelectedCardsProvider from "./components/context/SelectedCardsContext.jsx";
 import Payslip from "./components/payslip/Payslip.jsx";
 import ApplicationProvider from "./components/context/ApplicationContext.jsx";
-import PaymentProvider from "./components/context/PaymentContext.jsx";
 import Candidates from "./components/candidate/Candidates.jsx";
 import AdminOnly from "./components/shared/AdminOnly.jsx";
 import EmailVerificationPage from "./components/signup/EmailVerificationPage.jsx";
@@ -78,7 +77,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <ChakraProvider>
-            <PaymentProvider>
                 <ApplicationProvider>
                         <SelectedCardsProvider>
                             <AuthProvider>
@@ -88,7 +86,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                             <ToastContainer/>
                         </SelectedCardsProvider>
                 </ApplicationProvider>
-            </PaymentProvider>
         </ChakraProvider>
     </React.StrictMode>,
 )
