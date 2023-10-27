@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
+import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
+import rs.ac.bg.fon.silab.mock_exam.domain.currency.service.CurrencyService;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.entity.Payment;
@@ -23,8 +25,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.MATH_EXAM_ID;
-import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.OPSTA_INF_EXAM_ID;
+import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -34,11 +35,14 @@ public class PaymentServiceImpl implements PaymentService {
     private final PriceListService priceListService;
     private final PriceListItemService priceListItemService;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService) {
+    private final CurrencyService currencyService;
+
+    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService, CurrencyService currencyService) {
         this.paymentRepository = paymentRepository;
         this.mapper = mapper;
         this.priceListService = priceListService;
         this.priceListItemService = priceListItemService;
+        this.currencyService = currencyService;
     }
 
     @Override
@@ -96,40 +100,41 @@ public class PaymentServiceImpl implements PaymentService {
 
     private BigDecimal calculateAmount(Payment payment) {
         Application application = payment.getApplication();
+        List<Appointment> appointments = application.getAppointments();
 
         boolean privileged = application.getCandidate().isAttendedPreparation();
-        List<Long> exams = application.getAppointments().stream()
-                .map(appointment -> appointment.getExam().getId())
-                .toList();
-
+        List<Long> exams = extractExamIds(appointments);
         PriceList priceList = priceListService.findByYear(Year.now());
         List<PriceListItem> priceListItems = priceListItemService.findByPriceList(priceList.getId());
 
-        Map<Long, Long> examsCount = application.getAppointments().stream()
-                .map(appointment -> appointment.getExam().getId())
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<Long, Long> examsCount = countExams(appointments);
 
         BigDecimal amount = priceListItems.stream()
                 .filter(priceListItem -> privileged == priceListItem.isPrivileged())
                 .filter(priceListItem -> exams.contains(priceListItem.getExam().getId()))
-                .filter(priceListItem -> payment.getCurrency().equals(priceListItem.getCurrency()))
+                .filter(priceListItem -> currencyService.findByCode(CURRENCY_CODE).equals(priceListItem.getCurrency()))
                 .map(priceListItem -> priceListItem.getPrice().multiply(new BigDecimal(examsCount.get(priceListItem.getExam().getId()))))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-
-
         if(exams.contains(MATH_EXAM_ID) && exams.contains(OPSTA_INF_EXAM_ID)){
-            if(!privileged) {
-                BigDecimal decreasePercentage = new BigDecimal(0.083333333333);
-                BigDecimal amountToSubtract = amount.multiply(decreasePercentage);
-                amount = amount.subtract(amountToSubtract);
-            } else{
-                BigDecimal decreasePercentage = new BigDecimal(0.10);
-                BigDecimal amountToSubtract = amount.multiply(decreasePercentage);
-                amount = amount.subtract(amountToSubtract);
-            }
+            amount = amount.subtract(DISCOUNT_AMOUNT);
         }
 
         return amount.setScale(2, RoundingMode.HALF_UP);
     }
+
+    private List<Long> extractExamIds(List<Appointment> appointments){
+        return appointments.stream()
+                .map(appointment -> appointment.getExam().getId())
+                .toList();
+    }
+
+    private Map<Long, Long> countExams(List<Appointment> appointments){
+        return appointments.stream()
+                .map(appointment -> appointment.getExam().getId())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+    }
+
+
+
 }

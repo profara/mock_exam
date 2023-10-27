@@ -9,11 +9,10 @@ import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.entity.Payment;
 
-@Mapper(componentModel = "spring", uses = {ApplicationService.class, CurrencyService.class})
+@Mapper(componentModel = "spring", uses = {ApplicationService.class})
 public interface PaymentMapper {
 
     @Mapping(source = "applicationId", target = "application")
-    @Mapping(source = "currencyId", target = "currency")
     Payment map(PaymentRequestDTO paymentRequestDTO);
 
     PaymentResponseDTO map(Payment payment);

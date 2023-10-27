@@ -1,5 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.infrastructure.config;
 
+import java.math.BigDecimal;
+
 public class Constants {
 
     public static final String USER_PROFILE_TABLE_NAME = "user_profile";
@@ -37,4 +39,8 @@ public class Constants {
     public static final Long OPSTA_INF_EXAM_ID = 3L;
 
     public static final String CONFIRMATION_LINK = "http://localhost:5173/uspesnoPotvrdjen?token=";
+
+    public static final String CURRENCY_CODE = "RSD";
+
+    public static final BigDecimal DISCOUNT_AMOUNT = new BigDecimal(500);
 }

@@ -12,7 +12,6 @@ public record PaymentResponseDTO(
         BigDecimal amount,
         String paymentPurpose,
         int model,
-        ApplicationResponseDTO application,
-        CurrencyResponseDTO currency
+        ApplicationResponseDTO application
 ) {
 }
