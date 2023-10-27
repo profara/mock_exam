@@ -43,7 +43,7 @@ const CreateUserProfileForm = () => {
                         .required("Lozinka je obavezna")
                 })}
                 onSubmit={(user, { setSubmitting }) => {
-                    navigate("/potvrdaRegistracije")
+                    navigate("/potvrdaRegistracije", {state: { submitted: true}})
                     setSubmitting(true)
                     saveUserProfile(user)
                         .then(res => {

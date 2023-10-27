@@ -1,6 +1,17 @@
 import {Button, Flex, Heading, Text, Image} from "@chakra-ui/react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 const EmailVerificationPage = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!location.state?.submitted){
+            navigate("/");
+        }
+    }, [location, navigate])
+
 
     return (
         <Flex minH="100vh" direction={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="center" p={5}>
