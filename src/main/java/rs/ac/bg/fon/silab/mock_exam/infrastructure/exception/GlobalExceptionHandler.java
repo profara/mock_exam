@@ -149,6 +149,5 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, status);
     }
 
-    private record ApiError(String path, String error, int status, LocalDateTime timestamp) {}
 }
 
