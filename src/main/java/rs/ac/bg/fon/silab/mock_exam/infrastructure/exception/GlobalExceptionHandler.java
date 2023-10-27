@@ -134,8 +134,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({BadCredentialsException.class, VerificationException.class})
-    public ResponseEntity<ApiError> handleAuthenticationExceptions(RuntimeException e, HttpServletRequest request) {
-        return buildErrorResponse(request, HttpStatus.UNAUTHORIZED, e.getMessage());
+    public ResponseEntity<ApiError> handleAuthenticationExceptions(RuntimeException ex, HttpServletRequest request) {
+        return buildErrorResponse(request, HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     private ResponseEntity<ApiError> buildErrorResponse(HttpServletRequest request, HttpStatus status, String errorMsg) {
