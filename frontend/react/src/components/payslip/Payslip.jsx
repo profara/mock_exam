@@ -4,30 +4,38 @@ import Textarea from "./Textarea.jsx";
 import { deviceBrakepoints } from "./config/device-brakepoints.jsx"
 import {useAuth} from "../context/AuthContext.jsx";
 import {
-    CREDITOR_ACCOUNT,
+    CREDITOR_ACCOUNT, DEFAULT_CURRENCY_CODE,
     PAY_CODE,
     PAYMENT_PURPOSE,
     RECEIVER_DESCRIPTION,
     REFERENCE_NUMBER
 } from "./config/constants.js";
-import {useCurrency} from "../context/CurrencyContext.jsx";
 import {usePayment} from "../context/PaymentContext.jsx";
 import Simple from "../shared/NavBar.jsx";
 import {Spinner} from "@chakra-ui/react";
+import {useEffect} from "react";
+import {useLocation} from "react-router-dom";
 
 
 function Payslip() {
 
     const {candidate, loadingAuth} = useAuth();
-    const {currency, loadingCurrency} = useCurrency();
-    const {payment, loadingPayment} = usePayment();
+    //const {payment, loadingPayment} = usePayment();
+    const location = useLocation();
+    const payment = location.state?.payment;
+
+
 
     const printPayslip = () => {
         window.print()
     }
 
+    useEffect(() => {
+        window.scrollTo(0,0);
+    }, []);
 
-    if(loadingAuth || loadingCurrency || loadingPayment){
+
+    if(loadingAuth){
         return <Spinner
             thickness='4px'
             speed='0.65s'
@@ -79,7 +87,7 @@ function Payslip() {
                     disabled={true}
                     label='Valuta'
                     id='valuta'
-                    value={currency.code}
+                    value={DEFAULT_CURRENCY_CODE}
                     readOnly
                 />
                 <Input
@@ -119,7 +127,7 @@ function Payslip() {
                     width={75}
                     label='Poziv na broj'
                     id='referenceNumber'
-                    value={REFERENCE_NUMBER}
+                    value={`${REFERENCE_NUMBER}-${candidate.id}`}
                     disabled={true}
                     readOnly
                 />
