@@ -47,7 +47,6 @@ const CreateUserProfileForm = () => {
                     setSubmitting(true)
                     saveUserProfile(user)
                         .then(res => {
-                            console.log(res)
                         }).catch(err => {
                         console.error(err)
                         }).finally(() => {
