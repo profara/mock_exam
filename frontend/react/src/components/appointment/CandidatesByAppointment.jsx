@@ -1,4 +1,4 @@
-import {Box, Flex, Spinner, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, Spinner, Text} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import Simple from "../shared/NavBar.jsx";
 import {getCandidatesByAppointment} from "../../services/client.js";
@@ -9,11 +9,12 @@ import {useLocation} from "react-router-dom";
 const CandidatesByAppointment = () => {
     const [candidates, setCandidates] = useState([]);
     const [totalCandidates, setTotalCandidates] = useState(0);
+    const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     const appointmentId = location.state?.id;
-    const fetchCandidates = () => {
-        getCandidatesByAppointment(appointmentId)
+    const fetchCandidates = (page) => {
+        getCandidatesByAppointment(appointmentId, page)
             .then(res => {
                 console.log(res)
                 setCandidates(res.data.content);
@@ -26,8 +27,8 @@ const CandidatesByAppointment = () => {
     }
 
     useEffect(() => {
-        fetchCandidates()
-    }, [])
+        fetchCandidates(page)
+    }, [page])
 
     if (loading) {
         return <Spinner
@@ -56,6 +57,34 @@ const CandidatesByAppointment = () => {
                         rowNum={index + 1}
                     />
                 ))}
+
+                <Box mt={4}>
+                    <Button bg={'teal'}
+                            color={'white'}
+                            rounded={'full'}
+                            _hover={{
+                                transform: 'translateY(-2px)',
+                                boxShadow: 'lg'
+                            }}
+                            onClick={() => setPage(prev => prev - 1)}
+                            disabled={page === 0}
+                    >
+                        Prethodna
+                    </Button>
+                    <Button bg={'teal'}
+                            color={'white'}
+                            rounded={'full'}
+                            _hover={{
+                                transform: 'translateY(-2px)',
+                                boxShadow: 'lg'
+                            }}
+                        onClick={() => setPage(prev => prev + 1)}
+                        ml={2}
+                    >
+                        Sledeca
+                    </Button>
+                </Box>
+
             </Flex>
         </Simple>
     );
