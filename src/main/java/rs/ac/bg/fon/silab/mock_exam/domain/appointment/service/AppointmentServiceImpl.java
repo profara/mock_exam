@@ -1,6 +1,7 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.appointment.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,14 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.mapper.AppointmentMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.repository.AppointmentRepository;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.mapper.CandidateMapper;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
+import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
@@ -17,9 +25,12 @@ public class AppointmentServiceImpl implements AppointmentService{
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper mapper;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper) {
+    private final CandidateMapper candidateMapper;
+
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper, CandidateMapper candidateMapper) {
         this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
+        this.candidateMapper = candidateMapper;
     }
 
     @Override
@@ -78,6 +89,22 @@ public class AppointmentServiceImpl implements AppointmentService{
         appointmentRepository.save(appointment);
 
         return mapper.map(appointment);
+    }
+
+    @Override
+    public Page<CandidateResponseDTO> getCandidates(Long id, Pageable pageable) {
+            var appointment = appointmentRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id));
+
+                List<CandidateResponseDTO> candidates = appointment.getApplications().stream()
+                        .map(Application::getCandidate)
+                        .map(candidateMapper::map)
+                        .collect(Collectors.toList());
+
+                int start = (int) pageable.getOffset();
+                int end = Math.min((start + pageable.getPageSize()), candidates.size());
+
+                return new PageImpl<>(candidates.subList(start, end), pageable, candidates.size());
     }
 
 

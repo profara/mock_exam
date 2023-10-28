@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentService;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -49,6 +50,12 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponseDTO> update(@PathVariable Long id,
                                                          @Valid @RequestBody AppointmentRequestDTO appointmentRequestDTO){
         return ResponseEntity.ok(appointmentService.update(id,appointmentRequestDTO));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/{id}/candidates")
+    public ResponseEntity<Page<CandidateResponseDTO>> getCandidates(@PathVariable Long id, Pageable pageable){
+        return ResponseEntity.ok(appointmentService.getCandidates(id,pageable));
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 
 public interface AppointmentService {
 
@@ -20,4 +21,6 @@ public interface AppointmentService {
     void delete(Long id);
 
     AppointmentResponseDTO update(Long id, AppointmentRequestDTO appointmentRequestDTO);
+
+    Page<CandidateResponseDTO> getCandidates(Long id, Pageable pageable);
 }
