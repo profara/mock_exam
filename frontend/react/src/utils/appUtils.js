@@ -55,7 +55,7 @@ export const createApplication = (candidate, serbiaDate, selectedCards, setAppli
         }).catch(err => {
         errorNotification(
             err.code,
-            err?.response.data.violations[0].error
+            err?.response.data.message
         )
     })
 }
