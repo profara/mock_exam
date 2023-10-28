@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import rs.ac.bg.fon.silab.mock_exam.domain.application.exception.DuplicateAppointmentApplicationException;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.exception.DuplicateUserException;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.security.exception.VerificationException;
 
@@ -128,8 +129,8 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(request, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(DuplicateUserException.class)
-    public ResponseEntity<ApiError> handleDuplicateUserException(RuntimeException ex, HttpServletRequest request) {
+    @ExceptionHandler({DuplicateUserException.class, DuplicateAppointmentApplicationException.class})
+    public ResponseEntity<ApiError> handleDuplicates(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
