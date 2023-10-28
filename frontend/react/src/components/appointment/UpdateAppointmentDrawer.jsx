@@ -8,10 +8,9 @@ import {
     DrawerOverlay,
     useDisclosure
 } from "@chakra-ui/react";
-import {ADD_ICON, CLOSE_ICON} from "../payslip/config/constants.js";
+import {CLOSE_ICON} from "../payslip/config/constants.js";
 import UpdateAppointmentForm from "./UpdateAppointmentForm.jsx";
 
-const AddIcon = () => ADD_ICON;
 const CloseIcon = () => CLOSE_ICON;
 const UpdateAppointmentDrawer = ({ fetchAppointments, initialValues, appointmentId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
