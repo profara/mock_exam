@@ -1,7 +1,7 @@
 import {Box, Button, Flex, Spinner, Text} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import Simple from "../shared/NavBar.jsx";
-import {getCandidatesByAppointment} from "../../services/client.js";
+import {getCandidatesByAppointment, getAllCandidatesByAppointment} from "../../services/client.js";
 import CandidatesByAppointmentHeader from "./CandidatesByAppointmentHeader.jsx";
 import CandidateByAppointmentCard from "./CandidateByAppointmentCard.jsx";
 import {useLocation} from "react-router-dom";
@@ -11,6 +11,7 @@ import saveAs from "file-saver";
 
 const CandidatesByAppointment = () => {
     const [candidates, setCandidates] = useState([]);
+    const [allCandidates, setAllCandidates] = useState([]);
     const [totalCandidates, setTotalCandidates] = useState(0);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -20,7 +21,6 @@ const CandidatesByAppointment = () => {
     const fetchCandidates = (page) => {
         getCandidatesByAppointment(appointmentId, page)
             .then(res => {
-                console.log(res)
                 setCandidates(res.data.content);
                 setTotalCandidates(res.data.totalElements)
             }).catch(err => {
@@ -30,7 +30,16 @@ const CandidatesByAppointment = () => {
         })
     }
 
-    const mappedCandidates = candidates.map(candidate => ({
+    const fetchAllCandidates = () => {
+        getAllCandidatesByAppointment(appointmentId)
+            .then(res => {
+                setAllCandidates(res.data);
+            }).catch(err => {
+            console.error(err)
+        })
+    }
+
+    const mappedCandidates = allCandidates.map(candidate => ({
         'ID':candidate.id,
         'Ime': candidate.name,
         'Prezime': candidate.surname,
@@ -73,6 +82,10 @@ const CandidatesByAppointment = () => {
     useEffect(() => {
         fetchCandidates(page)
     }, [page])
+
+    useEffect(() => {
+        fetchAllCandidates()
+    }, [])
 
     if (loading) {
         return <Spinner
