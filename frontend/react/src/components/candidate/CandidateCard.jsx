@@ -25,7 +25,7 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
     const handleDeleteClick = () => {
         deleteCandidate(candidate.id).then(res =>{
             console.log(res)
-            successNotification('Kandidat uspesno obrisan')
+            successNotification('Kandidat uspesno izbrisan')
         }).catch(err => {
             console.log(err)
             errorNotification(

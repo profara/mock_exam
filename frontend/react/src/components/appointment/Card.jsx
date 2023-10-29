@@ -22,6 +22,7 @@ import {deleteAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import UpdateAppointmentDrawer from "./UpdateAppointmentDrawer.jsx";
 import {parseISO} from 'date-fns'
+import {useNavigate} from "react-router-dom";
 
 
 export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected, priceListItem, fetchAppointments}) {
@@ -29,6 +30,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
     const cancelRef = useRef()
     const {isAdmin} = useAuth();
     const appointmentRealDate=parseISO(appointmentDate)
+    const navigate = useNavigate();
 
     return (
         <Center py={6}>
@@ -94,6 +96,18 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                     </List>
                     {isAdmin() && (
                     <Stack direction={'row'} justify={'center'} spacing={6} mt={6}>
+                        <Button
+                            bg={'#084474'}
+                            color={'white'}
+                            rounded={'full'}
+                            _hover={{
+                                transform: 'translateY(-2px)',
+                                boxShadow: 'lg'
+                            }}
+                            onClick={() => navigate("/terminKandidati", { state : {id: id}})}
+                        >
+                            Detalji
+                        </Button>
                         <Stack>
                             <UpdateAppointmentDrawer
                                 initialValues={{exam, appointmentRealDate}}
@@ -138,7 +152,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                                             </Button>
                                             <Button colorScheme='red' onClick={() => {
                                                 deleteAppointment(id).then(res =>{
-                                                    successNotification('Termin uspesno obrisan')
+                                                    successNotification('Termin uspesno izbrisan')
                                                     fetchAppointments();
                                                 }).catch(err => {
                                                     errorNotification(
@@ -149,7 +163,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                                                     onClose();
                                                 })
                                             }} ml={3}>
-                                                Obrisi
+                                                Izbrisi
                                             </Button>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
