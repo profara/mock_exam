@@ -14,10 +14,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.mapper.CandidateMapper;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
-import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
@@ -93,18 +90,13 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public Page<CandidateResponseDTO> getCandidates(Long id, Pageable pageable) {
-            var appointment = appointmentRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id));
+        if(!appointmentRepository.existsById(id)){
+            throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id);
+        }
 
-                List<CandidateResponseDTO> candidates = appointment.getApplications().stream()
-                        .map(Application::getCandidate)
-                        .map(candidateMapper::map)
-                        .collect(Collectors.toList());
+        Page<Candidate> candidates = appointmentRepository.findCandidatesByAppointmentId(id, pageable);
 
-                int start = (int) pageable.getOffset();
-                int end = Math.min((start + pageable.getPageSize()), candidates.size());
-
-                return new PageImpl<>(candidates.subList(start, end), pageable, candidates.size());
+        return candidates.map(candidateMapper::map);
     }
 
 
