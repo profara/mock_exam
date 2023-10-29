@@ -11,7 +11,6 @@ import saveAs from "file-saver";
 
 const CandidatesByAppointment = () => {
     const [candidates, setCandidates] = useState([]);
-    const [allCandidates, setAllCandidates] = useState([]);
     const [totalCandidates, setTotalCandidates] = useState(0);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -30,28 +29,8 @@ const CandidatesByAppointment = () => {
         })
     }
 
-    const fetchAllCandidates = () => {
-        getAllCandidatesByAppointment(appointmentId)
-            .then(res => {
-                setAllCandidates(res.data);
-            }).catch(err => {
-            console.error(err)
-        })
-    }
-
-    const mappedCandidates = allCandidates.map(candidate => ({
-        'ID':candidate.id,
-        'Ime': candidate.name,
-        'Prezime': candidate.surname,
-        'Email': candidate.userProfile.email,
-        'Grad': candidate.city.name,
-        'Adresa': candidate.address,
-        'Skola': candidate.school.name
-
-    }))
-
-    const wscols=[
-        {wch:5},
+    const wscols = [
+        {wch: 5},
         {wch: 10},
         {wch: 15},
         {wch: 25},
@@ -61,31 +40,43 @@ const CandidatesByAppointment = () => {
     ]
 
     const handleExportToExcel = () => {
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(mappedCandidates);
-        ws['!cols'] = wscols;
-        XLSX.utils.book_append_sheet(wb, ws, "Candidates");
-        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        getAllCandidatesByAppointment(appointmentId)
+            .then(res => {
+                const mappedCandidates = res.data.map(candidate => ({
+                    'ID': candidate.id,
+                    'Ime': candidate.name,
+                    'Prezime': candidate.surname,
+                    'Email': candidate.userProfile.email,
+                    'Grad': candidate.city.name,
+                    'Adresa': candidate.address,
+                    'Skola': candidate.school.name
 
-        const s2ab = (s) => {
-            const buf = new ArrayBuffer(s.length);
-            const view = new Uint8Array(buf);
-            for (let i = 0; i < s.length; i++) {
-                view[i] = s.charCodeAt(i) & 0xFF;
-            }
-            return buf;
-        }
+                }))
 
-        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), "candidates.xlsx");
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(mappedCandidates);
+                ws['!cols'] = wscols;
+                XLSX.utils.book_append_sheet(wb, ws, "Candidates");
+                const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+
+                const s2ab = (s) => {
+                    const buf = new ArrayBuffer(s.length);
+                    const view = new Uint8Array(buf);
+                    for (let i = 0; i < s.length; i++) {
+                        view[i] = s.charCodeAt(i) & 0xFF;
+                    }
+                    return buf;
+                }
+
+                saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), "candidates.xlsx");
+            }).catch(err => {
+            console.error(err)
+        })
     };
 
     useEffect(() => {
         fetchCandidates(page)
     }, [page])
-
-    useEffect(() => {
-        fetchAllCandidates()
-    }, [])
 
     if (loading) {
         return <Spinner
@@ -109,7 +100,7 @@ const CandidatesByAppointment = () => {
                     position="absolute"
                     top="24"
                     right="4"
-                    leftIcon={<DownloadIcon />}
+                    leftIcon={<DownloadIcon/>}
                     onClick={handleExportToExcel}
                     colorScheme="teal"
                 >
@@ -145,8 +136,8 @@ const CandidatesByAppointment = () => {
                                 transform: 'translateY(-2px)',
                                 boxShadow: 'lg'
                             }}
-                        onClick={() => setPage(prev => prev + 1)}
-                        ml={2}
+                            onClick={() => setPage(prev => prev + 1)}
+                            ml={2}
                     >
                         Sledeca
                     </Button>
