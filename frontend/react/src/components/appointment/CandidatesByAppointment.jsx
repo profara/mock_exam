@@ -5,6 +5,9 @@ import {getCandidatesByAppointment} from "../../services/client.js";
 import CandidatesByAppointmentHeader from "./CandidatesByAppointmentHeader.jsx";
 import CandidateByAppointmentCard from "./CandidateByAppointmentCard.jsx";
 import {useLocation} from "react-router-dom";
+import {DownloadIcon} from "@chakra-ui/icons";
+import * as XLSX from "xlsx";
+import saveAs from "file-saver";
 
 const CandidatesByAppointment = () => {
     const [candidates, setCandidates] = useState([]);
@@ -13,6 +16,7 @@ const CandidatesByAppointment = () => {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     const appointmentId = location.state?.id;
+    const pageSize = 20;
     const fetchCandidates = (page) => {
         getCandidatesByAppointment(appointmentId, page)
             .then(res => {
@@ -25,6 +29,46 @@ const CandidatesByAppointment = () => {
             setLoading(false);
         })
     }
+
+    const mappedCandidates = candidates.map(candidate => ({
+        'ID':candidate.id,
+        'Ime': candidate.name,
+        'Prezime': candidate.surname,
+        'Email': candidate.userProfile.email,
+        'Grad': candidate.city.name,
+        'Adresa': candidate.address,
+        'Skola': candidate.school.name
+
+    }))
+
+    const wscols=[
+        {wch:5},
+        {wch: 10},
+        {wch: 15},
+        {wch: 25},
+        {wch: 10},
+        {wch: 25},
+        {wch: 30}
+    ]
+
+    const handleExportToExcel = () => {
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(mappedCandidates);
+        ws['!cols'] = wscols;
+        XLSX.utils.book_append_sheet(wb, ws, "Candidates");
+        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+        const s2ab = (s) => {
+            const buf = new ArrayBuffer(s.length);
+            const view = new Uint8Array(buf);
+            for (let i = 0; i < s.length; i++) {
+                view[i] = s.charCodeAt(i) & 0xFF;
+            }
+            return buf;
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), "candidates.xlsx");
+    };
 
     useEffect(() => {
         fetchCandidates(page)
@@ -48,13 +92,23 @@ const CandidatesByAppointment = () => {
                         Broj kandidata: {totalCandidates}
                     </Text>
                 </Box>
+                <Button
+                    position="absolute"
+                    top="24"
+                    right="4"
+                    leftIcon={<DownloadIcon />}
+                    onClick={handleExportToExcel}
+                    colorScheme="teal"
+                >
+                    Eksportuj u Excel
+                </Button>
                 <CandidatesByAppointmentHeader/>
                 {candidates.map((candidate, index) => (
                     <CandidateByAppointmentCard
-                        key={index}
+                        key={candidate.id}
                         candidate={candidate}
                         isOdd={index % 2 !== 0}
-                        rowNum={index + 1}
+                        rowNum={page * pageSize + index + 1}
                     />
                 ))}
 
