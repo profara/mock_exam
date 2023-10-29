@@ -11,10 +11,8 @@ const EmailConfirmed = () => {
 
     useEffect(() => {
         if(token){
-            console.log(token)
             localStorage.setItem("access_token", token);
                confirmUser(token).then(res => {
-                   console.log(res)
                }).catch(err => {
                    console.error(err)
                });
