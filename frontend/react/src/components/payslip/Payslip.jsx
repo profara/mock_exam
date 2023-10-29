@@ -195,11 +195,11 @@ const RightSide = styled.div`
 
 export default Payslip;
 
-const Button = styled.button`
-    @media print {
-        display: none;
-    }
-`
+// const Button = styled.button`
+//     @media print {
+//         display: none;
+//     }
+// `
 
 
 const StyledWrapper = styled.div`
