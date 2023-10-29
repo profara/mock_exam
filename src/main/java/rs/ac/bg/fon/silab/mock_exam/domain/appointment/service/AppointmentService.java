@@ -8,6 +8,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 
+import java.util.List;
+
 public interface AppointmentService {
 
     Appointment getById(Long id);
@@ -23,4 +25,6 @@ public interface AppointmentService {
     AppointmentResponseDTO update(Long id, AppointmentRequestDTO appointmentRequestDTO);
 
     Page<CandidateResponseDTO> getCandidates(Long id, Pageable pageable);
+
+    List<CandidateResponseDTO> getAllCandidates(Long id);
 }

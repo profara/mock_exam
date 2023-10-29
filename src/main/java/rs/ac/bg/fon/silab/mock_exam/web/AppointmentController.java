@@ -12,6 +12,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentService;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentController {
@@ -58,4 +60,9 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getCandidates(id,pageable));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/{id}/candidates/all")
+    public ResponseEntity<List<CandidateResponseDTO>> getCandidates(@PathVariable Long id){
+        return ResponseEntity.ok(appointmentService.getAllCandidates(id));
+    }
 }
