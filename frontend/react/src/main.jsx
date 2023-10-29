@@ -75,7 +75,10 @@ const router = createBrowserRouter([
     },
     {
         path: "/terminKandidati",
-        element: <CandidatesByAppointment/>
+        element:
+            <AdminOnly>
+                <CandidatesByAppointment/>
+            </AdminOnly>
     }
 ]);
 
