@@ -19,15 +19,14 @@ import {useLocation} from "react-router-dom";
 function Payslip() {
 
     const {candidate, loadingAuth} = useAuth();
-    //const {payment, loadingPayment} = usePayment();
     const location = useLocation();
     const payment = location.state?.payment;
 
 
 
-    const printPayslip = () => {
-        window.print()
-    }
+    // const printPayslip = () => {
+    //     window.print()
+    // }
 
     useEffect(() => {
         window.scrollTo(0,0);
@@ -133,9 +132,9 @@ function Payslip() {
 
             </RightSide>
         </Container>
-                <Button onClick={printPayslip}>
-                    Odštampaj uplatnicu
-                </Button>
+                {/*<Button onClick={printPayslip}>*/}
+                {/*    Odštampaj uplatnicu*/}
+                {/*</Button>*/}
         </StyledWrapper>
         </Simple>
     )
@@ -196,11 +195,11 @@ const RightSide = styled.div`
 
 export default Payslip;
 
-const Button = styled.button`
-    @media print {
-        display: none;
-    }
-`
+// const Button = styled.button`
+//     @media print {
+//         display: none;
+//     }
+// `
 
 
 const StyledWrapper = styled.div`
