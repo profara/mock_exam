@@ -77,6 +77,8 @@ public class CurrencyServiceImpl implements CurrencyService{
 
         mapper.update(currency,currencyDTO);
 
+        currencyRepository.save(currency);
+
         return mapper.map(currency);
     }
 }
