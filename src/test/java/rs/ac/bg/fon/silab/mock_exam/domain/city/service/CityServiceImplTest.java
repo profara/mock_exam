@@ -111,7 +111,7 @@ public class CityServiceImplTest {
 
     @Test
     void testDeleteWhenCityExists() {
-        Long zipCode = 10001L;
+        Long zipCode = 11000L;
         when(cityRepository.existsById(zipCode)).thenReturn(true);
 
         cityService.delete(zipCode);
