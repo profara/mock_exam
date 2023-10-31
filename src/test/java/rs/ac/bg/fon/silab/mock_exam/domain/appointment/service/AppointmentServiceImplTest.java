@@ -21,6 +21,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentServic
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.dto.ExamResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -57,10 +58,10 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testSave() {
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, new Date());
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, LocalDateTime.now());
         Appointment mappedAppointment = new Appointment();
         Appointment savedAppointment = new Appointment();
-        AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(1L, null, new Date());
+        AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(1L, null, LocalDateTime.now());
 
         when(mapper.map(dto)).thenReturn(mappedAppointment);
         when(appointmentRepository.save(mappedAppointment)).thenReturn(savedAppointment);
@@ -79,7 +80,7 @@ public class AppointmentServiceImplTest {
     void testFindByIdWhenAppointmentExists() {
         Long id = 1L;
         Appointment mockAppointment = new Appointment();
-        AppointmentResponseDTO expectedResponseDTO = new AppointmentResponseDTO(1L, null, new Date());
+        AppointmentResponseDTO expectedResponseDTO = new AppointmentResponseDTO(1L, null, LocalDateTime.now());
 
         when(appointmentRepository.findById(id)).thenReturn(Optional.of(mockAppointment));
         when(mapper.map(mockAppointment)).thenReturn(expectedResponseDTO);
@@ -108,7 +109,7 @@ public class AppointmentServiceImplTest {
         Appointment mockAppointment = new Appointment();
 
         ExamResponseDTO mockExamDTO = new ExamResponseDTO(1L, "Ispit");
-        AppointmentResponseDTO mockDTO = new AppointmentResponseDTO(1L, mockExamDTO, new Date());
+        AppointmentResponseDTO mockDTO = new AppointmentResponseDTO(1L, mockExamDTO, LocalDateTime.now());
 
         Page<Appointment> page = new PageImpl<>(List.of(new Appointment()));
         when(appointmentRepository.findAll(pageable)).thenReturn(page);
@@ -152,8 +153,8 @@ public class AppointmentServiceImplTest {
         Long id = 1L;
         Appointment existingAppointment = new Appointment();
         Appointment tempAppointment = new Appointment();
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, new Date());
-        AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(1L, null, new Date());
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, LocalDateTime.now());
+        AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(1L, null, LocalDateTime.now());
 
         when(appointmentRepository.findById(id)).thenReturn(Optional.of(existingAppointment));
         when(mapper.map(dto)).thenReturn(tempAppointment);
@@ -170,7 +171,7 @@ public class AppointmentServiceImplTest {
     void testUpdateWhenAppointmentDoesNotExist() {
 
         Long id = 1L;
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, new Date());
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, LocalDateTime.now());
 
         when(appointmentRepository.findById(id)).thenReturn(Optional.empty());
 
