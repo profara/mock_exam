@@ -23,13 +23,16 @@ import {errorNotification, successNotification} from "../../services/notificatio
 import UpdateAppointmentDrawer from "./UpdateAppointmentDrawer.jsx";
 import {parseISO} from 'date-fns'
 import {useNavigate} from "react-router-dom";
+import {format, utcToZonedTime} from "date-fns-tz";
 
 
 export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected, priceListItem, fetchAppointments}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()
     const {isAdmin} = useAuth();
-    const appointmentRealDate=parseISO(appointmentDate)
+    const cetDate = utcToZonedTime(appointmentDate, 'Europe/Belgrade');
+    const displayDate = format(cetDate, 'dd.MM.yyyy', {timeZone: 'Europe/Belgrade'});
+    const displayTime = format(cetDate, 'HH:mm', {timeZone: 'Europe/Belgrade'})
     const navigate = useNavigate();
 
     return (
@@ -80,13 +83,10 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                 <Box bg={useColorModeValue('gray.50', 'gray.900')} px={6} py={10}>
                     <List spacing={3}>
                         <ListItem>
-                            {(() => {
-                                const date = new Date(appointmentDate);
-                                const day = date.getDate();
-                                const month = date.getMonth() + 1;
-                                const year = date.getFullYear();
-                                return `Datum: ${day}.${month}.${year}`;
-                            })()}
+                            Datum: {displayDate}
+                        </ListItem>
+                        <ListItem>
+                            Vreme: {displayTime}
                         </ListItem>
                         {!isAdmin() && (
                         <ListItem>
@@ -110,7 +110,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                         </Button>
                         <Stack>
                             <UpdateAppointmentDrawer
-                                initialValues={{exam, appointmentRealDate}}
+                                initialValues={{exam, appointmentDate}}
                                 appointmentId={id}
                                 fetchAppointments={fetchAppointments}
                             />
