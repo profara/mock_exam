@@ -27,4 +27,5 @@ public interface AppointmentService {
     boolean existsById(Long id);
 
 
+    Page<AppointmentResponseDTO> getByCandidateId(Long candidateId, Pageable pageable);
 }

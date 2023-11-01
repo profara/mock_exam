@@ -121,4 +121,10 @@ public class CandidateServiceImpl implements CandidateService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsById(Long candidateId) {
+        return candidateRepository.existsById(candidateId);
+    }
+
 }

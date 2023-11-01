@@ -9,6 +9,9 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.mapper.AppointmentMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.repository.AppointmentRepository;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.repository.CandidateRepository;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 @Service
@@ -16,10 +19,12 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper mapper;
+    private final CandidateRepository candidateRepository;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper, CandidateRepository candidateRepository) {
         this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
+        this.candidateRepository = candidateRepository;
     }
 
     @Override
@@ -84,6 +89,18 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Transactional(readOnly = true)
     public boolean existsById(Long id) {
         return appointmentRepository.existsById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AppointmentResponseDTO> getByCandidateId(Long candidateId, Pageable pageable) {
+        if(!candidateRepository.existsById(candidateId)){
+            throw new EntityNotFoundException(Candidate.class.getSimpleName(), "id", candidateId);
+        }
+
+        Page<Appointment> appointments = appointmentRepository.findByCandidateId(candidateId, pageable);
+
+        return appointments.map(mapper::map);
     }
 
 

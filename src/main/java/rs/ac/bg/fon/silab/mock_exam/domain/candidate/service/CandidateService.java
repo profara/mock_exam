@@ -27,4 +27,5 @@ public interface CandidateService {
 
     List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId);
 
+    boolean existsById(Long candidateId);
 }

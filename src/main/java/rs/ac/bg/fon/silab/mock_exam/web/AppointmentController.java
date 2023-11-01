@@ -54,5 +54,8 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.update(id,appointmentRequestDTO));
     }
 
-
+    @GetMapping("/by-candidate/{candidateId}")
+    public ResponseEntity<Page<AppointmentResponseDTO>> getByCandidateId(@PathVariable Long candidateId, Pageable pageable){
+        return ResponseEntity.ok(appointmentService.getByCandidateId(candidateId, pageable));
+    }
 }
