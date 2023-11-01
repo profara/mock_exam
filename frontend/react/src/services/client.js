@@ -15,7 +15,7 @@ export const getAppointments = async () => {
 
 export const getCandidatesByAppointment = async (id, page) => {
     return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/appointments/${id}/candidates?page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}?page=${page}`,
         getAuthConfig()
     )
 }
@@ -56,7 +56,7 @@ export const getCandidates = async (page) => {
 
 export const getAllCandidatesByAppointment = async (id) => {
     return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/appointments/${id}/candidates/all`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}/all`,
         getAuthConfig()
     )
 }
