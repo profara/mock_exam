@@ -11,9 +11,5 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :id")
-    Page<Candidate> findCandidatesByAppointmentId(@Param("id") Long id, Pageable pageable);
 
-    @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :id")
-    List<Candidate> findAllCandidatesByAppointmentId(Long id);
 }

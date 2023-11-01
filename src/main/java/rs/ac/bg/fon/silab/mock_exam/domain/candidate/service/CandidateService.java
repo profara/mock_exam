@@ -6,6 +6,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
+import java.util.List;
+
 public interface CandidateService {
 
     Candidate findById(Long id);
@@ -20,5 +22,9 @@ public interface CandidateService {
     CandidateResponseDTO update(Long id, CandidateRequestDTO candidateDTO);
 
     CandidateResponseDTO getByEmail(String email);
+
+    Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Pageable pageable);
+
+    List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId);
 
 }

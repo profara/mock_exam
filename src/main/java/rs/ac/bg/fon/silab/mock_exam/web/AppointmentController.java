@@ -54,15 +54,5 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.update(id,appointmentRequestDTO));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}/candidates")
-    public ResponseEntity<Page<CandidateResponseDTO>> getCandidates(@PathVariable Long id, Pageable pageable){
-        return ResponseEntity.ok(appointmentService.getCandidates(id,pageable));
-    }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}/candidates/all")
-    public ResponseEntity<List<CandidateResponseDTO>> getCandidates(@PathVariable Long id){
-        return ResponseEntity.ok(appointmentService.getAllCandidates(id));
-    }
 }

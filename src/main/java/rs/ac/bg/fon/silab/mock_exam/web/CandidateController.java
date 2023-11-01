@@ -11,6 +11,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -54,6 +56,18 @@ public class CandidateController {
     public ResponseEntity<CandidateResponseDTO> update(@PathVariable Long id,
                                                        @Valid @RequestBody CandidateRequestDTO candidateDTO){
         return ResponseEntity.ok(candidateService.update(id,candidateDTO));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/by-appointment/{appointmentId}")
+    public ResponseEntity<Page<CandidateResponseDTO>> getByAppointmentId(@PathVariable Long appointmentId, Pageable pageable){
+        return ResponseEntity.ok(candidateService.getByAppointmentId(appointmentId,pageable));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/by-appointment/{appointmentId}/all")
+    public ResponseEntity<List<CandidateResponseDTO>> getAllByAppointmentId(@PathVariable Long appointmentId){
+        return ResponseEntity.ok(candidateService.getAllByAppointmentId(appointmentId));
     }
 
 }
