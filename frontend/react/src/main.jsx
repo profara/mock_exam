@@ -17,7 +17,8 @@ import Candidates from "./components/candidate/Candidates.jsx";
 import AdminOnly from "./components/shared/AdminOnly.jsx";
 import EmailVerificationPage from "./components/signup/EmailVerificationPage.jsx";
 import EmailConfirmed from "./components/signup/EmailConfirmed.jsx";
-import CandidatesByAppointment from "./components/appointment/CandidatesByAppointment.jsx";
+import CandidatesByAppointment from "./components/candidate/CandidatesByAppointment.jsx";
+import AppointmentsByCandidate from "./components/appointment/AppointmentsByCandidate.jsx";
 
 
 const {ToastContainer} = createStandaloneToast()
@@ -79,6 +80,13 @@ const router = createBrowserRouter([
             <AdminOnly>
                 <CandidatesByAppointment/>
             </AdminOnly>
+    },
+    {
+        path: "/mojePrijave",
+        element:
+            <ProtectedRoute>
+                <AppointmentsByCandidate/>
+            </ProtectedRoute>
     }
 ]);
 

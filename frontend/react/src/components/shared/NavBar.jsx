@@ -56,6 +56,14 @@ export default function Simple(props) {
             navigate("/profil")
         }
     }
+
+    const handleMojePrijaveClick = (candidate) => {
+        if(candidate){
+            navigate("/mojePrijave", { state : {candidate:candidate}});
+        } else{
+            navigate("/profil")
+        }
+    }
     return (
         <>
             <Box bg={useColorModeValue('#084474', '#084474')} px={4} sx={{ "@media print": {display: "none"}}}>
@@ -103,7 +111,18 @@ export default function Simple(props) {
                             <MenuList>
                                 {!isAdmin() && (
                                     <>
-                                <MenuItem onClick={() => handleProfileClick(candidate)}>Profil</MenuItem>
+                                <MenuItem
+                                    onClick={() => handleProfileClick(candidate)}
+                                >
+                                    Profil
+                                </MenuItem>
+
+                                 <MenuItem
+                                    onClick={() => handleMojePrijaveClick(candidate)}
+                                 >
+                                     Moje prijave
+                                 </MenuItem>
+
                                 <MenuDivider />
                                     </>
                                     )}
