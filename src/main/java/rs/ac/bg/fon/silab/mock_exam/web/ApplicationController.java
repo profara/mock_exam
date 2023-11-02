@@ -47,7 +47,7 @@ public class ApplicationController {
         applicationService.deleteAppointment(candidateId, appointmentId);
     }
 
-    @PostMapping("/by-candidate/{candidateId/appointments/{appointmentId}")
+    @PostMapping("/by-candidate/{candidateId}/appointments/{appointmentId}")
     public ResponseEntity<ApplicationResponseDTO> createApplicationWithAppointment(
             @PathVariable Long candidateId,
             @PathVariable Long appointmentId){
