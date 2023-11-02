@@ -16,4 +16,6 @@ public interface ApplicationService {
     Page<ApplicationResponseDTO> get(Pageable pageable);
 
     void delete(Long id);
+
+    void deleteAppointment(Long candidateId, Long appointmentId);
 }

@@ -17,13 +17,13 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundExcep
 import java.util.List;
 
 @Service
-public class ApplicationServiceImpl implements ApplicationService{
+public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationMapper mapper;
     private final AppointmentService appointmentService;
 
-    public ApplicationServiceImpl(ApplicationRepository applicationRepository, ApplicationMapper mapper,AppointmentService appointmentService) {
+    public ApplicationServiceImpl(ApplicationRepository applicationRepository, ApplicationMapper mapper, AppointmentService appointmentService) {
         this.applicationRepository = applicationRepository;
         this.mapper = mapper;
         this.appointmentService = appointmentService;
@@ -74,10 +74,48 @@ public class ApplicationServiceImpl implements ApplicationService{
     @Override
     @Transactional
     public void delete(Long id) {
-        if(!applicationRepository.existsById(id)){
+        if (!applicationRepository.existsById(id)) {
             throw new EntityNotFoundException(Application.class.getSimpleName(), "id", id);
         }
 
         applicationRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void deleteAppointment(Long candidateId, Long appointmentId) {
+
+        List<Application> candidateApplications = applicationRepository.findByCandidateId(candidateId);
+
+        boolean isAppointmentRemoved = false;
+
+
+
+        if (!candidateApplications.isEmpty()) {
+
+            for (Application application : candidateApplications) {
+                Appointment targetAppointment = null;
+                for (Appointment appointment : application.getAppointments()) {
+                    if (appointment.getId().equals(appointmentId)) {
+                        targetAppointment = appointment;
+                        break;
+                    }
+                }
+
+                if (targetAppointment != null) {
+                    application.removeAppointment(targetAppointment);
+                    applicationRepository.save(application);
+                    isAppointmentRemoved = true;
+                    break;
+                }
+            }
+        }
+
+        if (!isAppointmentRemoved) {
+            throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", appointmentId);
+        }
+
+
+    }
+
 }

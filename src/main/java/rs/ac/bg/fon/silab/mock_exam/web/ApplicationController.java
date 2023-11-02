@@ -40,4 +40,10 @@ public class ApplicationController {
     public void delete(@PathVariable Long id){
         applicationService.delete(id);
     }
+
+    @DeleteMapping("/by-candidate/{candidateId}/appointments/{appointmentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAppointment(@PathVariable Long candidateId,@PathVariable Long appointmentId){
+        applicationService.deleteAppointment(candidateId, appointmentId);
+    }
 }

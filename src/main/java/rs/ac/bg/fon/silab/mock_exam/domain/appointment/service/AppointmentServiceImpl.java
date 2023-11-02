@@ -107,6 +107,7 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<AppointmentResponseDTO> getAllSorted() {
         List<Appointment> sortedAppointments = appointmentRepository.findAllByOrderByAppointmentDateAscExamNameAsc();
 
