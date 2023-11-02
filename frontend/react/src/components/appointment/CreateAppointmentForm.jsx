@@ -7,6 +7,7 @@ import {getExams, saveAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 
 const MySelect = ({label, ...props}) => {
@@ -55,6 +56,7 @@ const MyDateInput = ({label, ...props}) => {
 };
 const CreateAppointmentForm = ({fetchAppointments}) => {
     const [exams, setExams] = useState([]);
+    const {updateOrderAfterDeletion} = useAppointmentOrder();
 
     useEffect(() => {
         getExams()
@@ -93,6 +95,7 @@ const CreateAppointmentForm = ({fetchAppointments}) => {
                                 "Uspesno sacuvan termin",
                                 ""
                             )
+                            updateOrderAfterDeletion()
                             fetchAppointments();
                         }).catch(err => {
                         console.error(err)

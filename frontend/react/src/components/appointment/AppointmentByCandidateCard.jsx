@@ -11,17 +11,21 @@ import {
 import React from "react";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import {format, utcToZonedTime} from "date-fns-tz";
+import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
+import {cancelAppointment} from "../../services/client.js";
 
-const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointments, page}) => {
+const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointments, page, candidate}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = React.useRef();
     const cetDate = utcToZonedTime(appointment.appointmentDate, 'Europe/Belgrade');
     const displayDate = format(cetDate, 'dd.MM.yyyy', {timeZone: 'Europe/Belgrade'});
     const displayTime = format(cetDate, 'HH:mm', {timeZone: 'Europe/Belgrade'})
-
+    const {getOrderForAppointment} = useAppointmentOrder();
+    const order = getOrderForAppointment(appointment);
 
     const handleOdjaviClick = () => {
-        cancelAppointment(appointment.id).then(res =>{
+        cancelAppointment(candidate.id, appointment.id)
+            .then(res =>{
             console.log(res)
             successNotification('Termin uspesno odjavljen')
         }).catch(err => {
@@ -50,7 +54,7 @@ const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointme
                 <Text>{rowNum}.</Text>
             </Box>
             <Box w="23.3%">
-                <Text>{appointment.exam.name}</Text>
+                <Text>{appointment.exam.name} - {order}. termin</Text>
             </Box>
 
             <Box w="23.3%">

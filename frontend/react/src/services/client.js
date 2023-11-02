@@ -180,6 +180,13 @@ export const deleteCandidate = async (id) => {
     )
 }
 
+export const cancelAppointment = async (candidateId, appointmentId) => {
+    return await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/applications/by-candidate/${candidateId}/appointments/${appointmentId}`,
+        getAuthConfig()
+    )
+}
+
 export const updateCandidate = async (id, candidate) => {
     return await axios.patch(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates/${id}`,

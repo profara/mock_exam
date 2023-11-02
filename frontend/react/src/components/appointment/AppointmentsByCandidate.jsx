@@ -52,6 +52,7 @@ const AppointmentsByCandidate = () => {
                         rowNum={page * pageSize + index + 1}
                         fetchAppointments={fetchAppointments}
                         page={page}
+                        candidate={candidate}
                     />
 
                 ))}
