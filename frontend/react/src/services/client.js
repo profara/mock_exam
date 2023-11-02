@@ -157,6 +157,13 @@ export const saveApplication = async (application) => {
     )
 }
 
+export const signCandidateForAppointment = async (candidateId, appointmentId) => {
+    return await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/applications/by-candidate/${candidateId}/appointments/${appointmentId}`,
+        {},
+        getAuthConfig()
+    )
+}
 export const saveAppointment = async (appointment) => {
     return await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/appointments`,
