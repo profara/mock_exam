@@ -28,4 +28,6 @@ public interface AppointmentService {
 
 
     Page<AppointmentResponseDTO> getByCandidateId(Long candidateId, Pageable pageable);
+
+    List<AppointmentResponseDTO> getAllSorted();
 }

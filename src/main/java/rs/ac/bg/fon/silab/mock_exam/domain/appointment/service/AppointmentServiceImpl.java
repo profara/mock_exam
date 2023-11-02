@@ -14,6 +14,9 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.repository.CandidateReposit
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
 
@@ -101,6 +104,15 @@ public class AppointmentServiceImpl implements AppointmentService{
         Page<Appointment> appointments = appointmentRepository.findByCandidateId(candidateId, pageable);
 
         return appointments.map(mapper::map);
+    }
+
+    @Override
+    public List<AppointmentResponseDTO> getAllSorted() {
+        List<Appointment> sortedAppointments = appointmentRepository.findAllByOrderByAppointmentDateAscExamNameAsc();
+
+        return sortedAppointments.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
     }
 
 

@@ -15,4 +15,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Page<Appointment> findByCandidateId(@Param("candidateId") Long candidateId, Pageable pageable);
 
 
+    List<Appointment> findAllByOrderByAppointmentDateAscExamNameAsc();
 }

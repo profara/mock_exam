@@ -58,4 +58,9 @@ public class AppointmentController {
     public ResponseEntity<Page<AppointmentResponseDTO>> getByCandidateId(@PathVariable Long candidateId, Pageable pageable){
         return ResponseEntity.ok(appointmentService.getByCandidateId(candidateId, pageable));
     }
+
+    @GetMapping("/all-sorted")
+    public ResponseEntity<List<AppointmentResponseDTO>> getAllSorted(){
+        return ResponseEntity.ok(appointmentService.getAllSorted());
+    }
 }
