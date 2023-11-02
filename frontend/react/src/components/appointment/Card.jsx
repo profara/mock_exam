@@ -24,9 +24,10 @@ import UpdateAppointmentDrawer from "./UpdateAppointmentDrawer.jsx";
 import {parseISO} from 'date-fns'
 import {useNavigate} from "react-router-dom";
 import {format, utcToZonedTime} from "date-fns-tz";
+import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 
-export default function Card({id,exam, appointmentDate, toogleCardSelection, isSelected, priceListItem, fetchAppointments, order}) {
+export default function Card({id,exam, appointmentDate, toogleCardSelection, isSelected, priceListItem, fetchAppointments, order, appointment}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()
     const {isAdmin} = useAuth();
@@ -34,6 +35,7 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
     const displayDate = format(cetDate, 'dd.MM.yyyy', {timeZone: 'Europe/Belgrade'});
     const displayTime = format(cetDate, 'HH:mm', {timeZone: 'Europe/Belgrade'})
     const navigate = useNavigate();
+    const {updateOrderAfterDeletion} = useAppointmentOrder();
 
     return (
         <Center py={6}>
@@ -153,6 +155,7 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
                                             <Button colorScheme='red' onClick={() => {
                                                 deleteAppointment(id).then(res =>{
                                                     successNotification('Termin uspesno izbrisan')
+                                                    updateOrderAfterDeletion();
                                                     fetchAppointments();
                                                 }).catch(err => {
                                                     errorNotification(

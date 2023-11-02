@@ -7,6 +7,7 @@ import {errorNotification, successNotification} from "../../services/notificatio
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {DateTime} from "luxon";
+import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 
 const MySelect = ({label, ...props}) => {
@@ -55,6 +56,7 @@ const MyDateInput = ({label, ...props}) => {
 };
 const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}) => {
     const [exams, setExams] = useState([]);
+    const {updateOrderAfterDeletion} = useAppointmentOrder();
 
     useEffect(() => {
         getExams()
@@ -92,6 +94,7 @@ const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}
                                 "Uspesno izmenjen termin",
                                 ""
                             )
+                            updateOrderAfterDeletion()
                             fetchAppointments();
                         }).catch(err => {
                         console.error(err)

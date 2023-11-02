@@ -1,7 +1,7 @@
 import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {getAppointments, getExams, getPriceListItems} from "./services/client.js";
+import {getAllSortedAppointments, getPriceListItems} from "./services/client.js";
 import Card from "./components/appointment/Card.jsx";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
@@ -23,11 +23,9 @@ const App = () => {
     const {candidate, isAdmin, loadingAuth, user} = useAuth();
     const serbiaDate = getCurrentDateInSerbiaTimeZone();
     const {setApplication} = useApplication();
-    const [examNames, setExamNames] = useState([]);
     const currentYear = new Date(serbiaDate).getFullYear().toString();
     const [priceListItem, setPriceListItem] = useState(null);
     const {getOrderForAppointment} = useAppointmentOrder();
-    let examResponse;
     let appointmentsResponse;
 
     const handlePrijaviClick = (candidate) => {
@@ -53,12 +51,10 @@ const App = () => {
     const fetchAppointmentsForAdmin = () => {
         setLoading(true);
 
-        Promise.all([getExams(), getAppointments()])
-            .then(([examsRes, appointmentsRes]) => {
-                examResponse = examsRes.data.content.map(exam => exam.name);
-                appointmentsResponse = appointmentsRes.data.content;
+        getAllSortedAppointments()
+            .then(res => {
+                appointmentsResponse = res.data;
 
-                setExamNames(examResponse);
                 setAppointments(appointmentsResponse);
 
             }).catch(err => {
@@ -71,11 +67,10 @@ const App = () => {
     const fetchAppointments = () => {
         setLoading(true);
 
-        Promise.all([getExams(), getAppointments(), getPriceListItems()])
-            .then(([examsRes, appointmentsRes, priceListItemsRes]) => {
+        Promise.all([getAllSortedAppointments(), getPriceListItems()])
+            .then(([appointmentsRes, priceListItemsRes]) => {
 
-                examResponse = examsRes.data.content.map(exam => exam.name);
-                appointmentsResponse = appointmentsRes.data.content;
+                appointmentsResponse = appointmentsRes.data;
 
                 const priceMap = {};
                 appointmentsResponse.forEach(appointment => {
@@ -92,7 +87,6 @@ const App = () => {
 
                 });
 
-                setExamNames(examResponse);
                 setAppointments(appointmentsResponse);
                 setPriceListItem(priceMap);
             }).catch(err => {
@@ -180,6 +174,7 @@ const App = () => {
                                 isSelected={selectedCards.includes(appointment.id)}
                                 fetchAppointments={isAdmin() ? fetchAppointmentsForAdmin : fetchAppointments}
                                 order={getOrderForAppointment(appointment)}
+                                appointment={appointment}
                             />
                         </WrapItem>
                     );
