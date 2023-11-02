@@ -9,23 +9,21 @@ import {
     AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter
 } from "@chakra-ui/react";
 import React from "react";
-import {useNavigate} from "react-router-dom";
-import {deleteCandidate} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
+import {format, utcToZonedTime} from "date-fns-tz";
 
-const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
+const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointments, page}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = React.useRef();
-    const navigate = useNavigate();
+    const cetDate = utcToZonedTime(appointment.appointmentDate, 'Europe/Belgrade');
+    const displayDate = format(cetDate, 'dd.MM.yyyy', {timeZone: 'Europe/Belgrade'});
+    const displayTime = format(cetDate, 'HH:mm', {timeZone: 'Europe/Belgrade'})
 
-    const handleUpdateClick = () => {
-        navigate('/updateProfil', {state: {selectedCandidate: candidate}});
-    }
 
-    const handleDeleteClick = () => {
-        deleteCandidate(candidate.id).then(res =>{
+    const handleOdjaviClick = () => {
+        cancelAppointment(appointment.id).then(res =>{
             console.log(res)
-            successNotification('Kandidat uspesno izbrisan')
+            successNotification('Termin uspesno odjavljen')
         }).catch(err => {
             console.log(err)
             errorNotification(
@@ -33,7 +31,7 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
                 err?.response.data.message
             )
         }).finally(() => {
-            fetchCandidates(page);
+            fetchAppointments(page);
         })
     }
 
@@ -48,26 +46,26 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
             w={"100%"}
         >
 
-            <Box ml={4} w="5%">
+            <Box ml={4} w="10%">
                 <Text>{rowNum}.</Text>
             </Box>
-            <Box w="15%">
-                <Text>{candidate.name}</Text>
+            <Box w="23.3%">
+                <Text>{appointment.exam.name}</Text>
             </Box>
-            <Box w="15%">
-                <Text>{candidate.surname}</Text>
+
+            <Box w="23.3%">
+                <Text>{displayDate}</Text>
             </Box>
-            <Box w="45%">
-                <Text>{candidate.userProfile.email}</Text>
+
+            <Box w="23.3%">
+                <Text>{displayTime}</Text>
             </Box>
+
             <Flex w="20%" justifyContent="flex-end" mr={4}>
-                <Button colorScheme="teal" mr={2} onClick={handleUpdateClick}>
-                    Azuriraj
-                </Button>
                 <>
-                <Button colorScheme="red" onClick={onOpen}>
-                    Izbrisi
-                </Button>
+                    <Button colorScheme="red" onClick={onOpen}>
+                        Odjavi
+                    </Button>
                     <AlertDialog
                         isOpen={isOpen}
                         leastDestructiveRef={cancelRef}
@@ -76,19 +74,19 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
                         <AlertDialogOverlay>
                             <AlertDialogContent>
                                 <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                                    Brisanje kandidata
+                                    Odjavljivanje termina
                                 </AlertDialogHeader>
 
                                 <AlertDialogBody>
-                                    Da li ste sigurni da zelite da izbrisete kandidata?
+                                    Da li ste sigurni da zelite da odjavite prijavu?
                                 </AlertDialogBody>
 
                                 <AlertDialogFooter>
                                     <Button ref={cancelRef} onClick={onClose}>
                                         Odustani
                                     </Button>
-                                    <Button colorScheme='red' onClick={handleDeleteClick} ml={3}>
-                                        Izbrisi
+                                    <Button colorScheme='red' onClick={handleOdjaviClick} ml={3}>
+                                        Odjavi
                                     </Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
@@ -100,4 +98,4 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
     );
 };
 
-export default CandidateCard;
+export default AppointmentByCandidateCard;

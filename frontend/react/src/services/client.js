@@ -13,6 +13,13 @@ export const getAppointments = async () => {
         )
 }
 
+export const getAppointmentsByCandidate = async (id, page) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/appointments/by-candidate/${id}?page=${page}`,
+        getAuthConfig()
+    )
+}
+
 export const getCandidatesByAppointment = async (id, page) => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}?page=${page}`,

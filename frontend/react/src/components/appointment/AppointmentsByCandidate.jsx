@@ -1,20 +1,23 @@
 import {Box, Button, Flex, Spinner} from "@chakra-ui/react";
-import CandidateCard from "./CandidateCard.jsx";
 import {useEffect, useState} from "react";
-import {getCandidates} from "../../services/client.js";
-import CandidatesHeader from "./CandidatesHeader.jsx";
 import Simple from "../shared/NavBar.jsx";
+import {getAppointmentsByCandidate} from "../../services/client.js";
+import {useLocation} from "react-router-dom";
+import AppointmentsHeader from "./AppointmentsHeader.jsx";
+import AppointmentByCandidateCard from "./AppointmentByCandidateCard.jsx";
 
-const CandidateList = () => {
-    const [candidates, setCandidates] = useState([]);
+const AppointmentsByCandidate = () => {
+    const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const pageSize = 20;
+    const location = useLocation();
+    const candidate = location.state?.candidate;
 
-    const fetchCandidates = (page) => {
-        getCandidates(page)
+    const fetchAppointments = (page) => {
+        getAppointmentsByCandidate(candidate.id, page)
             .then(res => {
-                setCandidates(res.data.content);
+                setAppointments(res.data.content);
             }).catch(err => {
             console.error(err)
         }).finally(() => {
@@ -22,8 +25,9 @@ const CandidateList = () => {
         })
     }
 
+
     useEffect(() => {
-        fetchCandidates(page)
+        fetchAppointments(page)
     }, [page])
 
     if (loading) {
@@ -39,16 +43,17 @@ const CandidateList = () => {
     return (
         <Simple>
             <Flex direction="column" w="100%" alignItems="center" p={4}>
-                <CandidatesHeader/>
-                {candidates.map((candidate, index) => (
-                    <CandidateCard
-                        key={candidate.id}
-                        candidate={candidate}
+                <AppointmentsHeader/>
+                {appointments.map((appointment, index) => (
+                    <AppointmentByCandidateCard
+                        key={appointment.id}
+                        appointment={appointment}
                         isOdd={index % 2 !== 0}
                         rowNum={page * pageSize + index + 1}
-                        fetchCandidates={fetchCandidates}
+                        fetchAppointments={fetchAppointments}
                         page={page}
                     />
+
                 ))}
 
                 <Box mt={4}>
@@ -82,4 +87,4 @@ const CandidateList = () => {
     );
 };
 
-export default CandidateList;
+export default AppointmentsByCandidate;
