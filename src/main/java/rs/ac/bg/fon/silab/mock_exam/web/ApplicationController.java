@@ -46,4 +46,13 @@ public class ApplicationController {
     public void deleteAppointment(@PathVariable Long candidateId,@PathVariable Long appointmentId){
         applicationService.deleteAppointment(candidateId, appointmentId);
     }
+
+    @PostMapping("/by-candidate/{candidateId/appointments/{appointmentId}")
+    public ResponseEntity<ApplicationResponseDTO> createApplicationWithAppointment(
+            @PathVariable Long candidateId,
+            @PathVariable Long appointmentId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(applicationService.createApplicationWithAppointment(candidateId, appointmentId));
+    }
+
+
 }

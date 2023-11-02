@@ -18,4 +18,6 @@ public interface ApplicationService {
     void delete(Long id);
 
     void deleteAppointment(Long candidateId, Long appointmentId);
+
+    ApplicationResponseDTO createApplicationWithAppointment(Long candidateId, Long appointmentId);
 }

@@ -12,9 +12,14 @@ import rs.ac.bg.fon.silab.mock_exam.domain.application.mapper.ApplicationMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.repository.ApplicationRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentService;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -22,11 +27,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ApplicationMapper mapper;
     private final AppointmentService appointmentService;
+    private final CandidateService candidateService;
 
-    public ApplicationServiceImpl(ApplicationRepository applicationRepository, ApplicationMapper mapper, AppointmentService appointmentService) {
+    public ApplicationServiceImpl(ApplicationRepository applicationRepository, ApplicationMapper mapper, AppointmentService appointmentService, CandidateService candidateService) {
         this.applicationRepository = applicationRepository;
         this.mapper = mapper;
         this.appointmentService = appointmentService;
+        this.candidateService = candidateService;
     }
 
     @Override
@@ -85,6 +92,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional
     public void deleteAppointment(Long candidateId, Long appointmentId) {
 
+        if(!candidateService.existsById(candidateId)){
+            throw new EntityNotFoundException(Candidate.class.getSimpleName(), "id", candidateId);
+        }
+
         List<Application> candidateApplications = applicationRepository.findByCandidateId(candidateId);
 
         boolean isAppointmentRemoved = false;
@@ -116,6 +127,26 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
 
+    }
+
+    @Override
+    @Transactional
+    public ApplicationResponseDTO createApplicationWithAppointment(Long candidateId, Long appointmentId) {
+        if (!candidateService.existsById(candidateId)) {
+            throw new EntityNotFoundException(Candidate.class.getSimpleName(), "id", candidateId);
+        }
+
+        Candidate candidate = candidateService.findById(candidateId);
+
+        Appointment appointment = appointmentService.getById(appointmentId);
+
+        Application application = new Application(new Date(), candidate.isAttendedPreparation(), candidate);
+
+        application.addAppointment(appointment);
+
+        applicationRepository.save(application);
+
+        return mapper.map(application);
     }
 
 }
