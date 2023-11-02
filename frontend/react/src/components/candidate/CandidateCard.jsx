@@ -37,6 +37,14 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
         })
     }
 
+    const handleOdjaviClick = () => {
+        navigate("/mojePrijave", {state:{candidate: candidate}})
+    }
+
+    const handlePrijaviClick = () => {
+        navigate("/mojePrijave", {state:{candidate: candidate}})
+    }
+
     return (
         <Flex
             alignItems="center"
@@ -61,6 +69,12 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
                 <Text>{candidate.userProfile.email}</Text>
             </Box>
             <Flex w="20%" justifyContent="flex-end" mr={4}>
+                <Button colorScheme="red" mr={2} onClick={handleOdjaviClick}>
+                    Odjavi
+                </Button>
+                <Button colorScheme="teal" mr={2} onClick={handlePrijaviClick}>
+                    Prijavi
+                </Button>
                 <Button colorScheme="teal" mr={2} onClick={handleUpdateClick}>
                     Azuriraj
                 </Button>
