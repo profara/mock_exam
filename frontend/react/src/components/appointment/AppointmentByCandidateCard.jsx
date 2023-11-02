@@ -12,8 +12,9 @@ import React from "react";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import {format, utcToZonedTime} from "date-fns-tz";
 import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
+import {cancelAppointment} from "../../services/client.js";
 
-const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointments, page}) => {
+const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointments, page, candidate}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = React.useRef();
     const cetDate = utcToZonedTime(appointment.appointmentDate, 'Europe/Belgrade');
@@ -23,7 +24,8 @@ const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointme
     const order = getOrderForAppointment(appointment);
 
     const handleOdjaviClick = () => {
-        cancelAppointment(appointment.id).then(res =>{
+        cancelAppointment(candidate.id, appointment.id)
+            .then(res =>{
             console.log(res)
             successNotification('Termin uspesno odjavljen')
         }).catch(err => {
