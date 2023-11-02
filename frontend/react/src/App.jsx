@@ -10,6 +10,7 @@ import {useApplication} from "./components/context/ApplicationContext.jsx";
 import {createApplication, getCurrentDateInSerbiaTimeZone} from "./utils/appUtils.js";
 import {DEFAULT_CURRENCY_CODE} from "./components/payslip/config/constants.js";
 import CreateAppointmentDrawer from "./components/appointment/CreateAppointmentDrawer.jsx";
+import {useAppointmentOrder} from "./components/context/AppointmentOrderContext.jsx";
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
     const [examNames, setExamNames] = useState([]);
     const currentYear = new Date(serbiaDate).getFullYear().toString();
     const [priceListItem, setPriceListItem] = useState(null);
+    const {getOrderForAppointment} = useAppointmentOrder();
     let examResponse;
     let appointmentsResponse;
 
@@ -47,10 +49,6 @@ const App = () => {
         });
     }
 
-    const examCounters = examNames.reduce((acc, name) => {
-        acc[name] = 0;
-        return acc;
-    }, {});
 
     const fetchAppointmentsForAdmin = () => {
         setLoading(true);
@@ -170,21 +168,18 @@ const App = () => {
                 />
             )}
             <Wrap justify={"center"} spacing={"30px"}>
-                {appointments.map((appointment, index) => {
-                    const examName = appointment.exam.name;
-                    examCounters[examName]++;
-
+                {appointments.map((appointment) => {
 
                     return (
                         <WrapItem key={appointment.id}>
 
                             <Card
                                 {...appointment}
-                                count={examCounters[examName]}
                                 priceListItem={isAdmin() ? null : priceListItem[appointment.id]}
                                 toogleCardSelection={() => toogleCardSelection(appointment.id)}
                                 isSelected={selectedCards.includes(appointment.id)}
                                 fetchAppointments={isAdmin() ? fetchAppointmentsForAdmin : fetchAppointments}
+                                order={getOrderForAppointment(appointment)}
                             />
                         </WrapItem>
                     );

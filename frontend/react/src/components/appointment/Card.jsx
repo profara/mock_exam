@@ -26,7 +26,7 @@ import {useNavigate} from "react-router-dom";
 import {format, utcToZonedTime} from "date-fns-tz";
 
 
-export default function Card({id,exam, appointmentDate, count, toogleCardSelection, isSelected, priceListItem, fetchAppointments}) {
+export default function Card({id,exam, appointmentDate, toogleCardSelection, isSelected, priceListItem, fetchAppointments, order}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()
     const {isAdmin} = useAuth();
@@ -71,7 +71,7 @@ export default function Card({id,exam, appointmentDate, count, toogleCardSelecti
                         px={3}
                         color={'green.500'}
                         rounded={'full'}>
-                        {count}. termin
+                        {order}. termin
                     </Text>
                     <Stack direction={'row'} align={'center'} justify={'center'}>
                         <Text fontSize={'4xl'} fontWeight={800} h={100} m={10}>

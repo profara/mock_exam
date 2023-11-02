@@ -19,6 +19,7 @@ import EmailVerificationPage from "./components/signup/EmailVerificationPage.jsx
 import EmailConfirmed from "./components/signup/EmailConfirmed.jsx";
 import CandidatesByAppointment from "./components/candidate/CandidatesByAppointment.jsx";
 import AppointmentsByCandidate from "./components/appointment/AppointmentsByCandidate.jsx";
+import AppointmentOrderProvider from "./components/context/AppointmentOrderContext.jsx";
 
 
 const {ToastContainer} = createStandaloneToast()
@@ -93,13 +94,14 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <ChakraProvider>
-                <ApplicationProvider>
+            <ApplicationProvider>
                         <SelectedCardsProvider>
                             <AuthProvider>
+                                <AppointmentOrderProvider>
                                 <RouterProvider router={router}/>
-
+                                </AppointmentOrderProvider>
                             </AuthProvider>
-                            <ToastContainer/>
+                                <ToastContainer/>
                         </SelectedCardsProvider>
                 </ApplicationProvider>
         </ChakraProvider>
