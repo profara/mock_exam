@@ -63,4 +63,9 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentResponseDTO>> getAllSorted(){
         return ResponseEntity.ok(appointmentService.getAllSorted());
     }
+
+    @GetMapping("/by-candidate/{candidateId}/not-signed")
+    public ResponseEntity<Page<AppointmentResponseDTO>> getByCandidateIdNotSigned(@PathVariable Long candidateId, Pageable pageable){
+        return ResponseEntity.ok(appointmentService.getByCandidateIdNotSigned(candidateId, pageable));
+    }
 }

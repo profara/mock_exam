@@ -14,6 +14,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT apt FROM Appointment apt JOIN apt.applications app WHERE app.candidate.id = :candidateId")
     Page<Appointment> findByCandidateId(@Param("candidateId") Long candidateId, Pageable pageable);
 
+    @Query("SELECT apt FROM Appointment apt WHERE apt NOT IN (SELECT a FROM Appointment a JOIN a.applications app WHERE app.candidate.id = :candidateId)")
+    Page<Appointment> findByCandidateIdNotSigned(@Param("candidateId") Long candidateId, Pageable pageable);
+
 
     List<Appointment> findAllByOrderByAppointmentDateAscExamNameAsc();
 }

@@ -116,5 +116,16 @@ public class AppointmentServiceImpl implements AppointmentService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Page<AppointmentResponseDTO> getByCandidateIdNotSigned(Long candidateId, Pageable pageable) {
+        if(!candidateRepository.existsById(candidateId)){
+            throw new EntityNotFoundException(Candidate.class.getSimpleName(), "id", candidateId);
+        }
+
+        Page<Appointment> appointments = appointmentRepository.findByCandidateIdNotSigned(candidateId, pageable);
+
+        return appointments.map(mapper::map);
+    }
+
 
 }
