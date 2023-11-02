@@ -12,7 +12,7 @@ import React from "react";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import {format, utcToZonedTime} from "date-fns-tz";
 import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
-import {cancelAppointment} from "../../services/client.js";
+import {cancelAppointment, signCandidateForAppointment} from "../../services/client.js";
 
 const AppointmentByCandidateCard = ({appointment, isOdd, rowNum, fetchAppointments, page, candidate, signed}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -26,7 +26,6 @@ const AppointmentByCandidateCard = ({appointment, isOdd, rowNum, fetchAppointmen
     const handleOdjaviClick = () => {
         cancelAppointment(candidate.id, appointment.id)
             .then(res => {
-                console.log(res)
                 successNotification('Termin uspesno odjavljen')
             }).catch(err => {
             console.log(err)
@@ -40,7 +39,17 @@ const AppointmentByCandidateCard = ({appointment, isOdd, rowNum, fetchAppointmen
     }
 
     const handlePrijaviClick = () => {
-
+        signCandidateForAppointment(candidate.id, appointment.id)
+            .then(res => {
+                successNotification('Termin uspesno prijavljen')
+            }).catch(err => {
+            errorNotification(
+                err.code,
+                err?.response.data.message
+            )
+        }).finally(() => {
+            fetchAppointments(page);
+        })
     }
 
     return (
