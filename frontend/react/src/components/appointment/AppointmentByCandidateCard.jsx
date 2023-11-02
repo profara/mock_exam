@@ -14,8 +14,8 @@ import {format, utcToZonedTime} from "date-fns-tz";
 import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 import {cancelAppointment} from "../../services/client.js";
 
-const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointments, page, candidate}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+const AppointmentByCandidateCard = ({appointment, isOdd, rowNum, fetchAppointments, page, candidate, signed}) => {
+    const {isOpen, onOpen, onClose} = useDisclosure();
     const cancelRef = React.useRef();
     const cetDate = utcToZonedTime(appointment.appointmentDate, 'Europe/Belgrade');
     const displayDate = format(cetDate, 'dd.MM.yyyy', {timeZone: 'Europe/Belgrade'});
@@ -25,10 +25,10 @@ const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointme
 
     const handleOdjaviClick = () => {
         cancelAppointment(candidate.id, appointment.id)
-            .then(res =>{
-            console.log(res)
-            successNotification('Termin uspesno odjavljen')
-        }).catch(err => {
+            .then(res => {
+                console.log(res)
+                successNotification('Termin uspesno odjavljen')
+            }).catch(err => {
             console.log(err)
             errorNotification(
                 err.code,
@@ -37,6 +37,10 @@ const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointme
         }).finally(() => {
             fetchAppointments(page);
         })
+    }
+
+    const handlePrijaviClick = () => {
+
     }
 
     return (
@@ -66,37 +70,44 @@ const AppointmentByCandidateCard = ({ appointment, isOdd, rowNum, fetchAppointme
             </Box>
 
             <Flex w="20%" justifyContent="flex-end" mr={4}>
-                <>
-                    <Button colorScheme="red" onClick={onOpen}>
-                        Odjavi
+                {signed ? (
+                    <>
+                        <Button colorScheme="red" onClick={onOpen}>
+                            Odjavi
+                        </Button>
+                        <AlertDialog
+                            isOpen={isOpen}
+                            leastDestructiveRef={cancelRef}
+                            onClose={onClose}
+                        >
+                            <AlertDialogOverlay>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                                        Odjavljivanje termina
+                                    </AlertDialogHeader>
+
+                                    <AlertDialogBody>
+                                        Da li ste sigurni da zelite da odjavite prijavu?
+                                    </AlertDialogBody>
+
+                                    <AlertDialogFooter>
+                                        <Button ref={cancelRef} onClick={onClose}>
+                                            Odustani
+                                        </Button>
+                                        <Button colorScheme='red' onClick={handleOdjaviClick} ml={3}>
+                                            Odjavi
+                                        </Button>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialogOverlay>
+                        </AlertDialog>
+                    </>
+                ) : (
+                    <Button colorScheme="teal" onClick={handlePrijaviClick}>
+                        Prijavi
                     </Button>
-                    <AlertDialog
-                        isOpen={isOpen}
-                        leastDestructiveRef={cancelRef}
-                        onClose={onClose}
-                    >
-                        <AlertDialogOverlay>
-                            <AlertDialogContent>
-                                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                                    Odjavljivanje termina
-                                </AlertDialogHeader>
+                )}
 
-                                <AlertDialogBody>
-                                    Da li ste sigurni da zelite da odjavite prijavu?
-                                </AlertDialogBody>
-
-                                <AlertDialogFooter>
-                                    <Button ref={cancelRef} onClick={onClose}>
-                                        Odustani
-                                    </Button>
-                                    <Button colorScheme='red' onClick={handleOdjaviClick} ml={3}>
-                                        Odjavi
-                                    </Button>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialogOverlay>
-                    </AlertDialog>
-                </>
             </Flex>
         </Flex>
     );
