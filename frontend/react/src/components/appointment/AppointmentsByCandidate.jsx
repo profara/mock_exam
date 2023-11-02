@@ -1,7 +1,7 @@
 import {Box, Button, Flex, Spinner} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import Simple from "../shared/NavBar.jsx";
-import {getAppointmentsByCandidate} from "../../services/client.js";
+import {getAppointmentsByCandidate, getAppointmentsByCandidateNotSigned} from "../../services/client.js";
 import {useLocation} from "react-router-dom";
 import AppointmentsHeader from "./AppointmentsHeader.jsx";
 import AppointmentByCandidateCard from "./AppointmentByCandidateCard.jsx";
@@ -13,16 +13,28 @@ const AppointmentsByCandidate = () => {
     const pageSize = 20;
     const location = useLocation();
     const candidate = location.state?.candidate;
+    const signed = location.state?.signed;
 
     const fetchAppointments = (page) => {
-        getAppointmentsByCandidate(candidate.id, page)
-            .then(res => {
-                setAppointments(res.data.content);
-            }).catch(err => {
-            console.error(err)
-        }).finally(() => {
-            setLoading(false);
-        })
+        if(signed) {
+            getAppointmentsByCandidate(candidate.id, page)
+                .then(res => {
+                    setAppointments(res.data.content);
+                }).catch(err => {
+                console.error(err)
+            }).finally(() => {
+                setLoading(false);
+            })
+        } else{
+            getAppointmentsByCandidateNotSigned(candidate.id, page)
+                .then(res => {
+                    setAppointments(res.data.content);
+                }).catch(err => {
+                console.error(err)
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
     }
 
 
@@ -53,6 +65,7 @@ const AppointmentsByCandidate = () => {
                         fetchAppointments={fetchAppointments}
                         page={page}
                         candidate={candidate}
+                        signed={signed}
                     />
 
                 ))}

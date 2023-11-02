@@ -38,11 +38,11 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
     }
 
     const handleOdjaviClick = () => {
-        navigate("/mojePrijave", {state:{candidate: candidate}})
+        navigate("/mojePrijave", {state:{candidate: candidate, signed: true}})
     }
 
     const handlePrijaviClick = () => {
-        navigate("/mojePrijave", {state:{candidate: candidate}})
+        navigate("/mojePrijave", {state:{candidate: candidate, signed: false}})
     }
 
     return (
