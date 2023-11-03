@@ -127,4 +127,11 @@ public class CandidateServiceImpl implements CandidateService{
         return candidateRepository.existsById(candidateId);
     }
 
+    @Override
+    public Page<CandidateResponseDTO> filterCandidates(Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable) {
+        Page<Candidate> candidates = candidateRepository.filterByCriteria(zipCode, schoolCode, attendedPreparation, pageable);
+
+        return candidates.map(mapper::map);
+    }
+
 }

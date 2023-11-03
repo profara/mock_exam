@@ -28,4 +28,6 @@ public interface CandidateService {
     List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId);
 
     boolean existsById(Long candidateId);
+
+    Page<CandidateResponseDTO> filterCandidates(Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable);
 }

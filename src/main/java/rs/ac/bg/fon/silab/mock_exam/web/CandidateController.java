@@ -70,4 +70,15 @@ public class CandidateController {
         return ResponseEntity.ok(candidateService.getAllByAppointmentId(appointmentId));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/filter")
+    public ResponseEntity<Page<CandidateResponseDTO>> filterCandidates(
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation,
+            Pageable pageable) {
+
+        return ResponseEntity.ok(candidateService.filterCandidates(zipCode, schoolCode, attendedPreparation, pageable));
+    }
+
 }
