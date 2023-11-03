@@ -116,6 +116,26 @@ export const filterCandidates = async (zipCode, schoolCode, attendedPreparation,
     )
 }
 
+export const filterCandidatesByAppointment = async (appointmentId, zipCode, schoolCode, attendedPreparation, page, size) => {
+    let queryParams = `page=${page}&size=${size}`;
+
+    if (zipCode) {
+        queryParams += `&zipCode=${zipCode}`;
+    }
+
+    if (schoolCode) {
+        queryParams += `&schoolCode=${schoolCode}`;
+    }
+
+    if (attendedPreparation !== '') {
+        queryParams += `&attendedPreparation=${attendedPreparation}`;
+    }
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${appointmentId}/filter?${queryParams}`,
+        getAuthConfig()
+    )
+}
+
 export const getSchools = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/schools`,

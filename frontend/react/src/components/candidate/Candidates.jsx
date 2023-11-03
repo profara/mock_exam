@@ -1,7 +1,12 @@
 import {Box, Button, Flex, Select, Spinner} from "@chakra-ui/react";
 import CandidateCard from "./CandidateCard.jsx";
 import {useEffect, useState} from "react";
-import {filterCandidates, getAllCities, getAllSchools, getCandidates} from "../../services/client.js";
+import {
+    filterCandidates,
+    getAllCities,
+    getAllSchools,
+    getCandidates
+} from "../../services/client.js";
 import CandidatesHeader from "./CandidatesHeader.jsx";
 import Simple from "../shared/NavBar.jsx";
 
@@ -46,7 +51,6 @@ const CandidateList = () => {
     }
 
     const handleFiltrirajClick = () => {
-        console.log(hasAttendedPreparation)
         filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize)
             .then(res => {
                 setCandidates(res.data.content);
