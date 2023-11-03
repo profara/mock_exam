@@ -97,12 +97,12 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Pageable pageable) {
+    public Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable) {
         if(!appointmentService.existsById(appointmentId)){
             throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", appointmentId);
         }
 
-        Page<Candidate> candidates = candidateRepository.findByAppointmentId(appointmentId, pageable);
+        Page<Candidate> candidates = candidateRepository.findByAppointmentId(appointmentId, zipCode, schoolCode, attendedPreparation, pageable);
 
         return candidates.map(mapper::map);
     }

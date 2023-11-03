@@ -23,7 +23,7 @@ public interface CandidateService {
 
     CandidateResponseDTO getByEmail(String email);
 
-    Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Pageable pageable);
+    Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable);
 
     List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation);
 

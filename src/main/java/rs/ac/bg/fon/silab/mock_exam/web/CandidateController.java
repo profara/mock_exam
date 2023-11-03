@@ -60,8 +60,13 @@ public class CandidateController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/by-appointment/{appointmentId}")
-    public ResponseEntity<Page<CandidateResponseDTO>> getByAppointmentId(@PathVariable Long appointmentId, Pageable pageable){
-        return ResponseEntity.ok(candidateService.getByAppointmentId(appointmentId,pageable));
+    public ResponseEntity<Page<CandidateResponseDTO>> getByAppointmentId(
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation,
+            Pageable pageable){
+        return ResponseEntity.ok(candidateService.getByAppointmentId(appointmentId,zipCode,schoolCode,attendedPreparation,pageable));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
