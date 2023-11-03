@@ -7,6 +7,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.entity.School;
 
+import java.util.List;
+
 public interface SchoolService {
 
     School findById(Long code);
@@ -19,4 +21,6 @@ public interface SchoolService {
     void delete(Long code);
 
     SchoolResponseDTO update(Long code, SchoolUpdateRequestDTO schoolDTO);
+
+    List<SchoolResponseDTO> getAll();
 }
