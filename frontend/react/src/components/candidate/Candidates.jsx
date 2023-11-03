@@ -39,7 +39,11 @@ const CandidateList = () => {
     return (
         <Simple>
             <Flex direction="column" w="100%" alignItems="center" p={4}>
-                <CandidatesHeader/>
+                <CandidatesHeader
+                    page={page}
+                    size={pageSize}
+                    setCandidates={setCandidates}
+                />
                 {candidates.map((candidate, index) => (
                     <CandidateCard
                         key={candidate.id}

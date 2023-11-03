@@ -41,6 +41,13 @@ export const getCandidatesByAppointment = async (id, page) => {
     )
 }
 
+export const sortCandidatesByColumnName = async (id, page, pageSize, column, direction) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}?page=${page}&size=${pageSize}&sort=${column},${direction}`,
+        getAuthConfig()
+    )
+}
+
 export const getExams = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/exams`,
@@ -71,6 +78,13 @@ export const getCandidate = async (email) => {
 export const getCandidates = async (page) => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates?page=${page}`,
+        getAuthConfig()
+    )
+}
+
+export const getSortedCandidatesByColumn = async (page, size, column, direction) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates?page=${page}&size=${size}&sort=${column},${direction}`,
         getAuthConfig()
     )
 }
