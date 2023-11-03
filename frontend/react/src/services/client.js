@@ -89,9 +89,25 @@ export const getSortedCandidatesByColumn = async (page, size, column, direction)
     )
 }
 
-export const getAllCandidatesByAppointment = async (id) => {
+export const getAllCandidatesByAppointment = async (id, zipCode, schoolCode, attendedPreparation) => {
+    let queryParams = [];
+
+    if (zipCode) {
+        queryParams.push(`zipCode=${zipCode}`);
+    }
+
+    if (schoolCode) {
+        queryParams.push(`schoolCode=${schoolCode}`);
+    }
+
+    if (attendedPreparation !== '') {
+        queryParams.push(`attendedPreparation=${attendedPreparation}`);
+    }
+
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
     return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}/all`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}/all${queryString}`,
         getAuthConfig()
     )
 }

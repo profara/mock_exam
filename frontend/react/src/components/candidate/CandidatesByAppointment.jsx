@@ -78,7 +78,7 @@ const CandidatesByAppointment = () => {
     ]
 
     const handleExportToExcel = () => {
-        getAllCandidatesByAppointment(appointmentId)
+        getAllCandidatesByAppointment(appointmentId, selectedCity, selectedSchool, hasAttendedPreparation)
             .then(res => {
                 const mappedCandidates = res.data.map(candidate => ({
                     'ID': candidate.id,
