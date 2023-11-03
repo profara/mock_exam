@@ -11,6 +11,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityRequestUpdateDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.service.CityService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cities")
 public class CityController {
@@ -34,6 +36,11 @@ public class CityController {
     @GetMapping
     public ResponseEntity<Page<CityResponseDTO>> get(Pageable pageable){
         return ResponseEntity.ok(cityService.get(pageable));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CityResponseDTO>> getAll(){
+        return ResponseEntity.ok(cityService.getAll());
     }
 
     @DeleteMapping("/{zipCode}")

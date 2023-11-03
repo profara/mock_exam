@@ -7,6 +7,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityRequestUpdateDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.dto.CityResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.city.entity.City;
 
+import java.util.List;
+
 public interface CityService {
 
     City getById(Long zipCode);
@@ -19,4 +21,6 @@ public interface CityService {
     void delete(Long zipCode);
 
     CityResponseDTO update(Long zipCode, CityRequestUpdateDTO cityDTO);
+
+    List<CityResponseDTO> getAll();
 }

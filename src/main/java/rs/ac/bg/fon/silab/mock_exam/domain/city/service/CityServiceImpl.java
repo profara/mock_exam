@@ -13,6 +13,9 @@ import rs.ac.bg.fon.silab.mock_exam.domain.city.repository.CityRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.typeofschool.entity.TypeOfSchool;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CityServiceImpl implements CityService{
 
@@ -79,5 +82,15 @@ public class CityServiceImpl implements CityService{
         cityRepository.save(city);
 
         return mapper.map(city);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CityResponseDTO> getAll() {
+        List<City> cities =  cityRepository.findAll();
+
+        return cities.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
     }
 }
