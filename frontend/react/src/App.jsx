@@ -1,7 +1,7 @@
 import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {getAllSortedAppointments, getPriceListItems} from "./services/client.js";
+import {getAllSortedAppointments, getAppointmentsByCandidate, getPriceListItems} from "./services/client.js";
 import Card from "./components/appointment/Card.jsx";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
@@ -16,6 +16,7 @@ import {useAppointmentOrder} from "./components/context/AppointmentOrderContext.
 const App = () => {
 
     const [appointments, setAppointments] = useState([]);
+    const [appliedAppointments, setAppliedAppointments] = useState([]);
     const [loading, setLoading] = useState(false);
     const {selectedCards, setSelectedCards} = useCard();
     const [err, setError] = useState("");
@@ -64,36 +65,40 @@ const App = () => {
         })
     }
 
+
+
     const fetchAppointments = () => {
         setLoading(true);
+        if(candidate) {
+            Promise.all([getAllSortedAppointments(), getPriceListItems(), getAppointmentsByCandidate(candidate.id)])
+                .then(([appointmentsRes, priceListItemsRes, appliedAppointmentsRes]) => {
 
-        Promise.all([getAllSortedAppointments(), getPriceListItems()])
-            .then(([appointmentsRes, priceListItemsRes]) => {
+                    appointmentsResponse = appointmentsRes.data;
 
-                appointmentsResponse = appointmentsRes.data;
+                    const priceMap = {};
+                    appointmentsResponse.forEach(appointment => {
 
-                const priceMap = {};
-                appointmentsResponse.forEach(appointment => {
+                        const matchingPriceItem = priceListItemsRes.data.content.find(item =>
+                            item.priceList.year === currentYear &&
+                            item.privileged === (candidate?.attendedPreparation ?? false) &&
+                            item.exam.id === appointment.exam.id &&
+                            item.currency.code === DEFAULT_CURRENCY_CODE
+                        );
+                        if (matchingPriceItem) {
+                            priceMap[appointment.id] = matchingPriceItem;
+                        }
 
-                    const matchingPriceItem = priceListItemsRes.data.content.find(item =>
-                        item.priceList.year === currentYear &&
-                        item.privileged === (candidate?.attendedPreparation ?? false) &&
-                        item.exam.id === appointment.exam.id &&
-                        item.currency.code === DEFAULT_CURRENCY_CODE
-                    );
-                    if (matchingPriceItem) {
-                        priceMap[appointment.id] = matchingPriceItem;
-                    }
+                    });
 
-                });
-
-                setAppointments(appointmentsResponse);
-                setPriceListItem(priceMap);
-            }).catch(err => {
-            setError(err.response.data.message);
-        }).finally(() => {
-            setLoading(false);
-        })
+                    setAppliedAppointments(appliedAppointmentsRes.data.content);
+                    setAppointments(appointmentsResponse);
+                    setPriceListItem(priceMap);
+                }).catch(err => {
+                setError(err.response.data.message);
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
 
     }
 
@@ -175,6 +180,8 @@ const App = () => {
                                 fetchAppointments={isAdmin() ? fetchAppointmentsForAdmin : fetchAppointments}
                                 order={getOrderForAppointment(appointment)}
                                 appointment={appointment}
+                                hasApplied={isAdmin() ? null : appliedAppointments.some(a => a.id === appointment.id)}
+                                candidate={candidate}
                             />
                         </WrapItem>
                     );

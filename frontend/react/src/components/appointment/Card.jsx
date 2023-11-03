@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import {useAuth} from "../context/AuthContext.jsx";
 import {useRef} from "react";
-import {deleteAppointment} from "../../services/client.js";
+import {cancelAppointment, deleteAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import UpdateAppointmentDrawer from "./UpdateAppointmentDrawer.jsx";
 import {parseISO} from 'date-fns'
@@ -27,7 +27,7 @@ import {format, utcToZonedTime} from "date-fns-tz";
 import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 
-export default function Card({id,exam, appointmentDate, toogleCardSelection, isSelected, priceListItem, fetchAppointments, order, appointment}) {
+export default function Card({id,exam, appointmentDate, toogleCardSelection, isSelected, priceListItem, fetchAppointments, order, appointment, hasApplied,candidate}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()
     const {isAdmin} = useAuth();
@@ -36,6 +36,22 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
     const displayTime = format(cetDate, 'HH:mm', {timeZone: 'Europe/Belgrade'})
     const navigate = useNavigate();
     const {updateOrderAfterDeletion} = useAppointmentOrder();
+
+    const handleOdjaviClick = () => {
+        cancelAppointment(candidate.id, id)
+            .then(res => {
+                successNotification('Termin uspesno odjavljen')
+            }).catch(err => {
+            console.log(err)
+            errorNotification(
+                err.code,
+                err?.response.data.message
+            )
+        }).finally(() => {
+            fetchAppointments();
+        })
+    }
+
 
     return (
         <Center py={6}>
@@ -49,7 +65,7 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
                 boxShadow={'2xl'}
                 rounded={'md'}
                 overflow={'hidden'}>
-                {!isAdmin() && (
+                {!isAdmin() && !hasApplied && (
                 <Checkbox
                     position={'absolute'}
                     top={2}
@@ -96,6 +112,22 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
                         </ListItem>
                         )}
                     </List>
+                    {!isAdmin() && hasApplied && (
+                        <Stack direction={'row'} justify={'center'} spacing={6} mt={6}>
+                            <Button
+                                bg={'red'}
+                                color={'white'}
+                                rounded={'full'}
+                                _hover={{
+                                    transform: 'translateY(-2px)',
+                                    boxShadow: 'lg'
+                                }}
+                                onClick={handleOdjaviClick}
+                            >
+                                Odjavi se
+                            </Button>
+                        </Stack>
+                    )}
                     {isAdmin() && (
                     <Stack direction={'row'} justify={'center'} spacing={6} mt={6}>
                         <Button

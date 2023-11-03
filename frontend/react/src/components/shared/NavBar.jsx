@@ -59,7 +59,7 @@ export default function Simple(props) {
 
     const handleMojePrijaveClick = (candidate) => {
         if(candidate){
-            navigate("/mojePrijave", { state : {candidate:candidate}});
+            navigate("/mojePrijave", { state : {candidate:candidate, signed: true}});
         } else{
             navigate("/profil")
         }
