@@ -18,17 +18,28 @@ import {
 } from '@chakra-ui/react'
 import {useAuth} from "../context/AuthContext.jsx";
 import {useRef} from "react";
-import {deleteAppointment} from "../../services/client.js";
+import {cancelAppointment, deleteAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import UpdateAppointmentDrawer from "./UpdateAppointmentDrawer.jsx";
-import {parseISO} from 'date-fns'
 import {useNavigate} from "react-router-dom";
 import {format, utcToZonedTime} from "date-fns-tz";
 import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 
-export default function Card({id,exam, appointmentDate, toogleCardSelection, isSelected, priceListItem, fetchAppointments, order, appointment}) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+export default function Card({
+                                 id,
+                                 exam,
+                                 appointmentDate,
+                                 toogleCardSelection,
+                                 isSelected,
+                                 priceListItem,
+                                 fetchAppointments,
+                                 order,
+                                 appointment,
+                                 hasApplied,
+                                 candidate
+                             }) {
+    const {isOpen, onOpen, onClose} = useDisclosure()
     const cancelRef = useRef()
     const {isAdmin} = useAuth();
     const cetDate = utcToZonedTime(appointmentDate, 'Europe/Belgrade');
@@ -36,6 +47,22 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
     const displayTime = format(cetDate, 'HH:mm', {timeZone: 'Europe/Belgrade'})
     const navigate = useNavigate();
     const {updateOrderAfterDeletion} = useAppointmentOrder();
+
+    const handleOdjaviClick = () => {
+        cancelAppointment(candidate.id, id)
+            .then(res => {
+                successNotification('Termin uspesno odjavljen')
+            }).catch(err => {
+            console.log(err)
+            errorNotification(
+                err.code,
+                err?.response.data.message
+            )
+        }).finally(() => {
+            fetchAppointments();
+        })
+    }
+
 
     return (
         <Center py={6}>
@@ -49,16 +76,33 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
                 boxShadow={'2xl'}
                 rounded={'md'}
                 overflow={'hidden'}>
-                {!isAdmin() && (
-                <Checkbox
-                    position={'absolute'}
-                    top={2}
-                    right={2}
-                    size={'lg'}
-                    colorScheme="green"
-                    onChange={toogleCardSelection}
-                    isChecked={isSelected}
-                />
+                {!isAdmin() && !hasApplied && (
+                    <Checkbox
+                        position={'absolute'}
+                        top={2}
+                        right={2}
+                        size={'lg'}
+                        colorScheme="green"
+                        onChange={toogleCardSelection}
+                        isChecked={isSelected}
+                    />
+                )}
+                {!isAdmin() && hasApplied && (
+                    <Button
+                        position={'absolute'}
+                        bottom={20}
+                        right={2}
+                        bg={'red'}
+                        color={'white'}
+                        rounded={'full'}
+                        _hover={{
+                            transform: 'translateY(-2px)',
+                            boxShadow: 'lg'
+                        }}
+                        onClick={handleOdjaviClick}
+                    >
+                        Odjavi se
+                    </Button>
                 )}
                 <Stack
                     textAlign={'center'}
@@ -91,89 +135,89 @@ export default function Card({id,exam, appointmentDate, toogleCardSelection, isS
                             Vreme: {displayTime}
                         </ListItem>
                         {!isAdmin() && (
-                        <ListItem>
-                            Cena: {priceListItem.price} {priceListItem.currency.code}
-                        </ListItem>
+                            <ListItem>
+                                Cena: {priceListItem.price} {priceListItem.currency.code}
+                            </ListItem>
                         )}
                     </List>
                     {isAdmin() && (
-                    <Stack direction={'row'} justify={'center'} spacing={6} mt={6}>
-                        <Button
-                            bg={'#084474'}
-                            color={'white'}
-                            rounded={'full'}
-                            _hover={{
-                                transform: 'translateY(-2px)',
-                                boxShadow: 'lg'
-                            }}
-                            onClick={() => navigate("/terminKandidati", { state : {id: id}})}
-                        >
-                            Detalji
-                        </Button>
-                        <Stack>
-                            <UpdateAppointmentDrawer
-                                initialValues={{exam, appointmentDate}}
-                                appointmentId={id}
-                                fetchAppointments={fetchAppointments}
-                            />
-                        </Stack>
-                        <Stack>
+                        <Stack direction={'row'} justify={'center'} spacing={6} mt={6}>
                             <Button
-                                bg={'red.400'}
+                                bg={'#084474'}
                                 color={'white'}
                                 rounded={'full'}
                                 _hover={{
                                     transform: 'translateY(-2px)',
                                     boxShadow: 'lg'
                                 }}
-                                _focus={{
-                                    bg: 'grey.500'
-                                }}
-                                onClick={onOpen}
+                                onClick={() => navigate("/terminKandidati", {state: {id: id}})}
                             >
-                                Izbrisi
+                                Detalji
                             </Button>
-                            <AlertDialog
-                                isOpen={isOpen}
-                                leastDestructiveRef={cancelRef}
-                                onClose={onClose}
-                            >
-                                <AlertDialogOverlay>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                                            Brisanje termina
-                                        </AlertDialogHeader>
+                            <Stack>
+                                <UpdateAppointmentDrawer
+                                    initialValues={{exam, appointmentDate}}
+                                    appointmentId={id}
+                                    fetchAppointments={fetchAppointments}
+                                />
+                            </Stack>
+                            <Stack>
+                                <Button
+                                    bg={'red.400'}
+                                    color={'white'}
+                                    rounded={'full'}
+                                    _hover={{
+                                        transform: 'translateY(-2px)',
+                                        boxShadow: 'lg'
+                                    }}
+                                    _focus={{
+                                        bg: 'grey.500'
+                                    }}
+                                    onClick={onOpen}
+                                >
+                                    Izbrisi
+                                </Button>
+                                <AlertDialog
+                                    isOpen={isOpen}
+                                    leastDestructiveRef={cancelRef}
+                                    onClose={onClose}
+                                >
+                                    <AlertDialogOverlay>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                                                Brisanje termina
+                                            </AlertDialogHeader>
 
-                                        <AlertDialogBody>
-                                            Da li ste sigurni da zelite da izbrisete termin?
-                                        </AlertDialogBody>
+                                            <AlertDialogBody>
+                                                Da li ste sigurni da zelite da izbrisete termin?
+                                            </AlertDialogBody>
 
-                                        <AlertDialogFooter>
-                                            <Button ref={cancelRef} onClick={onClose}>
-                                                Odustani
-                                            </Button>
-                                            <Button colorScheme='red' onClick={() => {
-                                                deleteAppointment(id).then(res =>{
-                                                    successNotification('Termin uspesno izbrisan')
-                                                    updateOrderAfterDeletion();
-                                                    fetchAppointments();
-                                                }).catch(err => {
-                                                    errorNotification(
-                                                        err.code,
-                                                        err?.response.data.message
-                                                    )
-                                                }).finally(() => {
-                                                    onClose();
-                                                })
-                                            }} ml={3}>
-                                                Izbrisi
-                                            </Button>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialogOverlay>
-                            </AlertDialog>
+                                            <AlertDialogFooter>
+                                                <Button ref={cancelRef} onClick={onClose}>
+                                                    Odustani
+                                                </Button>
+                                                <Button colorScheme='red' onClick={() => {
+                                                    deleteAppointment(id).then(res => {
+                                                        successNotification('Termin uspesno izbrisan')
+                                                        updateOrderAfterDeletion();
+                                                        fetchAppointments();
+                                                    }).catch(err => {
+                                                        errorNotification(
+                                                            err.code,
+                                                            err?.response.data.message
+                                                        )
+                                                    }).finally(() => {
+                                                        onClose();
+                                                    })
+                                                }} ml={3}>
+                                                    Izbrisi
+                                                </Button>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialogOverlay>
+                                </AlertDialog>
+                            </Stack>
                         </Stack>
-                    </Stack>
                     )}
                 </Box>
             </Box>
