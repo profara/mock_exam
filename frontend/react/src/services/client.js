@@ -96,6 +96,26 @@ export const getAllCandidatesByAppointment = async (id) => {
     )
 }
 
+export const filterCandidates = async (zipCode, schoolCode, attendedPreparation, page, size) => {
+    let queryParams = `page=${page}&size=${size}`;
+
+    if (zipCode) {
+        queryParams += `&zipCode=${zipCode}`;
+    }
+
+    if (schoolCode) {
+        queryParams += `&schoolCode=${schoolCode}`;
+    }
+
+    if (attendedPreparation !== '') {
+        queryParams += `&attendedPreparation=${attendedPreparation}`;
+    }
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/filter?${queryParams}`,
+        getAuthConfig()
+    )
+}
+
 export const getSchools = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/schools`,
@@ -103,9 +123,23 @@ export const getSchools = async () => {
         );
 }
 
+export const getAllSchools = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/schools/all`,
+        getAuthConfig()
+    );
+}
+
 export const getCities = async () => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/cities`,
+        getAuthConfig()
+    )
+}
+
+export const getAllCities = async () => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/cities/all`,
         getAuthConfig()
     )
 }
