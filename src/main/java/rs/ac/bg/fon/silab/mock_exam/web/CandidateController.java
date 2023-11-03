@@ -65,6 +65,17 @@ public class CandidateController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/by-appointment/{appointmentId}/filter")
+    public ResponseEntity<Page<CandidateResponseDTO>> filterByAppointmentId(
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation,
+            Pageable pageable){
+        return ResponseEntity.ok(candidateService.filterByAppointmentId(appointmentId,zipCode,schoolCode,attendedPreparation,pageable));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/by-appointment/{appointmentId}/all")
     public ResponseEntity<List<CandidateResponseDTO>> getAllByAppointmentId(@PathVariable Long appointmentId){
         return ResponseEntity.ok(candidateService.getAllByAppointmentId(appointmentId));

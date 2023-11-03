@@ -134,4 +134,15 @@ public class CandidateServiceImpl implements CandidateService{
         return candidates.map(mapper::map);
     }
 
+    @Override
+    public Page<CandidateResponseDTO> filterByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable) {
+        if(!appointmentService.existsById(appointmentId)){
+            throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", appointmentId);
+        }
+
+        Page<Candidate> candidates = candidateRepository.filterByAppointmentIdAndCriteria(appointmentId, zipCode,schoolCode, attendedPreparation, pageable);
+
+        return candidates.map(mapper::map);
+    }
+
 }
