@@ -109,12 +109,12 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId) {
+    public List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation) {
         if(!appointmentService.existsById(appointmentId)){
             throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", appointmentId);
         }
 
-        List<Candidate> candidates = candidateRepository.findAllByAppointmentId(appointmentId);
+        List<Candidate> candidates = candidateRepository.findAllByAppointmentId(appointmentId, zipCode, schoolCode, attendedPreparation);
 
         return candidates.stream()
                 .map(mapper::map)

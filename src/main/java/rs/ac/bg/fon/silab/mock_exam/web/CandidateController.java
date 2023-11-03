@@ -77,8 +77,12 @@ public class CandidateController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/by-appointment/{appointmentId}/all")
-    public ResponseEntity<List<CandidateResponseDTO>> getAllByAppointmentId(@PathVariable Long appointmentId){
-        return ResponseEntity.ok(candidateService.getAllByAppointmentId(appointmentId));
+    public ResponseEntity<List<CandidateResponseDTO>> getAllByAppointmentId(
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation){
+        return ResponseEntity.ok(candidateService.getAllByAppointmentId(appointmentId, zipCode, schoolCode, attendedPreparation));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

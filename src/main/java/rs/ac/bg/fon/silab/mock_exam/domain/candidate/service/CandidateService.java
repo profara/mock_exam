@@ -25,7 +25,7 @@ public interface CandidateService {
 
     Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Pageable pageable);
 
-    List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId);
+    List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation);
 
     boolean existsById(Long candidateId);
 

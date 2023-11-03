@@ -20,8 +20,14 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long>, Jpa
     @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :appointmentId")
     Page<Candidate> findByAppointmentId(@Param("appointmentId") Long appointmentId, Pageable pageable);
 
-    @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :appointmentId")
-    List<Candidate> findAllByAppointmentId(@Param("appointmentId") Long appointmentId);
+    @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :appointmentId " +
+            "AND (:zipCode IS NULL OR app.candidate.city.zipCode = :zipCode) " +
+            "AND (:schoolCode IS NULL OR app.candidate.school.code = :schoolCode) " +
+            "AND (:attendedPreparation IS NULL OR app.candidate.attendedPreparation = :attendedPreparation)")
+    List<Candidate> findAllByAppointmentId(@Param("appointmentId") Long appointmentId,
+                                           @Param("zipCode") Long zipCode,
+                                           @Param("schoolCode") Long schoolCode,
+                                           @Param("attendedPreparation") Boolean attendedPreparation);
 
     default Page<Candidate> filterByCriteria(Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable){
         return findAll((root, query, cb) -> {
