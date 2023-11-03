@@ -56,19 +56,28 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
             w={"100%"}
         >
 
-            <Box ml={4} w="5%">
+            <Box ml={4} w="2%">
                 <Text>{rowNum}.</Text>
             </Box>
-            <Box w="15%">
+            <Box w="14%">
                 <Text>{candidate.name}</Text>
             </Box>
-            <Box w="15%">
+            <Box w="14%">
                 <Text>{candidate.surname}</Text>
             </Box>
-            <Box w="45%">
+            <Box w="14%">
                 <Text>{candidate.userProfile.email}</Text>
             </Box>
-            <Flex w="20%" justifyContent="flex-end" mr={4}>
+            <Box w="14%">
+                <Text>{candidate.city.name}</Text>
+            </Box>
+            <Box w="18%">
+                <Text>{candidate.school.name}</Text>
+            </Box>
+            <Box w="10%">
+                <Text>{candidate.attendedPreparation ? 'Da' : 'Ne'}</Text>
+            </Box>
+            <Flex w="14%" justifyContent="flex-end" mr={4}>
                 <Button colorScheme="red" mr={2} onClick={handleOdjaviClick}>
                     Odjavi
                 </Button>

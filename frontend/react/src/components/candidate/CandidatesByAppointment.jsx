@@ -106,7 +106,12 @@ const CandidatesByAppointment = () => {
                 >
                     Eksportuj u Excel
                 </Button>
-                <CandidatesByAppointmentHeader/>
+                <CandidatesByAppointmentHeader
+                    id={appointmentId}
+                    page={page}
+                    size={pageSize}
+                    setCandidates={setCandidates}
+                />
                 {candidates.map((candidate, index) => (
                     <CandidateByAppointmentCard
                         key={candidate.id}
