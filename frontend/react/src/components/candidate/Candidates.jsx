@@ -1,15 +1,20 @@
-import {Box, Button, Flex, Spinner} from "@chakra-ui/react";
+import {Box, Button, Flex, Select, Spinner} from "@chakra-ui/react";
 import CandidateCard from "./CandidateCard.jsx";
 import {useEffect, useState} from "react";
-import {getCandidates} from "../../services/client.js";
+import {filterCandidates, getAllCities, getAllSchools, getCandidates} from "../../services/client.js";
 import CandidatesHeader from "./CandidatesHeader.jsx";
 import Simple from "../shared/NavBar.jsx";
 
 const CandidateList = () => {
     const [candidates, setCandidates] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [schools, setSchools] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const pageSize = 20;
+    const [selectedCity, setSelectedCity] = useState(null);
+    const [selectedSchool, setSelectedSchool] = useState(null);
+    const [hasAttendedPreparation, setHasSelectedPreparation] = useState('');
 
     const fetchCandidates = (page) => {
         getCandidates(page)
@@ -21,6 +26,40 @@ const CandidateList = () => {
             setLoading(false);
         })
     }
+
+    const fetchCities = () => {
+        getAllCities()
+            .then(res => {
+                setCities(res.data);
+            }).catch(err => {
+            console.error(err)
+        })
+    }
+
+    const fetchSchools = () => {
+        getAllSchools()
+            .then(res => {
+                setSchools(res.data);
+            }).catch(err => {
+            console.error(err)
+        })
+    }
+
+    const handleFiltrirajClick = () => {
+        console.log(hasAttendedPreparation)
+        filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize)
+            .then(res => {
+                setCandidates(res.data.content);
+                setPage(0);
+            }).catch(err => {
+            console.error(err);
+        })
+    }
+
+    useEffect(() => {
+        fetchCities();
+        fetchSchools();
+    }, [])
 
     useEffect(() => {
         fetchCandidates(page)
@@ -39,6 +78,32 @@ const CandidateList = () => {
     return (
         <Simple>
             <Flex direction="column" w="100%" alignItems="center" p={4}>
+                <Flex direction="row" w="100%" justifyContent="center" mb={4}>
+                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity} onChange={e => setSelectedCity(e.target.value)}>
+                        {cities.map(city => <option key={city.zipCode} value={city.zipCode}>{city.name}</option> )}
+                    </Select>
+
+                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
+                        {schools.map(school => <option key={school.code} value={school.code}>{school.name}</option>)}
+                    </Select>
+
+                    <Select placeholder="Isao na pripremu" w="200px" mr={2} values={hasAttendedPreparation === 'true'} onChange={e => setHasSelectedPreparation(e.target.value === 'true')}>
+                        <option value='true'>Da</option>
+                        <option value='false'>Ne</option>
+                    </Select>
+
+                    <Button bg={'teal'}
+                            color={'white'}
+                            rounded={'full'}
+                            _hover={{
+                                transform: 'translateY(-2px)',
+                                boxShadow: 'lg'
+                            }}
+                            onClick={handleFiltrirajClick}
+                    >
+                        Filtriraj
+                    </Button>
+                </Flex>
                 <CandidatesHeader
                     page={page}
                     size={pageSize}
