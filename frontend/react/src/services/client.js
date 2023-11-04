@@ -41,9 +41,23 @@ export const getCandidatesByAppointment = async (id, page) => {
     )
 }
 
-export const sortCandidatesByColumnName = async (id, page, pageSize, column, direction) => {
+export const sortCandidatesByColumnName = async (id, zipCode, schoolCode, attendedPreparation, page, pageSize, column, direction) => {
+    let queryParams = `page=${page}&size=${pageSize}&sort=${column},${direction}`;
+
+    if (zipCode !== "") {
+        queryParams += `&zipCode=${zipCode}`;
+    }
+
+    if (schoolCode !== "") {
+        queryParams += `&schoolCode=${schoolCode}`;
+    }
+
+    if (attendedPreparation !== '') {
+        queryParams += `&attendedPreparation=${attendedPreparation}`;
+    }
+
     return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}?page=${page}&size=${pageSize}&sort=${column},${direction}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}?${queryParams}`,
         getAuthConfig()
     )
 }
@@ -82,28 +96,41 @@ export const getCandidates = async (page) => {
     )
 }
 
-export const getSortedCandidatesByColumn = async (page, size, column, direction) => {
+export const getAllCandidatesByAppointment = async (id, zipCode, schoolCode, attendedPreparation) => {
+    let queryParams = [];
+
+    if (zipCode !== "") {
+        queryParams.push(`zipCode=${zipCode}`);
+    }
+
+    if (schoolCode !== "") {
+        queryParams.push(`schoolCode=${schoolCode}`);
+    }
+
+    if (attendedPreparation !== '') {
+        queryParams.push(`attendedPreparation=${attendedPreparation}`);
+    }
+
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
     return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/candidates?page=${page}&size=${size}&sort=${column},${direction}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}/all${queryString}`,
         getAuthConfig()
     )
 }
 
-export const getAllCandidatesByAppointment = async (id) => {
-    return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}/all`,
-        getAuthConfig()
-    )
-}
-
-export const filterCandidates = async (zipCode, schoolCode, attendedPreparation, page, size) => {
+export const filterCandidates = async (zipCode, schoolCode, attendedPreparation, page, size, column, direction) => {
     let queryParams = `page=${page}&size=${size}`;
 
-    if (zipCode) {
+    if(column && direction){
+        queryParams += `&sort=${column},${direction}`
+    }
+
+    if (zipCode !== "") {
         queryParams += `&zipCode=${zipCode}`;
     }
 
-    if (schoolCode) {
+    if (schoolCode !== "") {
         queryParams += `&schoolCode=${schoolCode}`;
     }
 
@@ -112,6 +139,26 @@ export const filterCandidates = async (zipCode, schoolCode, attendedPreparation,
     }
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates/filter?${queryParams}`,
+        getAuthConfig()
+    )
+}
+
+export const filterCandidatesByAppointment = async (appointmentId, zipCode, schoolCode, attendedPreparation, page, size) => {
+    let queryParams = `page=${page}&size=${size}`;
+
+    if (zipCode !== "") {
+        queryParams += `&zipCode=${zipCode}`;
+    }
+
+    if (schoolCode !== "") {
+        queryParams += `&schoolCode=${schoolCode}`;
+    }
+
+    if (attendedPreparation !== '') {
+        queryParams += `&attendedPreparation=${attendedPreparation}`;
+    }
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${appointmentId}/filter?${queryParams}`,
         getAuthConfig()
     )
 }

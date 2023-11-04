@@ -1,7 +1,12 @@
 import {Box, Button, Flex, Select, Spinner} from "@chakra-ui/react";
 import CandidateCard from "./CandidateCard.jsx";
 import {useEffect, useState} from "react";
-import {filterCandidates, getAllCities, getAllSchools, getCandidates} from "../../services/client.js";
+import {
+    filterCandidates,
+    getAllCities,
+    getAllSchools,
+    getCandidates
+} from "../../services/client.js";
 import CandidatesHeader from "./CandidatesHeader.jsx";
 import Simple from "../shared/NavBar.jsx";
 
@@ -12,8 +17,8 @@ const CandidateList = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const pageSize = 20;
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [selectedSchool, setSelectedSchool] = useState(null);
+    const [selectedCity, setSelectedCity] = useState("");
+    const [selectedSchool, setSelectedSchool] = useState("");
     const [hasAttendedPreparation, setHasSelectedPreparation] = useState('');
 
     const fetchCandidates = (page) => {
@@ -46,8 +51,7 @@ const CandidateList = () => {
     }
 
     const handleFiltrirajClick = () => {
-        console.log(hasAttendedPreparation)
-        filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize)
+        filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize, null, null)
             .then(res => {
                 setCandidates(res.data.content);
                 setPage(0);
@@ -79,15 +83,15 @@ const CandidateList = () => {
         <Simple>
             <Flex direction="column" w="100%" alignItems="center" p={4}>
                 <Flex direction="row" w="100%" justifyContent="center" mb={4}>
-                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity} onChange={e => setSelectedCity(e.target.value)}>
+                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity || ""} onChange={e => setSelectedCity(e.target.value || "")}>
                         {cities.map(city => <option key={city.zipCode} value={city.zipCode}>{city.name}</option> )}
                     </Select>
 
-                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
+                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool || ""} onChange={e => setSelectedSchool(e.target.value || "")}>
                         {schools.map(school => <option key={school.code} value={school.code}>{school.name}</option>)}
                     </Select>
 
-                    <Select placeholder="Isao na pripremu" w="200px" mr={2} values={hasAttendedPreparation === 'true'} onChange={e => setHasSelectedPreparation(e.target.value === 'true')}>
+                    <Select placeholder="Isao na pripremu" w="200px" mr={2} value={hasAttendedPreparation} onChange={e => setHasSelectedPreparation(e.target.value || "")}>
                         <option value='true'>Da</option>
                         <option value='false'>Ne</option>
                     </Select>
@@ -108,6 +112,9 @@ const CandidateList = () => {
                     page={page}
                     size={pageSize}
                     setCandidates={setCandidates}
+                    selectedCity={selectedCity}
+                    selectedSchool={selectedSchool}
+                    hasAttendedPreparation={hasAttendedPreparation}
                 />
                 {candidates.map((candidate, index) => (
                     <CandidateCard

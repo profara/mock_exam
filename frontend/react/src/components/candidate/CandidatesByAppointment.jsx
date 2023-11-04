@@ -1,7 +1,12 @@
-import {Box, Button, Flex, Spinner, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, Select, Spinner, Text} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import Simple from "../shared/NavBar.jsx";
-import {getCandidatesByAppointment, getAllCandidatesByAppointment} from "../../services/client.js";
+import {
+    getCandidatesByAppointment,
+    getAllCandidatesByAppointment,
+    getAllCities,
+    getAllSchools, filterCandidatesByAppointment
+} from "../../services/client.js";
 import CandidatesByAppointmentHeader from "./CandidatesByAppointmentHeader.jsx";
 import CandidateByAppointmentCard from "./CandidateByAppointmentCard.jsx";
 import {useLocation} from "react-router-dom";
@@ -11,6 +16,11 @@ import saveAs from "file-saver";
 
 const CandidatesByAppointment = () => {
     const [candidates, setCandidates] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [schools, setSchools] = useState([]);
+    const [selectedCity, setSelectedCity] = useState("");
+    const [selectedSchool, setSelectedSchool] = useState("");
+    const [hasAttendedPreparation, setHasSelectedPreparation] = useState('');
     const [totalCandidates, setTotalCandidates] = useState(0);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -29,6 +39,35 @@ const CandidatesByAppointment = () => {
         })
     }
 
+    const fetchCities = () => {
+        getAllCities()
+            .then(res => {
+                setCities(res.data);
+            }).catch(err => {
+            console.error(err)
+        })
+    }
+
+    const fetchSchools = () => {
+        getAllSchools()
+            .then(res => {
+                setSchools(res.data);
+            }).catch(err => {
+            console.error(err)
+        })
+    }
+
+    const handleFiltrirajClick = () => {
+        filterCandidatesByAppointment(appointmentId, selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize)
+            .then(res => {
+                setCandidates(res.data.content);
+                setPage(0);
+                setTotalCandidates(res.data.totalElements)
+            }).catch(err => {
+            console.error(err);
+        })
+    }
+
     const wscols = [
         {wch: 5},
         {wch: 10},
@@ -40,7 +79,7 @@ const CandidatesByAppointment = () => {
     ]
 
     const handleExportToExcel = () => {
-        getAllCandidatesByAppointment(appointmentId)
+        getAllCandidatesByAppointment(appointmentId, selectedCity, selectedSchool, hasAttendedPreparation)
             .then(res => {
                 const mappedCandidates = res.data.map(candidate => ({
                     'ID': candidate.id,
@@ -78,6 +117,11 @@ const CandidatesByAppointment = () => {
         fetchCandidates(page)
     }, [page])
 
+    useEffect(() => {
+        fetchCities();
+        fetchSchools();
+    }, [])
+
     if (loading) {
         return <Spinner
             thickness='4px'
@@ -96,6 +140,32 @@ const CandidatesByAppointment = () => {
                         Broj kandidata: {totalCandidates}
                     </Text>
                 </Box>
+                <Flex direction="row" w="100%" justifyContent="center" mb={4}>
+                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity || ""} onChange={e => setSelectedCity(e.target.value || "")}>
+                        {cities.map(city => <option key={city.zipCode} value={city.zipCode}>{city.name}</option> )}
+                    </Select>
+
+                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool || ""} onChange={e => setSelectedSchool(e.target.value || "")}>
+                        {schools.map(school => <option key={school.code} value={school.code}>{school.name}</option>)}
+                    </Select>
+
+                    <Select placeholder="Isao na pripremu" w="200px" mr={2} value={hasAttendedPreparation} onChange={e => setHasSelectedPreparation(e.target.value || "")}>
+                        <option value='true'>Da</option>
+                        <option value='false'>Ne</option>
+                    </Select>
+
+                    <Button bg={'teal'}
+                            color={'white'}
+                            rounded={'full'}
+                            _hover={{
+                                transform: 'translateY(-2px)',
+                                boxShadow: 'lg'
+                            }}
+                            onClick={handleFiltrirajClick}
+                    >
+                        Filtriraj
+                    </Button>
+                </Flex>
                 <Button
                     position="absolute"
                     top="24"
@@ -111,6 +181,9 @@ const CandidatesByAppointment = () => {
                     page={page}
                     size={pageSize}
                     setCandidates={setCandidates}
+                    selectedCity={selectedCity}
+                    selectedSchool={selectedSchool}
+                    hasAttendedPreparation={hasAttendedPreparation}
                 />
                 {candidates.map((candidate, index) => (
                     <CandidateByAppointmentCard
