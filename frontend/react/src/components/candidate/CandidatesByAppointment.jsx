@@ -180,6 +180,9 @@ const CandidatesByAppointment = () => {
                     page={page}
                     size={pageSize}
                     setCandidates={setCandidates}
+                    selectedCity={selectedCity}
+                    selectedSchool={selectedSchool}
+                    hasAttendedPreparation={hasAttendedPreparation}
                 />
                 {candidates.map((candidate, index) => (
                     <CandidateByAppointmentCard

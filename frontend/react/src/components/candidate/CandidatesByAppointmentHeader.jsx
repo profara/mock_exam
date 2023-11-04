@@ -2,10 +2,10 @@ import {Box, Flex, IconButton, Text} from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
 import {sortCandidatesByColumnName} from "../../services/client.js";
 
-const CandidatesByAppointmentHeader = ({id, page, size, setCandidates}) => {
+const CandidatesByAppointmentHeader = ({id, page, size, setCandidates, selectedCity, selectedSchool, hasAttendedPreparation}) => {
 
     const handleSort = (columnName, direction) => {
-        sortCandidatesByColumnName(id, page, size, columnName, direction)
+        sortCandidatesByColumnName(id, selectedCity, selectedSchool, hasAttendedPreparation, page, size, columnName, direction)
             .then(res => {
                 setCandidates(res.data.content);
             }).catch(err => {
