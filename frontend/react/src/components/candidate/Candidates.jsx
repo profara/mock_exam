@@ -17,8 +17,8 @@ const CandidateList = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const pageSize = 20;
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [selectedSchool, setSelectedSchool] = useState(null);
+    const [selectedCity, setSelectedCity] = useState("");
+    const [selectedSchool, setSelectedSchool] = useState("");
     const [hasAttendedPreparation, setHasSelectedPreparation] = useState('');
 
     const fetchCandidates = (page) => {
@@ -51,7 +51,7 @@ const CandidateList = () => {
     }
 
     const handleFiltrirajClick = () => {
-        filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize)
+        filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page, pageSize, null, null)
             .then(res => {
                 setCandidates(res.data.content);
                 setPage(0);
@@ -83,11 +83,11 @@ const CandidateList = () => {
         <Simple>
             <Flex direction="column" w="100%" alignItems="center" p={4}>
                 <Flex direction="row" w="100%" justifyContent="center" mb={4}>
-                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity} onChange={e => setSelectedCity(e.target.value || null)}>
+                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity || ""} onChange={e => setSelectedCity(e.target.value || "")}>
                         {cities.map(city => <option key={city.zipCode} value={city.zipCode}>{city.name}</option> )}
                     </Select>
 
-                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool} onChange={e => setSelectedSchool(e.target.value || null)}>
+                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool || ""} onChange={e => setSelectedSchool(e.target.value || "")}>
                         {schools.map(school => <option key={school.code} value={school.code}>{school.name}</option>)}
                     </Select>
 

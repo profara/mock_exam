@@ -44,11 +44,11 @@ export const getCandidatesByAppointment = async (id, page) => {
 export const sortCandidatesByColumnName = async (id, zipCode, schoolCode, attendedPreparation, page, pageSize, column, direction) => {
     let queryParams = `page=${page}&size=${pageSize}&sort=${column},${direction}`;
 
-    if (zipCode) {
+    if (zipCode !== "") {
         queryParams += `&zipCode=${zipCode}`;
     }
 
-    if (schoolCode) {
+    if (schoolCode !== "") {
         queryParams += `&schoolCode=${schoolCode}`;
     }
 
@@ -96,34 +96,14 @@ export const getCandidates = async (page) => {
     )
 }
 
-export const getSortedCandidatesByColumn = async (page, size, column, direction, zipCode, schoolCode, attendedPreparation) => {
-    let queryParams = `page=${page}&size=${size}&sort=${column},${direction}`;
-
-    if (zipCode) {
-        queryParams += `&zipCode=${zipCode}`;
-    }
-
-    if (schoolCode) {
-        queryParams += `&schoolCode=${schoolCode}`;
-    }
-
-    if (attendedPreparation !== '') {
-        queryParams += `&attendedPreparation=${attendedPreparation}`;
-    }
-    return await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/candidates?${queryParams}`,
-        getAuthConfig()
-    )
-}
-
 export const getAllCandidatesByAppointment = async (id, zipCode, schoolCode, attendedPreparation) => {
     let queryParams = [];
 
-    if (zipCode) {
+    if (zipCode !== "") {
         queryParams.push(`zipCode=${zipCode}`);
     }
 
-    if (schoolCode) {
+    if (schoolCode !== "") {
         queryParams.push(`schoolCode=${schoolCode}`);
     }
 
@@ -139,14 +119,18 @@ export const getAllCandidatesByAppointment = async (id, zipCode, schoolCode, att
     )
 }
 
-export const filterCandidates = async (zipCode, schoolCode, attendedPreparation, page, size) => {
+export const filterCandidates = async (zipCode, schoolCode, attendedPreparation, page, size, column, direction) => {
     let queryParams = `page=${page}&size=${size}`;
 
-    if (zipCode) {
+    if(column && direction){
+        queryParams += `&sort=${column},${direction}`
+    }
+
+    if (zipCode !== "") {
         queryParams += `&zipCode=${zipCode}`;
     }
 
-    if (schoolCode) {
+    if (schoolCode !== "") {
         queryParams += `&schoolCode=${schoolCode}`;
     }
 
@@ -162,11 +146,11 @@ export const filterCandidates = async (zipCode, schoolCode, attendedPreparation,
 export const filterCandidatesByAppointment = async (appointmentId, zipCode, schoolCode, attendedPreparation, page, size) => {
     let queryParams = `page=${page}&size=${size}`;
 
-    if (zipCode) {
+    if (zipCode !== "") {
         queryParams += `&zipCode=${zipCode}`;
     }
 
-    if (schoolCode) {
+    if (schoolCode !== "") {
         queryParams += `&schoolCode=${schoolCode}`;
     }
 

@@ -18,8 +18,8 @@ const CandidatesByAppointment = () => {
     const [candidates, setCandidates] = useState([]);
     const [cities, setCities] = useState([]);
     const [schools, setSchools] = useState([]);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [selectedSchool, setSelectedSchool] = useState(null);
+    const [selectedCity, setSelectedCity] = useState("");
+    const [selectedSchool, setSelectedSchool] = useState("");
     const [hasAttendedPreparation, setHasSelectedPreparation] = useState('');
     const [totalCandidates, setTotalCandidates] = useState(0);
     const [page, setPage] = useState(0);
@@ -62,6 +62,7 @@ const CandidatesByAppointment = () => {
             .then(res => {
                 setCandidates(res.data.content);
                 setPage(0);
+                setTotalCandidates(res.data.totalElements)
             }).catch(err => {
             console.error(err);
         })
@@ -140,11 +141,11 @@ const CandidatesByAppointment = () => {
                     </Text>
                 </Box>
                 <Flex direction="row" w="100%" justifyContent="center" mb={4}>
-                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity} onChange={e => setSelectedCity(e.target.value || null)}>
+                    <Select placeholder="Izaberite grad" w="200px" mr={2} value={selectedCity || ""} onChange={e => setSelectedCity(e.target.value || "")}>
                         {cities.map(city => <option key={city.zipCode} value={city.zipCode}>{city.name}</option> )}
                     </Select>
 
-                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool} onChange={e => setSelectedSchool(e.target.value || null)}>
+                    <Select placeholder="Izaberite skolu" w="200px" mr={2} value={selectedSchool || ""} onChange={e => setSelectedSchool(e.target.value || "")}>
                         {schools.map(school => <option key={school.code} value={school.code}>{school.name}</option>)}
                     </Select>
 
