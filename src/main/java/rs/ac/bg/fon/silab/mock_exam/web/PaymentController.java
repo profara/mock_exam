@@ -10,6 +10,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.service.PaymentService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
@@ -45,5 +47,11 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDTO> update(@PathVariable Long id,
                                                      @Valid @RequestBody PaymentRequestDTO paymentRequestDTO){
         return ResponseEntity.ok(paymentService.update(id,paymentRequestDTO));
+    }
+
+    @PostMapping("/send-payslip")
+    public ResponseEntity<?> sendPayslipOnEmail(@RequestBody Map<String, String> payload){
+        paymentService.sendPayslipOnEmail(payload);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 }

@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.payment.dto.PaymentResponseDTO;
 
+import java.util.Map;
+
 public interface PaymentService {
     PaymentResponseDTO save(PaymentRequestDTO paymentRequestDTO);
 
@@ -15,4 +17,6 @@ public interface PaymentService {
     void delete(Long id);
 
     PaymentResponseDTO update(Long id, PaymentRequestDTO paymentRequestDTO);
+
+    void sendPayslipOnEmail(Map<String, String> payload);
 }
