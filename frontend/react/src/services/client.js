@@ -1,4 +1,5 @@
 import axios from "axios";
+import html2canvas from 'html2canvas'
 
 const getAuthConfig = () => ({
     headers: {
@@ -319,3 +320,26 @@ export const login = async (emailAndPassword) => {
         )
 
 }
+
+export const capturePayslipAndSend = async () => {
+    const payslipElement = document.getElementById('payslip');
+    const canvas = await html2canvas(payslipElement);
+    const imageBase64 = canvas.toDataURL('image/png');
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+        }
+    };
+
+    const data = {
+        imageData: imageBase64
+    };
+
+    return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/payments/send-payslip`,
+        data,
+        config
+        )
+
+};
