@@ -19,27 +19,23 @@ const Container = S.div`
 `
 const InnerInput = S.input`
    width: calc(100% - 36px);
-   background-color: lightgrey;
-   border: solid 1px var(--color-primary);
+   background-color: white;
+   border: solid 1px #000;
    font-family: Arial, Helvetica, sans-serif;
-   line-height: 1.34em;
+   line-height: 1.8em;
    font-size: 14px;
    padding: 2px 8px;
    -webkit-appearance: none;
    -moz-appearance: none;
    appearance: none;
    outline: none;
-   border-width: 0.7mm;
-   &:disabled {
-        background: white;
-   }
-   &:focus {
-      border: solid 1px orange;
-      box-shadow: 0 0 2px 2px orange;
-   }
+   border-width: 2.7px;
+   
    @media ${deviceBrakepoints.mobile} {
       width: calc(100% - 26px);
    }
 `
 
-export default React.memo(Input);
+export default Input;
+
+

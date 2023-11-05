@@ -32,6 +32,7 @@ const App = () => {
     const handlePrijaviClick = (candidate) => {
         if (candidate) {
             createApplication(candidate, serbiaDate, selectedCards, setApplication, navigate);
+            setSelectedCards([]);
         } else {
             navigate("/profil")
         }
