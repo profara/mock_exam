@@ -16,6 +16,7 @@ const Container = S.div`
 `
 
 const StyledTextarea = S.div`
+    white-space: pre-wrap;
     background-color: white;
     border: solid 1px #000;
     font-family: Arial, Helvetica, sans-serif;

@@ -44,7 +44,7 @@ export const createApplication = (candidate, serbiaDate, selectedCards, setAppli
                     successNotification(
                         "Uspesno kreirana uplatnica"
                     )
-                    navigate("/uplatnica", { state: {payment: res.data}});
+                    navigate("/uplatnica", { state: {payment: res.data, application: application}});
                 }).catch(err => {
                 errorNotification(
                     err.code,

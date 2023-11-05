@@ -11,18 +11,85 @@ import {
     REFERENCE_NUMBER
 } from "./config/constants.js";
 import Simple from "../shared/NavBar.jsx";
-import {Button, Spinner, Text, Flex} from "@chakra-ui/react";
+import {Button, Spinner, Text, Flex, VStack, Box} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
-import {capturePayslipAndSend} from "../../services/client.js";
+import {capturePayslipAndSend, getAppointmentById, getExams} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
+import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 function Payslip() {
 
     const {candidate, loadingAuth} = useAuth();
     const location = useLocation();
     const payment = location.state?.payment;
+    const application = location.state?.application;
     const [showQuestion, setShowQuestion] = useState(true);
+    const {getOrderForAppointment} = useAppointmentOrder();
+    const [orders, setOrders] = useState({});
+    const [exams, setExams] = useState([]);
+    const [examCounts, setExamCounts] = useState({});
+
+    useEffect(() => {
+        getExams()
+            .then(res =>{
+                setExams(res.data.content);
+            }).catch(err => {
+            console.error(err);
+        })
+    }, [])
+
+    useEffect(() => {
+        if (application && application.appointmentIds) {
+            const appointmentPromises = application.appointmentIds.map(id => getAppointmentById(id));
+
+            Promise.all(appointmentPromises)
+                .then(appointmentResults => {
+                    const ordersTemp = {};
+                    appointmentResults.forEach(res => {
+                        if (res) {
+                            const order = getOrderForAppointment(res.data);
+                            const name = res.data.exam.name;
+                            const date = res.data.appointmentDate
+                            ordersTemp[res.data.id] = {name, order, date};
+                        }
+                    });
+                    setOrders(ordersTemp);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [application, getOrderForAppointment]);
+
+    const calculateCounts = () => {
+        const counts = {};
+
+        exams.forEach((exam) => {
+            counts[exam.name] = 0;
+        });
+
+        Object.values(orders).forEach((order) => {
+            if (Object.prototype.hasOwnProperty.call(counts,order.name)) {
+                counts[order.name] += 1;
+            }
+        });
+
+        setExamCounts(counts);
+    };
+
+    useEffect(() => {
+        calculateCounts();
+    }, [orders]);
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}.`;
+    }
 
     const handleDaClick = () => {
         capturePayslipAndSend(candidate.userProfile.email)
@@ -62,6 +129,17 @@ function Payslip() {
     return (
         <Simple>
             <StyledWrapper>
+                <Flex direction="column" align="center" mb="4">
+                    <Text fontSize="xl" mb="4" fontWeight="bold">Uspešno ste se prijavili za sledeće termine:</Text>
+                    <VStack spacing={4}>
+                        {Object.entries(orders).map(([appointmentId, { name, order, date }]) => (
+                            <Box key={appointmentId} >
+                                <Text>{name} - {order}.termin - {formatDate(date)}</Text>
+                            </Box>
+                        ))}
+                    </VStack>
+
+                </Flex>
                 <Container id="payslip">
                     <BankSlipTitle>Nalog Za Uplatu</BankSlipTitle>
                     <LeftSide>
@@ -72,7 +150,13 @@ function Payslip() {
                         <Textarea
                             label='Svrha uplate'
                             id='paymentPurpose'
-                            value={PAYMENT_PURPOSE}
+                            value={
+                                `${PAYMENT_PURPOSE}\n` +
+                                Object.entries(examCounts)
+                                    .filter(([, count]) => count > 0) // Exclude entries with a count of 0 or less
+                                    .map(([examName, count]) => `${examName} (${count} ${count > 1 ? 'termina' : 'termin'})`)
+                                    .join('\n')
+                            }
                         />
                         <Textarea label='Primalac'
                                   id='receiverDescription'

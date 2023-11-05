@@ -35,6 +35,13 @@ export const getAppointmentsByCandidateNotSigned = async (id, page) => {
     )
 }
 
+export const getAppointmentById = async (id) => {
+    return await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/appointments/${id}`,
+        getAuthConfig()
+    )
+}
+
 export const getCandidatesByAppointment = async (id, page) => {
     return await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/candidates/by-appointment/${id}?page=${page}`,
@@ -328,7 +335,6 @@ export const capturePayslipAndSend = async (userEmail) => {
         height: payslipElement.offsetHeight
     });
     const imageBase64 = canvas.toDataURL('image/png');
-    console.log(imageBase64)
 
     const config = {
         headers: {
