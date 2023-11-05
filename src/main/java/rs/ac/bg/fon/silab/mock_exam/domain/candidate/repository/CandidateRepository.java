@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,4 +66,7 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long>, Jpa
                                                      @Param("zipCode") Long zipCode,
                                                      @Param("schoolCode") Long schoolCode, Boolean attendedPreparation, Pageable pageable);
 
+    @Query("SELECT app.candidate, apt FROM Application app JOIN app.appointments apt WHERE apt.appointmentDate >= :startDateTime AND apt.appointmentDate < :endDateTime")
+    List<Object[]> findAllWithAppointmentBetween(@Param("startDateTime") LocalDateTime startOfTwoDaysFromNow,
+                                                  @Param("endDateTime") LocalDateTime endOfTwoDaysFromNow);
 }

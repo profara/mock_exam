@@ -17,6 +17,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.service.PriceListService;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service.PriceListItemService;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailSender;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 import java.math.BigDecimal;
@@ -37,15 +38,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final PriceListService priceListService;
     private final PriceListItemService priceListItemService;
     private final CurrencyService currencyService;
-    private final EmailService emailService;
+    private final EmailSender emailSender;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService, CurrencyService currencyService, EmailService emailService) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService, CurrencyService currencyService, EmailSender emailSender) {
         this.paymentRepository = paymentRepository;
         this.mapper = mapper;
         this.priceListService = priceListService;
         this.priceListItemService = priceListItemService;
         this.currencyService = currencyService;
-        this.emailService = emailService;
+        this.emailSender = emailSender;
     }
 
     @Override
@@ -107,7 +108,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         byte[] imageBytes = DatatypeConverter.parseBase64Binary(imageData.substring(imageData.indexOf(",") + 1));
 
-        emailService.sendAttachment(userEmail, imageBytes);
+        emailSender.sendAttachment(userEmail, imageBytes);
     }
 
 
