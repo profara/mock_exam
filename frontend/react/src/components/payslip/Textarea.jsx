@@ -2,10 +2,10 @@ import S from 'styled-components'
 
 import Label from './Label'
 
-const Textarea = ({ label, id, help, helpText, value, disabled}) => (
+const Textarea = ({ label, id, help, helpText, value}) => (
     <Container>
         <Label label={label} for={id}/>
-        <StyledTextarea name={id} id={id} aria-describedby={help} value={value} disabled={disabled}/>
+        <StyledTextarea  id={id}>{value}</StyledTextarea>
         <span hidden id={help}>{helpText}</span>
     </Container>
 )
@@ -15,22 +15,17 @@ const Container = S.div`
    text-align: left;
 `
 
-const StyledTextarea = S.textarea`
-    background-color: lightgrey;
-    border: solid 1px var(--color-primary);
+const StyledTextarea = S.div`
+    background-color: white;
+    border: solid 1px #000;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 3.9mm;
-    height: 15mm;
-    width: 91mm;
+    font-size: 15px;
+    height: 60px;
+    width: 344px;
     resize: none;
     -moz-appearance: none;
     appearance: none;
     outline: none;
-    
-    &:disabled {
-        
-        background-color: white
-    }
     
 `
 export default Textarea

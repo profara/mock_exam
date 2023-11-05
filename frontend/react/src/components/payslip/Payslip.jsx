@@ -17,7 +17,6 @@ import {useLocation} from "react-router-dom";
 import {capturePayslipAndSend} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 
-
 function Payslip() {
 
     const {candidate, loadingAuth} = useAuth();
@@ -26,7 +25,7 @@ function Payslip() {
     const [showQuestion, setShowQuestion] = useState(true);
 
     const handleDaClick = () => {
-        capturePayslipAndSend()
+        capturePayslipAndSend(candidate.userProfile.email)
             .then(res => {
                 successNotification(
                     "Poslato",
@@ -68,21 +67,15 @@ function Payslip() {
                     <LeftSide>
                         <Textarea label='Platilac'
                                   id='payer'
-                                  help='payerHelp'
-                                  helpText='U ovo polje upišite podatke osobe koja je Platilac.'
-                                  readOnly
-                                  disabled={true}
                                   value={`${candidate.name} ${candidate.surname}, ${candidate.address}, ${candidate.city.zipCode} ${candidate.city.name}`}
                         />
                         <Textarea
                             label='Svrha uplate'
                             id='paymentPurpose'
-                            disabled={true}
                             value={PAYMENT_PURPOSE}
                         />
                         <Textarea label='Primalac'
                                   id='receiverDescription'
-                                  disabled={true}
                                   value={RECEIVER_DESCRIPTION}
 
                         />
@@ -91,7 +84,7 @@ function Payslip() {
                         <Input
                             type='number'
                             width={23}
-                            label='Sifra Pacanja'
+                            label='Sifra Placanja'
                             id='payCode'
                             readOnly
                             disabled={true}
@@ -110,8 +103,6 @@ function Payslip() {
                             width={54}
                             label='Iznos'
                             id='totalAmount'
-                            help='totalAmountHelp'
-                            helpText='Ovde upišite brojevima ukupan iznos koji zelite da uplatite.'
                             value={payment ? payment.amount : ""}
                             readOnly
                             disabled={true}
@@ -131,8 +122,6 @@ function Payslip() {
                             width={25}
                             label='Model'
                             id='modelCode'
-                            help='modelCodeHelp'
-                            helpText='Ovde upisite brojevima model'
                             value=""
                             disabled={true}
                             readOnly
@@ -191,9 +180,9 @@ const Container = styled.div`
   position: relative;
   line-height: 1.2em;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 3mm;
+  font-size: 11.5px;
   border: solid 1px var(--color-primary);
-  padding: 6mm;
+  padding: 23px;
   margin-bottom: 1em;
   @media ${deviceBrakepoints.desktop} {
     &::before {
@@ -210,10 +199,11 @@ const Container = styled.div`
 
 const BankSlipTitle = styled.div`
   color: var(--color-primary);
-  font-size: 4.95mm;
+  font-size: 19px;
   font-weight: 600;
   text-transform: uppercase;
   text-align: right;
+  margin-bottom: 4px;
 `
 
 const LeftSide = styled.div`
@@ -240,11 +230,6 @@ const RightSide = styled.div`
 
 export default Payslip;
 
-// const Button = styled.button`
-//     @media print {
-//         display: none;
-//     }
-// `
 
 
 const StyledWrapper = styled.div`
@@ -266,7 +251,6 @@ const StyledWrapper = styled.div`
   --color-secondary: black;
 
   max-width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;

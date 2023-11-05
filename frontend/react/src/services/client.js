@@ -321,10 +321,14 @@ export const login = async (emailAndPassword) => {
 
 }
 
-export const capturePayslipAndSend = async () => {
+export const capturePayslipAndSend = async (userEmail) => {
     const payslipElement = document.getElementById('payslip');
-    const canvas = await html2canvas(payslipElement);
+    const canvas = await html2canvas(payslipElement ,{
+        width: payslipElement.offsetWidth,
+        height: payslipElement.offsetHeight
+    });
     const imageBase64 = canvas.toDataURL('image/png');
+    console.log(imageBase64)
 
     const config = {
         headers: {
@@ -334,7 +338,8 @@ export const capturePayslipAndSend = async () => {
     };
 
     const data = {
-        imageData: imageBase64
+        imageData: imageBase64,
+        userEmail: userEmail
     };
 
     return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/payments/send-payslip`,
