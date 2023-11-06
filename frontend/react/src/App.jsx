@@ -67,35 +67,44 @@ const App = () => {
     }
 
 
-
     const fetchAppointments = () => {
         setLoading(true);
-        if(candidate) {
-            Promise.all([getAllSortedAppointments(), getPriceListItems(), getAppointmentsByCandidate(candidate.id)])
-                .then(([appointmentsRes, priceListItemsRes, appliedAppointmentsRes]) => {
 
-                    appointmentsResponse = appointmentsRes.data;
+        Promise.all([getAllSortedAppointments(), getPriceListItems()])
+            .then(([appointmentsRes, priceListItemsRes]) => {
 
-                    const priceMap = {};
-                    appointmentsResponse.forEach(appointment => {
+                appointmentsResponse = appointmentsRes.data;
 
-                        const matchingPriceItem = priceListItemsRes.data.content.find(item =>
-                            item.priceList.year === currentYear &&
-                            item.privileged === (candidate?.attendedPreparation ?? false) &&
-                            item.exam.id === appointment.exam.id &&
-                            item.currency.code === DEFAULT_CURRENCY_CODE
-                        );
-                        if (matchingPriceItem) {
-                            priceMap[appointment.id] = matchingPriceItem;
-                        }
+                const priceMap = {};
+                appointmentsResponse.forEach(appointment => {
 
-                    });
+                    const matchingPriceItem = priceListItemsRes.data.content.find(item =>
+                        item.priceList.year === currentYear &&
+                        item.privileged === (candidate?.attendedPreparation ?? false) &&
+                        item.exam.id === appointment.exam.id &&
+                        item.currency.code === DEFAULT_CURRENCY_CODE
+                    );
+                    if (matchingPriceItem) {
+                        priceMap[appointment.id] = matchingPriceItem;
+                    }
 
-                    setAppliedAppointments(appliedAppointmentsRes.data.content);
-                    setAppointments(appointmentsResponse);
-                    setPriceListItem(priceMap);
+                });
+
+
+                setAppointments(appointmentsResponse);
+                setPriceListItem(priceMap);
+            }).catch(err => {
+            setError(err.response.data.message);
+        }).finally(() => {
+            setLoading(false);
+        })
+        if (candidate) {
+            setLoading(true);
+            getAppointmentsByCandidate(candidate.id)
+                .then(res => {
+                    setAppliedAppointments(res.data.content);
                 }).catch(err => {
-                setError(err.response.data.message);
+                console.error(err);
             }).finally(() => {
                 setLoading(false);
             })
@@ -108,7 +117,6 @@ const App = () => {
             fetchAppointmentsForAdmin();
         }
     }, [user]);
-
 
 
     useEffect(() => {
@@ -139,7 +147,7 @@ const App = () => {
         )
     }
 
-    if(!isAdmin() && !priceListItem){
+    if (!isAdmin() && !priceListItem) {
         return (
             <Simple>
                 <Text mt={5}>Nema dostupnih termina</Text>
@@ -152,7 +160,7 @@ const App = () => {
             <Simple>
                 {isAdmin() && (
                     <CreateAppointmentDrawer
-                    fetchAppointments={fetchAppointmentsForAdmin}
+                        fetchAppointments={fetchAppointmentsForAdmin}
                     />
                 )}
                 <Text mt={5}>Nema dostupnih termina</Text>
@@ -190,13 +198,13 @@ const App = () => {
 
             </Wrap>
             {!isAdmin() && (
-            <Center mt={10}>
-                <Button colorScheme="green" size="lg" isDisabled={selectedCards.length === 0}
-                        onClick={() => handlePrijaviClick(candidate)}>
-                    Prijavi
-                </Button>
-            </Center>
-            ) }
+                <Center mt={10}>
+                    <Button colorScheme="green" size="lg" isDisabled={selectedCards.length === 0}
+                            onClick={() => handlePrijaviClick(candidate)}>
+                        Prijavi
+                    </Button>
+                </Center>
+            )}
         </Simple>
     )
 }

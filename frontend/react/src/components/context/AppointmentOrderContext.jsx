@@ -1,5 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {getAllSortedAppointments} from "../../services/client.js";
+import {useAuth} from "./AuthContext.jsx";
 
 
 const AppointmentOrderContext = createContext({});
@@ -9,6 +10,7 @@ export const useAppointmentOrder = () => useContext(AppointmentOrderContext);
 
 const AppointmentOrderProvider = ({ children }) => {
     const [orderMap, setOrderMap] = useState({});
+    const {isUserAuthenticated, user} = useAuth();
 
     const fetchAppointments = async () => {
         try {
@@ -38,16 +40,17 @@ const AppointmentOrderProvider = ({ children }) => {
             });
 
             setOrderMap(tempOrderMap);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
         }
     };
 
     useEffect(() => {
 
-
-        fetchAppointments();
-    }, []);
+        if(isUserAuthenticated()) {
+            fetchAppointments();
+        }
+    }, [user]);
 
     const updateOrderAfterDeletion = () => {
         fetchAppointments();
