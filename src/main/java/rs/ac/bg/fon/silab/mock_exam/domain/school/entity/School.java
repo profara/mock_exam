@@ -70,7 +70,7 @@ public class School {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         School school = (School) o;
-        return code == school.code;
+        return Objects.equals(code, school.code);
     }
 
     @Override
