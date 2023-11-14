@@ -16,6 +16,7 @@ import rs.ac.bg.fon.silab.mock_exam.domain.application.dto.ApplicationResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.mapper.ApplicationMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.repository.ApplicationRepository;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 import java.util.Date;
@@ -58,10 +59,14 @@ public class ApplicationServiceImplTest {
         boolean mockPrivileged = true;
         Long mockCandidateId = 1L;
         List<Long> mockAppointmentIds = List.of(1L, 2L);
+        Candidate mockCandidate = new Candidate();
+        mockCandidate.setId(mockCandidateId);
 
         ApplicationRequestDTO dto = new ApplicationRequestDTO(mockDate, mockPrivileged, mockCandidateId, mockAppointmentIds);
         Application mappedApplication = new Application();
+        mappedApplication.setCandidate(mockCandidate);
         Application savedApplication = new Application();
+        savedApplication.setCandidate(mockCandidate);
         ApplicationResponseDTO responseDTO = new ApplicationResponseDTO(1L, mockDate, mockPrivileged, null, null);
 
         when(mapper.map(dto)).thenReturn(mappedApplication);
