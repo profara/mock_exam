@@ -12,6 +12,9 @@ import rs.ac.bg.fon.silab.mock_exam.domain.school.mapper.SchoolMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.repository.SchoolRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class SchoolServiceImpl implements SchoolService{
 
@@ -76,6 +79,15 @@ public class SchoolServiceImpl implements SchoolService{
         schoolRepository.save(school);
 
         return mapper.map(school);
+    }
+
+    @Override
+    public List<SchoolResponseDTO> getAll() {
+        List<School> schools = schoolRepository.findAll();
+
+        return schools.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
     }
 
 

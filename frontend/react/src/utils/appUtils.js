@@ -28,8 +28,8 @@ export const createApplication = (candidate, serbiaDate, selectedCards, setAppli
     saveApplication(application)
         .then(res => {
             successNotification(
-                "Uspesno sacuvana prijava",
-                ""
+                "Uspeh",
+                "Uspešno ste se prijavili"
             )
             setApplication(res.data);
 
@@ -41,10 +41,7 @@ export const createApplication = (candidate, serbiaDate, selectedCards, setAppli
             }
             savePayment(payment)
                 .then(res => {
-                    successNotification(
-                        "Uspesno kreirana uplatnica"
-                    )
-                    navigate("/uplatnica", { state: {payment: res.data}});
+                    navigate("/uplatnica", { state: {payment: res.data, application: application}});
                 }).catch(err => {
                 errorNotification(
                     err.code,

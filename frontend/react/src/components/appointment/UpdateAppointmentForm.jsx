@@ -6,6 +6,8 @@ import {getExams, updateAppointment} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import {DateTime} from "luxon";
+import {useAppointmentOrder} from "../context/AppointmentOrderContext.jsx";
 
 
 const MySelect = ({label, ...props}) => {
@@ -28,14 +30,19 @@ const MyDateInput = ({label, ...props}) => {
     const [field, meta] = useField(props);
     const {setFieldValue} = useFormikContext();
 
+
     return (
         <Box>
             <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
             <ReactDatePicker
-                selected={field.value}
-                onChange={date => setFieldValue(field.name, date)}
-                dateFormat="MMMM d, yyyy"
+                selected={field.value ? new Date(field.value) : null}
+                onChange={date => {
+                    const adjustedDate = DateTime.fromJSDate(date).setZone('Europe/Belgrade').toISO().split('.')[0];
+                    setFieldValue(field.name, adjustedDate);
+                }}
+                dateFormat="dd.MM.yyyy HH:mm"
                 isClearable
+                showTimeSelect
                 {...props}
             />
             {meta.touched && meta.error ? (
@@ -49,6 +56,7 @@ const MyDateInput = ({label, ...props}) => {
 };
 const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}) => {
     const [exams, setExams] = useState([]);
+    const {updateOrderAfterDeletion} = useAppointmentOrder();
 
     useEffect(() => {
         getExams()
@@ -65,27 +73,31 @@ const UpdateAppointmentForm = ({fetchAppointments, initialValues, appointmentId}
                 validateOnMount={true}
                 initialValues={{
                     examId: initialValues.exam.id,
-                    appointmentDate: initialValues.appointmentRealDate
+                    appointmentDate: initialValues.appointmentDate
                 }}
                 validationSchema={Yup.object({
                     examId: Yup.number()
                         .oneOf(exams.map(exam => exam.id), "Greska")
                         .required('Morate izabrati ispit'),
-                    appointmentDate: Yup.date()
+                    appointmentDate: Yup.string()
+                        .matches(
+                            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/,
+                            'Morate uneti datum u formatu "dd.MM.yyyy HH:mm"'
+                        )
                         .required('Morate izabrati datum')
                 })}
                 onSubmit={(updatedAppointment, {setSubmitting}) => {
                     setSubmitting(true);
                     updateAppointment(appointmentId, updatedAppointment)
                         .then(async res => {
-                            console.log(res)
                             successNotification(
                                 "Uspesno izmenjen termin",
                                 ""
                             )
+                            updateOrderAfterDeletion()
                             fetchAppointments();
                         }).catch(err => {
-                        console.log(err)
+                        console.error(err)
                         errorNotification(
                             err.code,
                             err?.response.data.message

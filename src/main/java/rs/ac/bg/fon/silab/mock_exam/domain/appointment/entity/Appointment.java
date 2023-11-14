@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,18 +24,18 @@ public class Appointment {
     private Exam exam;
 
     @Column(name = APPOINTMENT_DATE_COLUMN_NAME, nullable = false)
-    private Date appointmentDate;
+    private LocalDateTime appointmentDate;
 
     @ManyToMany(mappedBy = "appointments")
     private List<Application> applications = new ArrayList<>();
     public Appointment() {
     }
 
-    public Appointment(Date appointmentDate) {
+    public Appointment(LocalDateTime appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public Appointment(Exam exam, Date appointmentDate, List<Application> applications) {
+    public Appointment(Exam exam, LocalDateTime appointmentDate, List<Application> applications) {
         this.exam = exam;
         this.appointmentDate = appointmentDate;
         this.applications = applications;
@@ -56,11 +57,11 @@ public class Appointment {
         this.exam = exam;
     }
 
-    public Date getAppointmentDate() {
+    public LocalDateTime getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(Date appointmentDate) {
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 

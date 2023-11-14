@@ -1,7 +1,6 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.appointment.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,27 +9,25 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.mapper.AppointmentMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.repository.AppointmentRepository;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.mapper.CandidateMapper;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.repository.CandidateRepository;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper mapper;
+    private final CandidateRepository candidateRepository;
 
-    private final CandidateMapper candidateMapper;
-
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper, CandidateMapper candidateMapper) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper, CandidateRepository candidateRepository) {
         this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
-        this.candidateMapper = candidateMapper;
+        this.candidateRepository = candidateRepository;
     }
 
     @Override
@@ -92,27 +89,42 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public Page<CandidateResponseDTO> getCandidates(Long id, Pageable pageable) {
-        if(!appointmentRepository.existsById(id)){
-            throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id);
-        }
-
-        Page<Candidate> candidates = appointmentRepository.findCandidatesByAppointmentId(id, pageable);
-
-        return candidates.map(candidateMapper::map);
+    @Transactional(readOnly = true)
+    public boolean existsById(Long id) {
+        return appointmentRepository.existsById(id);
     }
 
     @Override
-    public List<CandidateResponseDTO> getAllCandidates(Long id) {
-        if(!appointmentRepository.existsById(id)){
-            throw new EntityNotFoundException(Appointment.class.getSimpleName(), "id", id);
+    @Transactional(readOnly = true)
+    public Page<AppointmentResponseDTO> getByCandidateId(Long candidateId, Pageable pageable) {
+        if(!candidateRepository.existsById(candidateId)){
+            throw new EntityNotFoundException(Candidate.class.getSimpleName(), "id", candidateId);
         }
 
-        List<Candidate> candidates = appointmentRepository.findAllCandidatesByAppointmentId(id);
+        Page<Appointment> appointments = appointmentRepository.findByCandidateId(candidateId, pageable);
 
-        return candidates.stream()
-                .map(candidateMapper::map)
+        return appointments.map(mapper::map);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AppointmentResponseDTO> getAllSorted() {
+        List<Appointment> sortedAppointments = appointmentRepository.findAllByOrderByAppointmentDateAscExamNameAsc();
+
+        return sortedAppointments.stream()
+                .map(mapper::map)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AppointmentResponseDTO> getByCandidateIdNotSigned(Long candidateId, Pageable pageable) {
+        if(!candidateRepository.existsById(candidateId)){
+            throw new EntityNotFoundException(Candidate.class.getSimpleName(), "id", candidateId);
+        }
+
+        Page<Appointment> appointments = appointmentRepository.findByCandidateIdNotSigned(candidateId, pageable);
+
+        return appointments.map(mapper::map);
     }
 
 

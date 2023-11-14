@@ -85,7 +85,7 @@ const MySelect = ({ label, ...props }) => {
 const CreateCandidateProfileForm = () => {
     const {user, loadCandidate, candidate} = useAuth();
     const [schools, setSchools] = useState([]);
-    const {selectedCards} = useCard();
+    const {selectedCards, setSelectedCards} = useCard();
     const navigate = useNavigate();
     const serbiaDate = getCurrentDateInSerbiaTimeZone();
     const {setApplication} = useApplication();
@@ -96,8 +96,8 @@ const CreateCandidateProfileForm = () => {
             navigate("/termini")
         } else{
             if(candidate) {
-                console.log(candidate);
                 createApplication(candidate, serbiaDate, selectedCards, setApplication, navigate);
+                setSelectedCards([]);
             }
         }
     }
@@ -111,7 +111,6 @@ const CreateCandidateProfileForm = () => {
     useEffect(() => {
         getSchools()
             .then(res => {
-                console.log(res);
                 setSchools(res.data.content);
             }).catch(err => {
                 console.error("Greska prilikom fecovanja skola", err);
@@ -121,7 +120,6 @@ const CreateCandidateProfileForm = () => {
     useEffect( () => {
         getCities()
             .then(res => {
-                console.log(res);
                 setCities(res.data.content);
             }).catch(err => {
             console.error("Greska prilikom fecovanja gradova", err);

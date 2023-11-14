@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,7 +21,7 @@ class AppointmentTest {
     void setUp() {
         mockExam = mock(Exam.class);
         mockApplication = mock(Application.class);
-        appointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        appointment = new Appointment(mockExam, LocalDateTime.now(), new ArrayList<>());
     }
 
     @Test
@@ -63,7 +62,7 @@ class AppointmentTest {
 
     @Test
     void testEqualsWithDifferentId() {
-        Appointment anotherAppointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        Appointment anotherAppointment = new Appointment(mockExam, LocalDateTime.now(), new ArrayList<>());
         anotherAppointment.setId(2L);
         appointment.setId(1L);
 
@@ -72,7 +71,7 @@ class AppointmentTest {
 
     @Test
     void testEqualsWithSameId() {
-        Appointment anotherAppointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        Appointment anotherAppointment = new Appointment(mockExam, LocalDateTime.now(), new ArrayList<>());
         anotherAppointment.setId(1L);
         appointment.setId(1L);
 
@@ -82,13 +81,13 @@ class AppointmentTest {
     @Test
     void testHashCodeConsistency() {
         int initialHashCode = appointment.hashCode();
-        appointment.setAppointmentDate(new Date());
+        appointment.setAppointmentDate(LocalDateTime.now());
         assertEquals(initialHashCode, appointment.hashCode());
     }
 
     @Test
     void testHashCodeDifference() {
-        Appointment anotherAppointment = new Appointment(mockExam, new Date(), new ArrayList<>());
+        Appointment anotherAppointment = new Appointment(mockExam, LocalDateTime.now(), new ArrayList<>());
         anotherAppointment.setId(2L);
         appointment.setId(1L);
 

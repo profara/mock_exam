@@ -21,7 +21,7 @@ public class Application {
     private Date applicationDate;
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean privileged;
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = FOREIGN_KEY_CANDIDATE)
     private Candidate candidate;
 

@@ -11,6 +11,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -54,6 +56,49 @@ public class CandidateController {
     public ResponseEntity<CandidateResponseDTO> update(@PathVariable Long id,
                                                        @Valid @RequestBody CandidateRequestDTO candidateDTO){
         return ResponseEntity.ok(candidateService.update(id,candidateDTO));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/by-appointment/{appointmentId}")
+    public ResponseEntity<Page<CandidateResponseDTO>> getByAppointmentId(
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation,
+            Pageable pageable){
+        return ResponseEntity.ok(candidateService.getByAppointmentId(appointmentId,zipCode,schoolCode,attendedPreparation,pageable));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/by-appointment/{appointmentId}/filter")
+    public ResponseEntity<Page<CandidateResponseDTO>> filterByAppointmentId(
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation,
+            Pageable pageable){
+        return ResponseEntity.ok(candidateService.filterByAppointmentId(appointmentId,zipCode,schoolCode,attendedPreparation,pageable));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/by-appointment/{appointmentId}/all")
+    public ResponseEntity<List<CandidateResponseDTO>> getAllByAppointmentId(
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation){
+        return ResponseEntity.ok(candidateService.getAllByAppointmentId(appointmentId, zipCode, schoolCode, attendedPreparation));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/filter")
+    public ResponseEntity<Page<CandidateResponseDTO>> filterCandidates(
+            @RequestParam(required = false) Long zipCode,
+            @RequestParam(required = false) Long schoolCode,
+            @RequestParam(required = false) Boolean attendedPreparation,
+            Pageable pageable) {
+
+        return ResponseEntity.ok(candidateService.filterCandidates(zipCode, schoolCode, attendedPreparation, pageable));
     }
 
 }

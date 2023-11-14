@@ -11,9 +11,12 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :id")
-    Page<Candidate> findCandidatesByAppointmentId(@Param("id") Long id, Pageable pageable);
+    @Query("SELECT apt FROM Appointment apt JOIN apt.applications app WHERE app.candidate.id = :candidateId")
+    Page<Appointment> findByCandidateId(@Param("candidateId") Long candidateId, Pageable pageable);
 
-    @Query("SELECT app.candidate FROM Application app JOIN app.appointments apt WHERE apt.id = :id")
-    List<Candidate> findAllCandidatesByAppointmentId(Long id);
+    @Query("SELECT apt FROM Appointment apt WHERE apt NOT IN (SELECT a FROM Appointment a JOIN a.applications app WHERE app.candidate.id = :candidateId)")
+    Page<Appointment> findByCandidateIdNotSigned(@Param("candidateId") Long candidateId, Pageable pageable);
+
+
+    List<Appointment> findAllByOrderByAppointmentDateAscExamNameAsc();
 }

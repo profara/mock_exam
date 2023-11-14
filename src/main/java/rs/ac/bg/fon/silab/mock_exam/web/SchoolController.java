@@ -11,6 +11,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.dto.SchoolUpdateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.school.service.SchoolService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/schools")
 public class SchoolController {
@@ -34,6 +36,11 @@ public class SchoolController {
     @GetMapping
     public ResponseEntity<Page<SchoolResponseDTO>> get(Pageable pageable){
         return ResponseEntity.ok(schoolService.get(pageable));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<SchoolResponseDTO>> getAll(){
+        return ResponseEntity.ok(schoolService.getAll());
     }
 
     @DeleteMapping("/{code}")

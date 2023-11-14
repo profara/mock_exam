@@ -1,7 +1,7 @@
 import {Wrap, WrapItem, Spinner, Text, Button, Center} from '@chakra-ui/react';
 import Simple from "./components/shared/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {getAppointments, getExams, getPriceListItems} from "./services/client.js";
+import {getAllSortedAppointments, getAppointmentsByCandidate, getPriceListItems} from "./services/client.js";
 import Card from "./components/appointment/Card.jsx";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./components/context/AuthContext.jsx";
@@ -10,11 +10,13 @@ import {useApplication} from "./components/context/ApplicationContext.jsx";
 import {createApplication, getCurrentDateInSerbiaTimeZone} from "./utils/appUtils.js";
 import {DEFAULT_CURRENCY_CODE} from "./components/payslip/config/constants.js";
 import CreateAppointmentDrawer from "./components/appointment/CreateAppointmentDrawer.jsx";
+import {useAppointmentOrder} from "./components/context/AppointmentOrderContext.jsx";
 
 
 const App = () => {
 
     const [appointments, setAppointments] = useState([]);
+    const [appliedAppointments, setAppliedAppointments] = useState([]);
     const [loading, setLoading] = useState(false);
     const {selectedCards, setSelectedCards} = useCard();
     const [err, setError] = useState("");
@@ -22,15 +24,15 @@ const App = () => {
     const {candidate, isAdmin, loadingAuth, user} = useAuth();
     const serbiaDate = getCurrentDateInSerbiaTimeZone();
     const {setApplication} = useApplication();
-    const [examNames, setExamNames] = useState([]);
     const currentYear = new Date(serbiaDate).getFullYear().toString();
     const [priceListItem, setPriceListItem] = useState(null);
-    let examResponse;
+    const {getOrderForAppointment} = useAppointmentOrder();
     let appointmentsResponse;
 
     const handlePrijaviClick = (candidate) => {
         if (candidate) {
             createApplication(candidate, serbiaDate, selectedCards, setApplication, navigate);
+            setSelectedCards([]);
         } else {
             navigate("/profil")
         }
@@ -47,20 +49,14 @@ const App = () => {
         });
     }
 
-    const examCounters = examNames.reduce((acc, name) => {
-        acc[name] = 0;
-        return acc;
-    }, {});
 
     const fetchAppointmentsForAdmin = () => {
         setLoading(true);
 
-        Promise.all([getExams(), getAppointments()])
-            .then(([examsRes, appointmentsRes]) => {
-                examResponse = examsRes.data.content.map(exam => exam.name);
-                appointmentsResponse = appointmentsRes.data.content;
+        getAllSortedAppointments()
+            .then(res => {
+                appointmentsResponse = res.data;
 
-                setExamNames(examResponse);
                 setAppointments(appointmentsResponse);
 
             }).catch(err => {
@@ -70,14 +66,14 @@ const App = () => {
         })
     }
 
+
     const fetchAppointments = () => {
         setLoading(true);
 
-        Promise.all([getExams(), getAppointments(), getPriceListItems()])
-            .then(([examsRes, appointmentsRes, priceListItemsRes]) => {
+        Promise.all([getAllSortedAppointments(), getPriceListItems()])
+            .then(([appointmentsRes, priceListItemsRes]) => {
 
-                examResponse = examsRes.data.content.map(exam => exam.name);
-                appointmentsResponse = appointmentsRes.data.content;
+                appointmentsResponse = appointmentsRes.data;
 
                 const priceMap = {};
                 appointmentsResponse.forEach(appointment => {
@@ -94,7 +90,7 @@ const App = () => {
 
                 });
 
-                setExamNames(examResponse);
+
                 setAppointments(appointmentsResponse);
                 setPriceListItem(priceMap);
             }).catch(err => {
@@ -102,6 +98,17 @@ const App = () => {
         }).finally(() => {
             setLoading(false);
         })
+        if (candidate) {
+            setLoading(true);
+            getAppointmentsByCandidate(candidate.id)
+                .then(res => {
+                    setAppliedAppointments(res.data.content);
+                }).catch(err => {
+                console.error(err);
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
 
     }
 
@@ -110,7 +117,6 @@ const App = () => {
             fetchAppointmentsForAdmin();
         }
     }, [user]);
-
 
 
     useEffect(() => {
@@ -141,7 +147,7 @@ const App = () => {
         )
     }
 
-    if(!isAdmin() && !priceListItem){
+    if (!isAdmin() && !priceListItem) {
         return (
             <Simple>
                 <Text mt={5}>Nema dostupnih termina</Text>
@@ -154,7 +160,7 @@ const App = () => {
             <Simple>
                 {isAdmin() && (
                     <CreateAppointmentDrawer
-                    fetchAppointments={fetchAppointmentsForAdmin}
+                        fetchAppointments={fetchAppointmentsForAdmin}
                     />
                 )}
                 <Text mt={5}>Nema dostupnih termina</Text>
@@ -170,21 +176,21 @@ const App = () => {
                 />
             )}
             <Wrap justify={"center"} spacing={"30px"}>
-                {appointments.map((appointment, index) => {
-                    const examName = appointment.exam.name;
-                    examCounters[examName]++;
-
+                {appointments.map((appointment) => {
 
                     return (
                         <WrapItem key={appointment.id}>
 
                             <Card
                                 {...appointment}
-                                count={examCounters[examName]}
                                 priceListItem={isAdmin() ? null : priceListItem[appointment.id]}
                                 toogleCardSelection={() => toogleCardSelection(appointment.id)}
                                 isSelected={selectedCards.includes(appointment.id)}
                                 fetchAppointments={isAdmin() ? fetchAppointmentsForAdmin : fetchAppointments}
+                                order={getOrderForAppointment(appointment)}
+                                appointment={appointment}
+                                hasApplied={isAdmin() ? null : appliedAppointments.some(a => a.id === appointment.id)}
+                                candidate={candidate}
                             />
                         </WrapItem>
                     );
@@ -192,13 +198,13 @@ const App = () => {
 
             </Wrap>
             {!isAdmin() && (
-            <Center mt={10}>
-                <Button colorScheme="green" size="lg" isDisabled={selectedCards.length === 0}
-                        onClick={() => handlePrijaviClick(candidate)}>
-                    Prijavi
-                </Button>
-            </Center>
-            ) }
+                <Center mt={10}>
+                    <Button colorScheme="green" size="lg" isDisabled={selectedCards.length === 0}
+                            onClick={() => handlePrijaviClick(candidate)}>
+                        Prijavi
+                    </Button>
+                </Center>
+            )}
         </Simple>
     )
 }

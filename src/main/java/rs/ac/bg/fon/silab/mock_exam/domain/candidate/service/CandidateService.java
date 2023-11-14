@@ -6,6 +6,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
+import java.util.List;
+
 public interface CandidateService {
 
     Candidate findById(Long id);
@@ -21,4 +23,13 @@ public interface CandidateService {
 
     CandidateResponseDTO getByEmail(String email);
 
+    Page<CandidateResponseDTO> getByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable);
+
+    List<CandidateResponseDTO> getAllByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation);
+
+    boolean existsById(Long candidateId);
+
+    Page<CandidateResponseDTO> filterCandidates(Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable);
+
+    Page<CandidateResponseDTO> filterByAppointmentId(Long appointmentId, Long zipCode, Long schoolCode, Boolean attendedPreparation, Pageable pageable);
 }

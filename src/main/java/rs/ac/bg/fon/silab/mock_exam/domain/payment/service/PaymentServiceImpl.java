@@ -1,5 +1,6 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.payment.service;
 
+import jakarta.xml.bind.DatatypeConverter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.service.PriceListService;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service.PriceListItemService;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailSender;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,15 +37,16 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentMapper mapper;
     private final PriceListService priceListService;
     private final PriceListItemService priceListItemService;
-
     private final CurrencyService currencyService;
+    private final EmailSender emailSender;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService, CurrencyService currencyService) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService, CurrencyService currencyService, EmailSender emailSender) {
         this.paymentRepository = paymentRepository;
         this.mapper = mapper;
         this.priceListService = priceListService;
         this.priceListItemService = priceListItemService;
         this.currencyService = currencyService;
+        this.emailSender = emailSender;
     }
 
     @Override
@@ -95,6 +99,16 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
 
         return mapper.map(payment);
+    }
+
+    @Override
+    public void sendPayslipOnEmail(Map<String, String> payload) {
+        String imageData = payload.get("imageData");
+        String userEmail = payload.get("userEmail");
+
+        byte[] imageBytes = DatatypeConverter.parseBase64Binary(imageData.substring(imageData.indexOf(",") + 1));
+
+        emailSender.sendAttachment(userEmail, imageBytes);
     }
 
 

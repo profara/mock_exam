@@ -13,7 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {deleteCandidate} from "../../services/client.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 
-const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
+const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates, page}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = React.useRef();
     const navigate = useNavigate();
@@ -33,8 +33,16 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
                 err?.response.data.message
             )
         }).finally(() => {
-            fetchCandidates();
+            fetchCandidates(page);
         })
+    }
+
+    const handleOdjaviClick = () => {
+        navigate("/mojePrijave", {state:{candidate: candidate, signed: true}})
+    }
+
+    const handlePrijaviClick = () => {
+        navigate("/mojePrijave", {state:{candidate: candidate, signed: false}})
     }
 
     return (
@@ -48,19 +56,34 @@ const CandidateCard = ({ candidate, isOdd, rowNum, fetchCandidates}) => {
             w={"100%"}
         >
 
-            <Box ml={4} w="5%">
+            <Box ml={4} w="2%">
                 <Text>{rowNum}.</Text>
             </Box>
-            <Box w="15%">
+            <Box w="14%">
                 <Text>{candidate.name}</Text>
             </Box>
-            <Box w="15%">
+            <Box w="14%">
                 <Text>{candidate.surname}</Text>
             </Box>
-            <Box w="45%">
+            <Box w="14%">
                 <Text>{candidate.userProfile.email}</Text>
             </Box>
-            <Flex w="20%" justifyContent="flex-end" mr={4}>
+            <Box w="14%">
+                <Text>{candidate.city.name}</Text>
+            </Box>
+            <Box w="18%">
+                <Text>{candidate.school.name}</Text>
+            </Box>
+            <Box w="10%">
+                <Text>{candidate.attendedPreparation ? 'Da' : 'Ne'}</Text>
+            </Box>
+            <Flex w="14%" justifyContent="flex-end" mr={4}>
+                <Button colorScheme="red" mr={2} onClick={handleOdjaviClick}>
+                    Odjavi
+                </Button>
+                <Button colorScheme="teal" mr={2} onClick={handlePrijaviClick}>
+                    Prijavi
+                </Button>
                 <Button colorScheme="teal" mr={2} onClick={handleUpdateClick}>
                     Azuriraj
                 </Button>

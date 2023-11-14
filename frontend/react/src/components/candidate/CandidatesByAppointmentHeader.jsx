@@ -1,16 +1,18 @@
 import {Box, Flex, IconButton, Text} from "@chakra-ui/react";
-import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
-import {filterCandidates} from "../../services/client.js";
+import { ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
+import {sortCandidatesByColumnName} from "../../services/client.js";
 
-const CandidatesHeader = ({page, size, setCandidates, selectedCity, selectedSchool,hasAttendedPreparation}) => {
-    function handleSort(column, direction) {
-        filterCandidates(selectedCity, selectedSchool, hasAttendedPreparation, page,size, column, direction, )
+const CandidatesByAppointmentHeader = ({id, page, size, setCandidates, selectedCity, selectedSchool, hasAttendedPreparation}) => {
+
+    const handleSort = (columnName, direction) => {
+        sortCandidatesByColumnName(id, selectedCity, selectedSchool, hasAttendedPreparation, page, size, columnName, direction)
             .then(res => {
                 setCandidates(res.data.content);
             }).catch(err => {
-            console.error(err);
+            console.error(err)
         })
     }
+
 
     return (
         <Flex
@@ -26,7 +28,7 @@ const CandidatesHeader = ({page, size, setCandidates, selectedCity, selectedScho
             <Box ml={4} w="2%">
                 <Text>Br.</Text>
             </Box>
-            <Box w="14%">
+            <Box w="12.25%">
                 <Flex  alignItems="center">
                     <Text fontWeight="bold" mr={4}>Ime</Text>
                     <Flex direction="column">
@@ -34,18 +36,18 @@ const CandidatesHeader = ({page, size, setCandidates, selectedCity, selectedScho
                             aria-label="Sort Ascending"
                             icon={<ChevronUpIcon />}
                             size="xss"
-                            onClick={() => handleSort('name', 'asc')}
+                            onClick={() => handleSort('candidate.name', 'asc')}
                         />
                         <IconButton
                             aria-label="Sort Descending"
                             icon={<ChevronDownIcon />}
                             size="xss"
-                            onClick={() => handleSort('name', 'desc')}
+                            onClick={() => handleSort('candidate.name', 'desc')}
                         />
                     </Flex>
                 </Flex>
             </Box>
-            <Box w="14%">
+            <Box w="12.25%">
                 <Flex  alignItems="center">
                     <Text fontWeight="bold" mr={4}>Prezime</Text>
                     <Flex direction="column">
@@ -53,35 +55,34 @@ const CandidatesHeader = ({page, size, setCandidates, selectedCity, selectedScho
                             aria-label="Sort Ascending"
                             icon={<ChevronUpIcon />}
                             size="xss"
-                            onClick={() => handleSort('surname', 'asc')}
+                            onClick={() => handleSort('candidate.surname', 'asc')}
                         />
                         <IconButton
                             aria-label="Sort Descending"
                             icon={<ChevronDownIcon />}
                             size="xss"
-                            onClick={() => handleSort('surname', 'desc')}
+                            onClick={() => handleSort('candidate.surname', 'desc')}
                         />
                     </Flex>
                 </Flex>
             </Box>
-            <Box w="14%">
+            <Box w="12.25%">
                 <Text>Email</Text>
             </Box>
-            <Box w="14%">
+            <Box w="12.25%">
                 <Text>Grad</Text>
             </Box>
-            <Box w="18%">
+            <Box w="12.25%">
+                <Text>Adresa</Text>
+            </Box>
+            <Box w="12.25%">
                 <Text>Skola</Text>
             </Box>
-            <Box w="15%">
+            <Box w="12.25%">
                 <Text>Isao na pripremu</Text>
             </Box>
-            <Box w="10%">
-                <Text>Akcije</Text>
-            </Box>
-
         </Flex>
     );
 };
 
-export default CandidatesHeader;
+export default CandidatesByAppointmentHeader;

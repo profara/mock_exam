@@ -54,15 +54,18 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.update(id,appointmentRequestDTO));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}/candidates")
-    public ResponseEntity<Page<CandidateResponseDTO>> getCandidates(@PathVariable Long id, Pageable pageable){
-        return ResponseEntity.ok(appointmentService.getCandidates(id,pageable));
+    @GetMapping("/by-candidate/{candidateId}")
+    public ResponseEntity<Page<AppointmentResponseDTO>> getByCandidateId(@PathVariable Long candidateId, Pageable pageable){
+        return ResponseEntity.ok(appointmentService.getByCandidateId(candidateId, pageable));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}/candidates/all")
-    public ResponseEntity<List<CandidateResponseDTO>> getCandidates(@PathVariable Long id){
-        return ResponseEntity.ok(appointmentService.getAllCandidates(id));
+    @GetMapping("/all-sorted")
+    public ResponseEntity<List<AppointmentResponseDTO>> getAllSorted(){
+        return ResponseEntity.ok(appointmentService.getAllSorted());
+    }
+
+    @GetMapping("/by-candidate/{candidateId}/not-signed")
+    public ResponseEntity<Page<AppointmentResponseDTO>> getByCandidateIdNotSigned(@PathVariable Long candidateId, Pageable pageable){
+        return ResponseEntity.ok(appointmentService.getByCandidateIdNotSigned(candidateId, pageable));
     }
 }

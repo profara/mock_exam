@@ -24,7 +24,12 @@ public interface AppointmentService {
 
     AppointmentResponseDTO update(Long id, AppointmentRequestDTO appointmentRequestDTO);
 
-    Page<CandidateResponseDTO> getCandidates(Long id, Pageable pageable);
+    boolean existsById(Long id);
 
-    List<CandidateResponseDTO> getAllCandidates(Long id);
+
+    Page<AppointmentResponseDTO> getByCandidateId(Long candidateId, Pageable pageable);
+
+    List<AppointmentResponseDTO> getAllSorted();
+
+    Page<AppointmentResponseDTO> getByCandidateIdNotSigned(Long candidateId, Pageable pageable);
 }
