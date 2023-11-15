@@ -21,6 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the ApplicationService.
+ * This class handles business logic for managing applications, including operations like finding, saving, deleting...
+ */
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -29,6 +33,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final AppointmentService appointmentService;
     private final CandidateService candidateService;
 
+    /**
+     * Constructs a new ApplicationServiceImpl with required dependencies.
+     *
+     * @param applicationRepository the repository for application data access
+     * @param mapper the mapper for converting between entity and DTO
+     * @param appointmentService the service for managing appointments
+     * @param candidateService the service for managing candidates
+     */
     public ApplicationServiceImpl(ApplicationRepository applicationRepository, ApplicationMapper mapper, AppointmentService appointmentService, CandidateService candidateService) {
         this.applicationRepository = applicationRepository;
         this.mapper = mapper;
