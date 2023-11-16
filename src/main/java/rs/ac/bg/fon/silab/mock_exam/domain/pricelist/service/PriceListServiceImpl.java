@@ -13,12 +13,22 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundExcep
 
 import java.time.Year;
 
+/**
+ * Implementation of the PriceListService interface.
+ * Handles business logic related to price list management, such as finding, saving, updating, and deleting price lists.
+ */
 @Service
 public class PriceListServiceImpl implements PriceListService{
 
     private final PriceListRepository priceListRepository;
     private final PriceListMapper mapper;
 
+    /**
+     * Constructs a new PriceListServiceImpl with necessary dependencies.
+     *
+     * @param priceListRepository the repository for price list data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public PriceListServiceImpl(PriceListRepository priceListRepository, PriceListMapper mapper) {
         this.priceListRepository = priceListRepository;
         this.mapper = mapper;
