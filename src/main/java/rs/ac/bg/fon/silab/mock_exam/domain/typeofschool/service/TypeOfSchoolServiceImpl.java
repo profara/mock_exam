@@ -11,12 +11,22 @@ import rs.ac.bg.fon.silab.mock_exam.domain.typeofschool.mapper.TypeOfSchoolMappe
 import rs.ac.bg.fon.silab.mock_exam.domain.typeofschool.repository.TypeOfSchoolRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+/**
+ * Implementation of the TypeOfSchoolService interface.
+ * Manages operations related to the types of schools, including retrieving, saving, updating, and deleting.
+ */
 @Service
 public class TypeOfSchoolServiceImpl implements TypeOfSchoolService{
 
     private final TypeOfSchoolRepository typeOfSchoolRepository;
     private final TypeOfSchoolMapper mapper;
 
+    /**
+     * Constructs a new TypeOfSchoolServiceImpl with necessary dependencies.
+     *
+     * @param typeOfSchoolRepository the repository for accessing type of school data
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public TypeOfSchoolServiceImpl(TypeOfSchoolRepository typeOfSchoolRepository, TypeOfSchoolMapper mapper) {
         this.typeOfSchoolRepository = typeOfSchoolRepository;
         this.mapper = mapper;
