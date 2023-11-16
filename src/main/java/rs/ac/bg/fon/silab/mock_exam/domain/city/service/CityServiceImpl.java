@@ -16,12 +16,22 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundExcep
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the CityService interface.
+ * Handles business logic related to city management, such as finding, saving, updating, and deleting cities.
+ */
 @Service
 public class CityServiceImpl implements CityService{
 
     private final CityRepository cityRepository;
     private final CityMapper mapper;
 
+    /**
+     * Constructs a new CityServiceImpl with necessary dependencies.
+     *
+     * @param cityRepository the repository for city data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public CityServiceImpl(CityRepository cityRepository, CityMapper mapper) {
         this.cityRepository = cityRepository;
         this.mapper = mapper;
