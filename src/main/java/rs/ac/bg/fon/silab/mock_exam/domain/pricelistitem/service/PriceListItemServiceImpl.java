@@ -1,6 +1,5 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service;
 
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,15 +12,24 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.mapper.PriceListItemMap
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.repository.PriceListItemRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
-import java.time.Year;
 import java.util.List;
 
+/**
+ * Service implementation for managing price list items.
+ * Provides concrete implementations of the methods defined in the PriceListItemService interface.
+ */
 @Service
 public class PriceListItemServiceImpl implements PriceListItemService{
 
     private final PriceListItemRepository priceListItemRepository;
     private final PriceListItemMapper mapper;
 
+    /**
+     * Constructs a new PriceListItemServiceImpl with necessary dependencies.
+     *
+     * @param priceListItemRepository the repository for price list item data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public PriceListItemServiceImpl(PriceListItemRepository priceListItemRepository, PriceListItemMapper mapper) {
         this.priceListItemRepository = priceListItemRepository;
         this.mapper = mapper;
