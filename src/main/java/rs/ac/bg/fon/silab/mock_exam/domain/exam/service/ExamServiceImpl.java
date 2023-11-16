@@ -11,12 +11,22 @@ import rs.ac.bg.fon.silab.mock_exam.domain.exam.mapper.ExamMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.repository.ExamRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+/**
+ * Implementation of the ExamService interface.
+ * Handles business logic related to exam management, such as finding, saving, updating, and deleting exams.
+ */
 @Service
 public class ExamServiceImpl implements ExamService{
 
     private final ExamRepository examRepository;
     private final ExamMapper mapper;
 
+    /**
+     * Constructs a new ExamServiceImpl with necessary dependencies.
+     *
+     * @param examRepository the repository for exam data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public ExamServiceImpl(ExamRepository examRepository, ExamMapper mapper) {
         this.examRepository = examRepository;
         this.mapper = mapper;
