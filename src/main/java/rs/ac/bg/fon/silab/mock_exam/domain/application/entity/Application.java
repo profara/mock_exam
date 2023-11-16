@@ -161,7 +161,11 @@ public class Application {
     /**
      * Checks if the candidate associated with the application has privileged status.
      *
-     * @return {@code true} if the candidate associated with the application has attended the preparation, {@code false} otherwise
+     * @return
+     * <ul>
+     *     <li>{@code true} - if the candidate associated with the application has attended the preparation</li>
+     *     <li>{@code false} - otherwise</li>
+     * </ul>
      */
     public boolean isPrivileged() {
         return privileged;
@@ -198,7 +202,11 @@ public class Application {
      * Indicates whether some other {@link Application} is "equal to" this one based on the id.
      *
      * @param o the reference object with which to compare
-     * @return {@code true} if this Application is the same as the object argument; {@code false} otherwise
+     * @return
+     * <ul>
+     *     <li>{@code true} - if this Application is the same as the object argument</li>
+     *     <li>{@code false} - otherwise</li>
+     * </ul>
      */
     @Override
     public boolean equals(Object o) {

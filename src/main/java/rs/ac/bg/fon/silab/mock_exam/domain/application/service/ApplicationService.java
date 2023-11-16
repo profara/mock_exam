@@ -26,6 +26,8 @@ public interface ApplicationService {
      *
      * @param applicationDTO the application data transfer object
      * @return the persisted state of the application as a DTO
+     * @throws rs.ac.bg.fon.silab.mock_exam.domain.application.exception.DuplicateAppointmentApplicationException if Candidate
+     * already applied for some of the appointments in the application
      */
     ApplicationResponseDTO save(ApplicationRequestDTO applicationDTO);
 
@@ -50,6 +52,7 @@ public interface ApplicationService {
      * Deletes an application by its ID.
      *
      * @param id the ID of the application to delete
+     * @throws rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException if Application with entered ID doesn't exist
      */
     void delete(Long id);
 
@@ -58,7 +61,8 @@ public interface ApplicationService {
      *
      * @param candidateId the ID of the candidate
      * @param appointmentId the ID of the appointment to be removed
-     * @throws rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException if application with that ID doesn't exist
+     * @throws rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException if application with entered ID doesn't exist
+     * or candidate with entered ID doesn't exist
      */
     void deleteAppointment(Long candidateId, Long appointmentId);
 
@@ -68,7 +72,7 @@ public interface ApplicationService {
      * @param candidateId the ID of the candidate
      * @param appointmentId the ID of the appointment to be included in the application
      * @return the created application as a DTO
-     * @throws rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException if Candidate with entered candidateId doesn't exists
+     * @throws rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException if Candidate with entered candidateId doesn't exist
      */
     ApplicationResponseDTO createApplicationWithAppointment(Long candidateId, Long appointmentId);
 }

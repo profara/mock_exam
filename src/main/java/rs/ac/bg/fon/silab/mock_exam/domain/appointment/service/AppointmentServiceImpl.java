@@ -17,6 +17,10 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundExcep
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the AppointmentService interface.
+ * Handles business logic related to appointment management, such as finding, saving, updating, and deleting appointments.
+ */
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
 
@@ -24,6 +28,13 @@ public class AppointmentServiceImpl implements AppointmentService{
     private final AppointmentMapper mapper;
     private final CandidateRepository candidateRepository;
 
+    /**
+     * Constructs a new AppointmentServiceImpl with necessary dependencies.
+     *
+     * @param appointmentRepository the repository for appointment data access
+     * @param mapper the mapper for converting between entity and DTO
+     * @param candidateRepository the repository for accessing candidate data
+     */
     public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper mapper, CandidateRepository candidateRepository) {
         this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
