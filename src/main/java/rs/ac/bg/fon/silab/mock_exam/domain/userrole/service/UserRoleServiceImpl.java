@@ -11,12 +11,22 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userrole.mapper.UserRoleMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.repository.UserRoleRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+/**
+ * Implementation of the UserRoleService interface.
+ * Handles business logic for managing user roles, including finding, saving, updating, and deleting user roles.
+ */
 @Service
 public class UserRoleServiceImpl implements UserRoleService{
 
     private final UserRoleRepository userRoleRepository;
     private final UserRoleMapper mapper;
 
+    /**
+     * Constructs a new UserRoleServiceImpl with necessary dependencies.
+     *
+     * @param userRoleRepository the repository for user role data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public UserRoleServiceImpl(UserRoleRepository userRoleRepository, UserRoleMapper mapper) {
         this.userRoleRepository = userRoleRepository;
         this.mapper = mapper;
