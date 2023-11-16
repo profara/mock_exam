@@ -15,12 +15,22 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundExcep
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the SchoolService interface.
+ * Handles business logic related to school management, such as finding, saving, updating, and deleting schools.
+ */
 @Service
 public class SchoolServiceImpl implements SchoolService{
 
     private final SchoolRepository schoolRepository;
     private final SchoolMapper mapper;
 
+    /**
+     * Constructs a new SchoolServiceImpl with necessary dependencies.
+     *
+     * @param schoolRepository the repository for school data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public SchoolServiceImpl(SchoolRepository schoolRepository, SchoolMapper mapper) {
         this.schoolRepository = schoolRepository;
         this.mapper = mapper;
