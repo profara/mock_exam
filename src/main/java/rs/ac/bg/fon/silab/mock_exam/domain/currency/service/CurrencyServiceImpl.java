@@ -11,12 +11,22 @@ import rs.ac.bg.fon.silab.mock_exam.domain.currency.mapper.CurrencyMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.repository.CurrencyRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
+/**
+ * Implementation of the CurrencyService interface.
+ * Handles business logic related to currency management, such as finding, saving, updating, and deleting currencies.
+ */
 @Service
 public class CurrencyServiceImpl implements CurrencyService{
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper mapper;
 
+    /**
+     * Constructs a new CurrencyServiceImpl with necessary dependencies.
+     *
+     * @param currencyRepository the repository for currency data access
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public CurrencyServiceImpl(CurrencyRepository currencyRepository, CurrencyMapper mapper) {
         this.currencyRepository = currencyRepository;
         this.mapper = mapper;
