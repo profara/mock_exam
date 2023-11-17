@@ -15,6 +15,11 @@ import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Service class implementing the EmailSender interface for sending emails.
+ * Provides functionalities for sending simple emails, emails with attachments,
+ * and reminder emails for appointments.
+ */
 @Service
 public class EmailService implements EmailSender{
 

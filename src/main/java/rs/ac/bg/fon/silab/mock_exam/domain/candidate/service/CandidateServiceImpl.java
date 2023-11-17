@@ -16,7 +16,10 @@ import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundExcep
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * Implementation of the CandidateService interface.
+ * Handles business logic related to candidate management, such as finding, saving, updating, and deleting candidates.
+ */
 @Service
 public class CandidateServiceImpl implements CandidateService{
 
@@ -24,6 +27,13 @@ public class CandidateServiceImpl implements CandidateService{
     private final CandidateMapper mapper;
     private final AppointmentService appointmentService;
 
+    /**
+     * Constructs a new CandidateServiceImpl with necessary dependencies.
+     *
+     * @param candidateRepository the repository for candidate data access
+     * @param mapper the mapper for converting between entity and DTO
+     * @param appointmentService the service for managing appointments
+     */
     public CandidateServiceImpl(CandidateRepository candidateRepository, CandidateMapper mapper, AppointmentService appointmentService) {
         this.candidateRepository = candidateRepository;
         this.mapper = mapper;

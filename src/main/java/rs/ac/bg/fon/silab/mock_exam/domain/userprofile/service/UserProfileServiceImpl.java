@@ -23,6 +23,10 @@ import java.util.Optional;
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.CONFIRMATION_LINK;
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.USER_ROLE;
 
+/**
+ * Implementation of the UserProfileService interface.
+ * Manages user profile related business logic such as user registration, updating, and retrieval.
+ */
 @Service
 public class UserProfileServiceImpl implements UserProfileService{
 
@@ -33,6 +37,16 @@ public class UserProfileServiceImpl implements UserProfileService{
     private final JWTUtil jwtUtil;
     private final EmailSender emailSender;
 
+    /**
+     * Constructs a new UserProfileServiceImpl with necessary dependencies.
+     *
+     * @param userProfileRepository the repository for accessing user profile data
+     * @param userRoleRepository the repository for accessing user role data
+     * @param passwordEncoder the encoder for user password hashing
+     * @param mapper the mapper for converting between entity and DTO
+     * @param jwtUtil utility for handling JSON Web Tokens
+     * @param emailSender service for sending emails
+     */
     public UserProfileServiceImpl(UserProfileRepository userProfileRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, UserProfileMapper mapper, JWTUtil jwtUtil, EmailSender emailSender) {
         this.userProfileRepository = userProfileRepository;
         this.userRoleRepository = userRoleRepository;

@@ -18,7 +18,6 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.service.PriceListService;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service.PriceListItemService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailSender;
-import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,6 +29,10 @@ import java.util.stream.Collectors;
 
 import static rs.ac.bg.fon.silab.mock_exam.infrastructure.config.Constants.*;
 
+/**
+ * Implementation of the PaymentService interface.
+ * Handles business logic related to payment management such as saving, updating, retrieving, and deleting payments.
+ */
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
@@ -40,6 +43,16 @@ public class PaymentServiceImpl implements PaymentService {
     private final CurrencyService currencyService;
     private final EmailSender emailSender;
 
+    /**
+     * Constructs a new PaymentServiceImpl with necessary dependencies.
+     *
+     * @param paymentRepository the repository for payment data access
+     * @param mapper the mapper for converting between entity and DTO
+     * @param priceListService the service for managing price lists
+     * @param priceListItemService the service for managing price list items
+     * @param currencyService the service for managing currencies
+     * @param emailSender the utility for sending emails
+     */
     public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper mapper, PriceListService priceListService, PriceListItemService priceListItemService, CurrencyService currencyService, EmailSender emailSender) {
         this.paymentRepository = paymentRepository;
         this.mapper = mapper;
