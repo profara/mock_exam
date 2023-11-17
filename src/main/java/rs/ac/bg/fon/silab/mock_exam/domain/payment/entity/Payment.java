@@ -2,7 +2,6 @@ package rs.ac.bg.fon.silab.mock_exam.domain.payment.entity;
 
 import jakarta.persistence.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.entity.Application;
-import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 
 import java.math.BigDecimal;
 import java.util.Objects;

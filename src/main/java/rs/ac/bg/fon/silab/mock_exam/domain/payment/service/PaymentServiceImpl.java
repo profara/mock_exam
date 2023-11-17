@@ -18,7 +18,6 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.service.PriceListService;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service.PriceListItemService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailSender;
-import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

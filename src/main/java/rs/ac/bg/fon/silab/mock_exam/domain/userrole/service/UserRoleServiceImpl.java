@@ -78,7 +78,7 @@ public class UserRoleServiceImpl implements UserRoleService{
         var userRole = userRoleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(UserRole.class.getSimpleName(),"id", id));
 
-        mapper.update(userRole,userRoleDTO);;
+        mapper.update(userRole,userRoleDTO);
 
         userRoleRepository.save(userRole);
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentService;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 
 import java.util.List;
 

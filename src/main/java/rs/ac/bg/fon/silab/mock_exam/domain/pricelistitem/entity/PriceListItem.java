@@ -1,7 +1,6 @@
 package rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity;
 
 import jakarta.persistence.*;
-import org.springframework.data.domain.Persistable;
 import rs.ac.bg.fon.silab.mock_exam.domain.currency.entity.Currency;
 import rs.ac.bg.fon.silab.mock_exam.domain.exam.entity.Exam;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;

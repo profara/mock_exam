@@ -11,7 +11,6 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.mapper.AppointmentMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.repository.AppointmentRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.repository.CandidateRepository;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 import java.util.List;

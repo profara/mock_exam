@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentRequestDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 
 import java.util.List;
 

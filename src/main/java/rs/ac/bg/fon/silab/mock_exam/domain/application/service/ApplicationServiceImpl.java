@@ -12,14 +12,12 @@ import rs.ac.bg.fon.silab.mock_exam.domain.application.mapper.ApplicationMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.application.repository.ApplicationRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentService;
-import rs.ac.bg.fon.silab.mock_exam.domain.candidate.dto.CandidateResponseDTO;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.entity.Candidate;
 import rs.ac.bg.fon.silab.mock_exam.domain.candidate.service.CandidateService;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Implementation of the ApplicationService.
