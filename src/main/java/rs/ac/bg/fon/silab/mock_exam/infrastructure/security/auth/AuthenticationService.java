@@ -14,6 +14,10 @@ import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper.UserProfileMapper;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.jwt.JWTUtil;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.security.exception.VerificationException;
 
+/**
+ * Service class for authentication operations.
+ * This service provides functionalities to authenticate users and issue JWT tokens.
+ */
 @Service
 public class AuthenticationService {
 
@@ -21,12 +25,28 @@ public class AuthenticationService {
     private final JWTUtil jwtUtil;
     private final UserProfileMapper userProfileMapper;
 
+    /**
+     * Constructs an AuthenticationService with the necessary dependencies.
+     *
+     * @param authenticationManager Manager to handle authentication processes.
+     * @param jwtUtil Utility to handle JWT token operations.
+     * @param userProfileMapper Mapper to convert UserProfile entities to DTOs.
+     */
     public AuthenticationService(AuthenticationManager authenticationManager, JWTUtil jwtUtil, UserProfileMapper userProfileMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userProfileMapper = userProfileMapper;
     }
 
+    /**
+     * Authenticates a user based on email and password.
+     * If authentication is successful, a JWT token is issued.
+     *
+     * @param request DTO containing the user's email and password.
+     * @return AuthenticationResponseDTO containing the JWT token and user profile details.
+     * @throws BadCredentialsException if the credentials are incorrect.
+     * @throws AuthenticationException if the account is not verified.
+     */
     public AuthenticationResponseDTO login(UserProfileRequestUpdateDTO request){
             try {
                 Authentication authentication = authenticationManager.authenticate(
