@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,12 +18,10 @@ import rs.ac.bg.fon.silab.mock_exam.domain.appointment.dto.AppointmentResponseDT
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.entity.Appointment;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.mapper.AppointmentMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.appointment.repository.AppointmentRepository;
-import rs.ac.bg.fon.silab.mock_exam.domain.appointment.service.AppointmentServiceImpl;
-import rs.ac.bg.fon.silab.mock_exam.domain.exam.dto.ExamResponseDTO;
+import rs.ac.bg.fon.silab.mock_exam.domain.candidate.repository.CandidateRepository;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,17 +30,29 @@ public class AppointmentServiceImplTest {
 
     @Mock
     private AppointmentRepository appointmentRepository;
-
     @Mock
     private AppointmentMapper mapper;
-
+    @Mock
+    private CandidateRepository candidateRepository;
     @InjectMocks
     private AppointmentServiceImpl appointmentService;
+    private final Long id = 1L;
+    private final LocalDateTime appointmentDateTime = LocalDateTime.now();
+    private Appointment mockAppointment;
+    private AppointmentRequestDTO requestDTO;
+    private AppointmentResponseDTO responseDTO;
+
+    @BeforeEach
+    void setUp(){
+        this.mockAppointment = new Appointment();
+        mockAppointment.setId(id);
+        this.requestDTO = new AppointmentRequestDTO(id, appointmentDateTime);
+        this.responseDTO = new AppointmentResponseDTO(id, null, appointmentDateTime);
+
+    }
 
     @Test
     void testGetByIdWhenAppointmentExists() {
-        Long id = 1L;
-        Appointment mockAppointment = new Appointment();
         when(appointmentRepository.findById(id)).thenReturn(Optional.of(mockAppointment));
 
         Appointment result = appointmentService.getById(id);
@@ -50,7 +61,6 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testGetByIdWhenAppointmentDoesNotExist() {
-        Long id = 1L;
         when(appointmentRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> appointmentService.getById(id));
@@ -58,18 +68,16 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testSave() {
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, LocalDateTime.now());
         Appointment mappedAppointment = new Appointment();
         Appointment savedAppointment = new Appointment();
-        AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(1L, null, LocalDateTime.now());
 
-        when(mapper.map(dto)).thenReturn(mappedAppointment);
+        when(mapper.map(requestDTO)).thenReturn(mappedAppointment);
         when(appointmentRepository.save(mappedAppointment)).thenReturn(savedAppointment);
         when(mapper.map(savedAppointment)).thenReturn(responseDTO);
 
-        AppointmentResponseDTO resultDTO = appointmentService.save(dto);
+        AppointmentResponseDTO resultDTO = appointmentService.save(requestDTO);
 
-        verify(mapper).map(dto);
+        verify(mapper).map(requestDTO);
         verify(appointmentRepository).save(mappedAppointment);
         verify(mapper).map(savedAppointment);
 
@@ -78,8 +86,6 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testFindByIdWhenAppointmentExists() {
-        Long id = 1L;
-        Appointment mockAppointment = new Appointment();
         AppointmentResponseDTO expectedResponseDTO = new AppointmentResponseDTO(1L, null, LocalDateTime.now());
 
         when(appointmentRepository.findById(id)).thenReturn(Optional.of(mockAppointment));
@@ -95,7 +101,6 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testFindByIdWhenAppointmentDoesNotExist() {
-        Long id = 1L;
         when(appointmentRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> appointmentService.findById(id));
@@ -106,14 +111,10 @@ public class AppointmentServiceImplTest {
 
         Pageable pageable = mock(Pageable.class);
 
-        Appointment mockAppointment = new Appointment();
 
-        ExamResponseDTO mockExamDTO = new ExamResponseDTO(1L, "Ispit");
-        AppointmentResponseDTO mockDTO = new AppointmentResponseDTO(1L, mockExamDTO, LocalDateTime.now());
-
-        Page<Appointment> page = new PageImpl<>(List.of(new Appointment()));
+        Page<Appointment> page = new PageImpl<>(List.of(mockAppointment));
         when(appointmentRepository.findAll(pageable)).thenReturn(page);
-        when(mapper.map(mockAppointment)).thenReturn(mockDTO);
+        when(mapper.map(mockAppointment)).thenReturn(responseDTO);
 
         Page<AppointmentResponseDTO> resultPage = appointmentService.get(pageable);
 
@@ -121,12 +122,11 @@ public class AppointmentServiceImplTest {
 
         assertNotNull(resultPage);
         assertEquals(1, resultPage.getContent().size());
-        assertEquals(mockDTO, resultPage.getContent().get(0));
+        assertEquals(responseDTO, resultPage.getContent().get(0));
     }
 
     @Test
     void testDeleteWhenAppointmentExists() {
-        Long id = 1L;
         when(appointmentRepository.existsById(id)).thenReturn(true);
 
         appointmentService.delete(id);
@@ -136,8 +136,6 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testDeleteWhenAppointmentDoesNotExist() {
-        Long id = 1L;
-
         when(appointmentRepository.existsById(id)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> {
@@ -149,8 +147,6 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testUpdateWhenAppointmentExists() {
-
-        Long id = 1L;
         Appointment existingAppointment = new Appointment();
         Appointment tempAppointment = new Appointment();
         AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, LocalDateTime.now());
@@ -169,18 +165,84 @@ public class AppointmentServiceImplTest {
 
     @Test
     void testUpdateWhenAppointmentDoesNotExist() {
-
-        Long id = 1L;
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, LocalDateTime.now());
-
         when(appointmentRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> {
-            appointmentService.update(id, dto);
+            appointmentService.update(id, requestDTO);
         });
 
         verify(mapper, never()).update(any(Appointment.class), any(Appointment.class));
         verify(appointmentRepository, never()).save(any(Appointment.class));
+    }
+
+    @Test
+    void testGetByCandidateIdWhenCandidateExists() {
+        Pageable pageable = mock(Pageable.class);
+        Page<Appointment> page = new PageImpl<>(List.of(mockAppointment));
+
+        when(candidateRepository.existsById(id)).thenReturn(true);
+        when(appointmentRepository.findByCandidateId(id, pageable)).thenReturn(page);
+        when(mapper.map(mockAppointment)).thenReturn(responseDTO);
+
+        Page<AppointmentResponseDTO> resultPage = appointmentService.getByCandidateId(id, pageable);
+
+        verify(appointmentRepository).findByCandidateId(id, pageable);
+        verify(mapper, times(page.getContent().size())).map(any(Appointment.class));
+        assertNotNull(resultPage);
+        assertEquals(1, resultPage.getContent().size());
+        assertEquals(responseDTO, resultPage.getContent().get(0));
+    }
+
+    @Test
+    void testGetByCandidateIdWhenCandidateDoesNotExist() {
+        Pageable pageable = mock(Pageable.class);
+
+        when(candidateRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> appointmentService.getByCandidateId(id, pageable));
+    }
+
+    @Test
+    void testGetAllSorted() {
+        List<Appointment> sortedAppointments = List.of(mockAppointment);
+        when(appointmentRepository.findAllByOrderByAppointmentDateAscExamNameAsc()).thenReturn(sortedAppointments);
+        when(mapper.map(mockAppointment)).thenReturn(responseDTO);
+
+        List<AppointmentResponseDTO> result = appointmentService.getAllSorted();
+
+        verify(appointmentRepository).findAllByOrderByAppointmentDateAscExamNameAsc();
+        verify(mapper, times(sortedAppointments.size())).map(any(Appointment.class));
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(responseDTO, result.get(0));
+    }
+
+    @Test
+    void testGetByCandidateIdNotSignedWhenCandidateExists() {
+        Pageable pageable = mock(Pageable.class);
+        Page<Appointment> page = new PageImpl<>(List.of(mockAppointment));
+
+        when(candidateRepository.existsById(id)).thenReturn(true);
+        when(appointmentRepository.findByCandidateIdNotSigned(id, pageable)).thenReturn(page);
+        when(mapper.map(mockAppointment)).thenReturn(responseDTO);
+
+        Page<AppointmentResponseDTO> resultPage = appointmentService.getByCandidateIdNotSigned(id, pageable);
+
+        verify(appointmentRepository).findByCandidateIdNotSigned(id, pageable);
+        verify(mapper, times(page.getContent().size())).map(any(Appointment.class));
+        assertNotNull(resultPage);
+        assertEquals(1, resultPage.getContent().size());
+        assertEquals(responseDTO, resultPage.getContent().get(0));
+    }
+
+    @Test
+    void testGetByCandidateIdNotSignedWhenCandidateDoesNotExist() {
+        Long candidateId = 1L;
+        Pageable pageable = mock(Pageable.class);
+
+        when(candidateRepository.existsById(candidateId)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> appointmentService.getByCandidateIdNotSigned(candidateId, pageable));
     }
 }
 

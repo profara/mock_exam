@@ -91,6 +91,17 @@ public class CityServiceImplTest {
     }
 
     @Test
+    void testGetByZipCodeWhenCityDoesNotExist() {
+        Long zipCode = 11000L;
+        when(cityRepository.findById(zipCode)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> cityService.getByZipCode(zipCode));
+
+        verify(cityRepository).findById(zipCode);
+        verify(mapper, never()).map(any(City.class));
+    }
+
+    @Test
     void testGet() {
         Pageable pageable = mock(Pageable.class);
         City mockCity = new City();
@@ -130,7 +141,7 @@ public class CityServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenCityExists() {
         Long zipCode = 10001L;
         CityRequestUpdateDTO dto = new CityRequestUpdateDTO("CityName");
         City existingCity = new City();
@@ -147,5 +158,42 @@ public class CityServiceImplTest {
         verify(mapper).map(existingCity);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenCityDoesNotExist() {
+        Long zipCode = 11000L;
+        CityRequestUpdateDTO dto = new CityRequestUpdateDTO("New City Name");
+
+        when(cityRepository.findById(zipCode)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> cityService.update(zipCode, dto));
+
+        verify(cityRepository).findById(zipCode);
+        verify(mapper, never()).update(any(City.class), any(CityRequestUpdateDTO.class));
+        verify(cityRepository, never()).save(any(City.class));
+    }
+
+    @Test
+    void testGetAll() {
+        List<City> cities = List.of(new City(11000L, "City1"), new City(12000L, "City2"));
+        List<CityResponseDTO> cityResponseDTOs = cities.stream()
+                .map(city -> new CityResponseDTO(city.getZipCode(), city.getName()))
+                .toList();
+
+        when(cityRepository.findAll()).thenReturn(cities);
+        when(mapper.map(any(City.class))).thenAnswer(invocation -> {
+            City city = invocation.getArgument(0);
+            return new CityResponseDTO(city.getZipCode(), city.getName());
+        });
+
+        List<CityResponseDTO> resultDTOs = cityService.getAll();
+
+        verify(cityRepository).findAll();
+        verify(mapper, times(cities.size())).map(any(City.class));
+        assertEquals(cityResponseDTOs.size(), resultDTOs.size());
+        for (int i = 0; i < cityResponseDTOs.size(); i++) {
+            assertEquals(cityResponseDTOs.get(i), resultDTOs.get(i));
+        }
     }
 }

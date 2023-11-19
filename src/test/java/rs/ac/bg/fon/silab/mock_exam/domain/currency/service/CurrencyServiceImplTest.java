@@ -99,6 +99,17 @@ public class CurrencyServiceImplTest {
     }
 
     @Test
+    void testGetByIdWhenCurrencyDoesNotExist() {
+        Long id = 1L;
+        when(currencyRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> currencyService.getById(id));
+
+        verify(currencyRepository).findById(id);
+        verify(mapper, never()).map(any(Currency.class));
+    }
+
+    @Test
     void testGet() {
         Pageable pageable = mock(Pageable.class);
         Currency mockCurrency = new Currency();
@@ -138,7 +149,7 @@ public class CurrencyServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenCurrencyExists() {
         Long id = 1L;
         CurrencyRequestDTO dto = new CurrencyRequestDTO("US Dollar", "USD");
         Currency existingCurrency = new Currency();
@@ -155,5 +166,19 @@ public class CurrencyServiceImplTest {
         verify(mapper).map(existingCurrency);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenCurrencyDoesNotExist() {
+        Long id = 1L;
+        CurrencyRequestDTO dto = new CurrencyRequestDTO("US Dollar", "USD");
+
+        when(currencyRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> currencyService.update(id, dto));
+
+        verify(currencyRepository).findById(id);
+        verify(mapper, never()).update(any(Currency.class), any(CurrencyRequestDTO.class));
+        verify(currencyRepository, never()).save(any(Currency.class));
     }
 }

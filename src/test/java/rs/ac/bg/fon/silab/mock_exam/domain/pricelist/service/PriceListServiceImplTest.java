@@ -133,7 +133,7 @@ public class PriceListServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenPriceListExists() {
         Long id = 1L;
         Year year = Year.now();
         PriceListRequestDTO dto = new PriceListRequestDTO(year);
@@ -146,10 +146,25 @@ public class PriceListServiceImplTest {
 
         PriceListResponseDTO resultDTO = priceListService.update(id, dto);
 
-        verify(mapper).update(any(), any());
+        verify(mapper).update(existingPriceList, dto);
         verify(priceListRepository).save(existingPriceList);
         verify(mapper).map(existingPriceList);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenPriceListDoesNotExist() {
+        Long id = 1L;
+        Year year = Year.now();
+        PriceListRequestDTO dto = new PriceListRequestDTO(year);
+
+        when(priceListRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            priceListService.update(id, dto);
+        });
+
+        verify(priceListRepository, never()).save(any());
     }
 }

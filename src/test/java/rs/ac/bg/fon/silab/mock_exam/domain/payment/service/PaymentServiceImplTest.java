@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.payment.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import jakarta.xml.bind.DatatypeConverter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,12 +25,14 @@ import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.entity.PriceList;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelist.service.PriceListService;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.entity.PriceListItem;
 import rs.ac.bg.fon.silab.mock_exam.domain.pricelistitem.service.PriceListItemService;
+import rs.ac.bg.fon.silab.mock_exam.infrastructure.email.EmailSender;
 import rs.ac.bg.fon.silab.mock_exam.infrastructure.exception.EntityNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.Year;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +53,8 @@ public class PaymentServiceImplTest {
 
     @Mock
     private PriceListItemService mockPriceListItemService;
+    @Mock
+    private EmailSender emailSender;
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
@@ -149,7 +154,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenPaymentExists() {
         Long id = 1L;
         PaymentRequestDTO dto = new PaymentRequestDTO(REFERENCE_NUMBER, CREDIT_ACCOUNT, PURPOSE, 10, 1001L);
         Payment existingPayment = new Payment();
@@ -168,6 +173,38 @@ public class PaymentServiceImplTest {
         verify(mockMapper).map(existingPayment);
 
         assertEquals(expectedResponseDTO, actualResponseDTO);
+    }
+
+    @Test
+    void testUpdateWhenPaymentDoesNotExist() {
+        Long id = 1L;
+        PaymentRequestDTO dto = new PaymentRequestDTO(REFERENCE_NUMBER, CREDIT_ACCOUNT, PURPOSE, 10, 1001L);
+
+        when(mockPaymentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> paymentService.update(id, dto));
+
+        verify(mockPaymentRepository).findById(id);
+
+        verify(mockMapper, never()).update(any(Payment.class), any(PaymentRequestDTO.class));
+        verify(mockPaymentRepository, never()).save(any(Payment.class));
+    }
+
+    @Test
+    void testSendPayslipOnEmail() {
+        String base64ImageData = "data:image/png;base64,ENCODED_STRING";
+        String userEmail = "user@example.com";
+        Map<String, String> payload = Map.of(
+                "imageData", base64ImageData,
+                "userEmail", userEmail
+        );
+
+        String encodedImage = base64ImageData.substring(base64ImageData.indexOf(",") + 1);
+        byte[] expectedImageBytes = DatatypeConverter.parseBase64Binary(encodedImage);
+
+        paymentService.sendPayslipOnEmail(payload);
+
+        verify(emailSender).sendAttachment(userEmail, expectedImageBytes);
     }
 }
 

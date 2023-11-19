@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.dto.*;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.entity.UserProfile;
+import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.exception.DuplicateUserException;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.mapper.UserProfileMapper;
 import rs.ac.bg.fon.silab.mock_exam.domain.userprofile.repository.UserProfileRepository;
 import rs.ac.bg.fon.silab.mock_exam.domain.userrole.dto.UserRoleRequestDTO;
@@ -73,7 +74,7 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testFindByEmail() {
+    void testFindByEmailWhenUserProfileExists() {
         when(userProfileRepository.findByEmail(email)).thenReturn(Optional.of(userProfile));
 
         UserProfile result = userProfileService.findByEmail(email);
@@ -83,7 +84,19 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testSave() {
+    void testFindByEmailWhenUserProfileDoesNotExist() {
+        String email = "nonexistent@example.com";
+        when(userProfileRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userProfileService.findByEmail(email);
+        });
+
+        verify(userProfileRepository).findByEmail(email);
+    }
+
+    @Test
+    void testSaveWhenUserIsNotRegistered() {
         when(userProfileRepository.findByEmail(userProfileRequestUpdateDTO.email())).thenReturn(Optional.empty());
         when(userRoleRepository.findByName(anyString())).thenReturn(userRole);
         when(passwordEncoder.encode(userProfile.getPassword())).thenReturn("encodedPassword");
@@ -99,7 +112,24 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testGetById() {
+    void testSaveWhenUserIsAlreadyRegistered() {
+        String email = "existing@example.com";
+        UserProfile existingUserProfile = new UserProfile();
+        existingUserProfile.setEmail(email);
+        existingUserProfile.setEnabled(true);
+
+        UserProfileRequestUpdateDTO userProfileDTO = new UserProfileRequestUpdateDTO(email, "password");
+        when(userProfileRepository.findByEmail(email)).thenReturn(Optional.of(existingUserProfile));
+
+        assertThrows(DuplicateUserException.class, () -> {
+            userProfileService.save(userProfileDTO);
+        });
+
+        verify(userProfileRepository).findByEmail(email);
+    }
+
+    @Test
+    void testGetByIdWhenUserExists() {
         Long id = 1L;
         when(userProfileRepository.findById(id)).thenReturn(Optional.of(userProfile));
         when(mapper.map(userProfile)).thenReturn(userProfileResponseDTO);
@@ -108,6 +138,18 @@ public class UserProfileServiceImplTest {
 
         verify(userProfileRepository).findById(id);
         assertEquals(userProfileResponseDTO, result);
+    }
+
+    @Test
+    void testGetByIdWhenUserDoesNotExist() {
+        Long nonExistentUserId = 999L;
+        when(userProfileRepository.findById(nonExistentUserId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userProfileService.getById(nonExistentUserId);
+        });
+
+        verify(userProfileRepository).findById(nonExistentUserId);
     }
 
     @Test
@@ -142,7 +184,7 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testUpdateUserRole() {
+    void testUpdateUserRoleWhenUserExists() {
         Long id = 1L;
         UserProfileUpdateRoleRequestDTO dto = new UserProfileUpdateRoleRequestDTO(new UserRoleRequestDTO("ROLE_USER"));
         when(userProfileRepository.findById(id)).thenReturn(Optional.of(userProfile));
@@ -157,7 +199,20 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateUserRoleWhenUserDoesNotExist() {
+        Long nonExistentUserId = 999L;
+        UserProfileUpdateRoleRequestDTO updateRoleRequestDTO = new UserProfileUpdateRoleRequestDTO(new UserRoleRequestDTO("ROLE_USER"));
+        when(userProfileRepository.findById(nonExistentUserId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userProfileService.updateUserRole(nonExistentUserId, updateRoleRequestDTO);
+        });
+
+        verify(userProfileRepository).findById(nonExistentUserId);
+    }
+
+    @Test
+    void testUpdateWhenUserExists() {
         Long id = 1L;
         when(userProfileRepository.findById(id)).thenReturn(Optional.of(userProfile));
         when(userProfileRepository.save(userProfile)).thenReturn(userProfile);
@@ -171,7 +226,19 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testGetByEmail() {
+    void testUpdateWhenUserDoesNotExist() {
+        Long nonExistentUserId = 999L;
+        when(userProfileRepository.findById(nonExistentUserId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userProfileService.update(nonExistentUserId, userProfileRequestUpdateDTO);
+        });
+
+        verify(userProfileRepository).findById(nonExistentUserId);
+    }
+
+    @Test
+    void testGetByEmailWhenUserExists() {
         when(userProfileRepository.findByEmail(email)).thenReturn(Optional.of(userProfile));
         when(mapper.map(userProfile)).thenReturn(userProfileResponseDTO);
 
@@ -182,7 +249,19 @@ public class UserProfileServiceImplTest {
     }
 
     @Test
-    void testEnableProfile() {
+    void testGetByEmailWhenUserDoesNotExist() {
+        String nonExistentEmail = "nonexistent@example.com";
+        when(userProfileRepository.findByEmail(nonExistentEmail)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userProfileService.getByEmail(nonExistentEmail);
+        });
+
+        verify(userProfileRepository).findByEmail(nonExistentEmail);
+    }
+
+    @Test
+    void testEnableProfileWhenUserExists() {
         String token = "jwtToken";
         when(jwtUtil.getSubject(token)).thenReturn(email);
         when(userProfileRepository.findByEmail(email)).thenReturn(Optional.of(userProfile));
@@ -195,6 +274,21 @@ public class UserProfileServiceImplTest {
         verify(userProfileRepository).findByEmail(email);
         verify(userProfileRepository).save(userProfile);
         assertEquals(userProfileResponseDTO, result);
+    }
+
+    @Test
+    void testEnableProfileWhenUserDoesNotExist() {
+        String token = "testToken";
+        String nonExistentEmail = "nonexistent@example.com";
+        when(jwtUtil.getSubject(token)).thenReturn(nonExistentEmail);
+        when(userProfileRepository.findByEmail(nonExistentEmail)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userProfileService.enableProfile(token);
+        });
+
+        verify(jwtUtil).getSubject(token);
+        verify(userProfileRepository).findByEmail(nonExistentEmail);
     }
 
 }

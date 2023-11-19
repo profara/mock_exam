@@ -3,6 +3,7 @@ package rs.ac.bg.fon.silab.mock_exam.domain.candidate.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,17 +28,26 @@ public class CandidateServiceImplTest {
 
     @Mock
     private CandidateRepository candidateRepository;
-
     @Mock
     private CandidateMapper mapper;
-
     @InjectMocks
     private CandidateServiceImpl candidateService;
 
+    private final Long id = 1L;
+    private Candidate mockCandidate;
+    private CandidateRequestDTO requestDTO;
+    private CandidateResponseDTO responseDTO;
+
+    @BeforeEach
+    void setUp(){
+        mockCandidate = new Candidate();
+        mockCandidate.setId(id);
+        requestDTO = new CandidateRequestDTO("TestName", "TestSurname", "123 St.", true, null, 100001L, 10001L);
+        responseDTO = new CandidateResponseDTO(id, "TestName", "TestSurname", "123 St.", true, null, null, null);
+    }
+
     @Test
     void testFindByIdWhenCandidateExists() {
-        Long id = 1L;
-        Candidate mockCandidate = new Candidate();
         when(candidateRepository.findById(id)).thenReturn(Optional.of(mockCandidate));
 
         Candidate result = candidateService.findById(id);
@@ -46,7 +56,6 @@ public class CandidateServiceImplTest {
 
     @Test
     void testFindByIdWhenCandidateDoesNotExist() {
-        Long id = 1L;
         when(candidateRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> candidateService.findById(id));
@@ -54,18 +63,16 @@ public class CandidateServiceImplTest {
 
     @Test
     void testSave() {
-        CandidateRequestDTO dto = new CandidateRequestDTO("John", "Doe", "123 St.", true, null, 100001L, 10001L);
         Candidate mappedCandidate = new Candidate();
         Candidate savedCandidate = new Candidate();
-        CandidateResponseDTO responseDTO = new CandidateResponseDTO(1L, "John", "Doe", "123 St.", true, null, null, null);
 
-        when(mapper.map(dto)).thenReturn(mappedCandidate);
+        when(mapper.map(requestDTO)).thenReturn(mappedCandidate);
         when(candidateRepository.save(mappedCandidate)).thenReturn(savedCandidate);
         when(mapper.map(savedCandidate)).thenReturn(responseDTO);
 
-        CandidateResponseDTO resultDTO = candidateService.save(dto);
+        CandidateResponseDTO resultDTO = candidateService.save(requestDTO);
 
-        verify(mapper).map(dto);
+        verify(mapper).map(requestDTO);
         verify(candidateRepository).save(mappedCandidate);
         verify(mapper).map(savedCandidate);
 
@@ -74,30 +81,24 @@ public class CandidateServiceImplTest {
 
     @Test
     void testGetByIdWhenCandidateExists() {
-        Long id = 1L;
-        Candidate mockCandidate = new Candidate();
-        CandidateResponseDTO expectedResponseDTO = new CandidateResponseDTO(1L, "John", "Doe", "123 St.", true, null, null, null);
-
         when(candidateRepository.findById(id)).thenReturn(Optional.of(mockCandidate));
-        when(mapper.map(mockCandidate)).thenReturn(expectedResponseDTO);
+        when(mapper.map(mockCandidate)).thenReturn(responseDTO);
 
         CandidateResponseDTO actualResponseDTO = candidateService.getById(id);
 
         verify(candidateRepository).findById(id);
         verify(mapper).map(mockCandidate);
 
-        assertEquals(expectedResponseDTO, actualResponseDTO);
+        assertEquals(responseDTO, actualResponseDTO);
     }
 
     @Test
     void testGet() {
         Pageable pageable = mock(Pageable.class);
-        Candidate mockCandidate = new Candidate();
-        CandidateResponseDTO mockDTO = new CandidateResponseDTO(1L, "John", "Doe", "123 St.", true, null, null, null);
-        Page<Candidate> page = new PageImpl<>(List.of(new Candidate()));
+        Page<Candidate> page = new PageImpl<>(List.of(mockCandidate));
 
         when(candidateRepository.findAll(pageable)).thenReturn(page);
-        when(mapper.map(mockCandidate)).thenReturn(mockDTO);
+        when(mapper.map(mockCandidate)).thenReturn(responseDTO);
 
         Page<CandidateResponseDTO> resultPage = candidateService.get(pageable);
 
@@ -105,12 +106,11 @@ public class CandidateServiceImplTest {
 
         assertNotNull(resultPage);
         assertEquals(1, resultPage.getContent().size());
-        assertEquals(mockDTO, resultPage.getContent().get(0));
+        assertEquals(responseDTO, resultPage.getContent().get(0));
     }
 
     @Test
     void testDeleteWhenCandidateExists() {
-        Long id = 1L;
         when(candidateRepository.existsById(id)).thenReturn(true);
 
         candidateService.delete(id);
@@ -120,7 +120,6 @@ public class CandidateServiceImplTest {
 
     @Test
     void testDeleteWhenCandidateDoesNotExist() {
-        Long id = 1L;
         when(candidateRepository.existsById(id)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> candidateService.delete(id));
@@ -129,39 +128,48 @@ public class CandidateServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
-        Long id = 1L;
-        CandidateRequestDTO dto = new CandidateRequestDTO("John", "Doe", "123 St.", true, null, 100001L, 10001L);
-        Candidate existingCandidate = new Candidate();
-        CandidateResponseDTO responseDTO = new CandidateResponseDTO(1L, "John", "Doe", "123 St.", true, null, null, null);
+    void testUpdateWhenCandidateExists() {
+        when(candidateRepository.findById(id)).thenReturn(Optional.of(mockCandidate));
+        when(mapper.map(mockCandidate)).thenReturn(responseDTO);
 
-        when(candidateRepository.findById(id)).thenReturn(Optional.of(existingCandidate));
-        when(candidateRepository.save(existingCandidate)).thenReturn(existingCandidate);
-        when(mapper.map(existingCandidate)).thenReturn(responseDTO);
+        CandidateResponseDTO resultDTO = candidateService.update(id, requestDTO);
 
-        CandidateResponseDTO resultDTO = candidateService.update(id, dto);
-
-        verify(mapper).update(any(), any());
-        verify(candidateRepository).save(existingCandidate);
-        verify(mapper).map(existingCandidate);
-
+        verify(mapper).update(mockCandidate, requestDTO);
+        verify(candidateRepository).save(mockCandidate);
         assertEquals(responseDTO, resultDTO);
     }
 
     @Test
-    void testGetByEmail() {
+    void testUpdateWhenCandidateDoesNotExist() {
+        when(candidateRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> candidateService.update(id, requestDTO));
+        verify(mapper, never()).update(any(Candidate.class), any(CandidateRequestDTO.class));
+        verify(candidateRepository, never()).save(any(Candidate.class));
+    }
+
+    @Test
+    void testGetByEmailWhenCandidateExists() {
         String email = "john.doe@example.com";
-        Candidate mockCandidate = new Candidate();
-        CandidateResponseDTO expectedResponseDTO = new CandidateResponseDTO(1L, "John", "Doe", "123 St.", true, null, null, null);
 
         when(candidateRepository.findByUserProfile_Email(email)).thenReturn(Optional.of(mockCandidate));
-        when(mapper.map(mockCandidate)).thenReturn(expectedResponseDTO);
+        when(mapper.map(mockCandidate)).thenReturn(responseDTO);
 
         CandidateResponseDTO actualResponseDTO = candidateService.getByEmail(email);
 
         verify(candidateRepository).findByUserProfile_Email(email);
         verify(mapper).map(mockCandidate);
 
-        assertEquals(expectedResponseDTO, actualResponseDTO);
+        assertEquals(responseDTO, actualResponseDTO);
+    }
+
+    @Test
+    void testGetByEmailWhenCandidateDoesNotExist() {
+        String email = "john.doe@example.com";
+        when(candidateRepository.findByUserProfile_Email(email)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> candidateService.getByEmail(email));
+        verify(candidateRepository).findByUserProfile_Email(email);
+        verify(mapper, never()).map(any(Candidate.class));
     }
 }

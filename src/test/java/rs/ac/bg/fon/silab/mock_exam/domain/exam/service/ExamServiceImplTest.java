@@ -100,6 +100,16 @@ public class ExamServiceImplTest {
     }
 
     @Test
+    void testGetByIdWhenExamDoesNotExist() {
+        Long id = 1L;
+        when(examRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> examService.getById(id));
+
+        verify(examRepository).findById(id);
+    }
+
+    @Test
     void testGet() {
         Pageable pageable = mock(Pageable.class);
         Exam mockExam = new Exam();
@@ -139,7 +149,7 @@ public class ExamServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenExamExists() {
         Long id = 1L;
         ExamRequestDTO dto = new ExamRequestDTO("Matematika");
         Exam existingExam = new Exam();
@@ -156,5 +166,19 @@ public class ExamServiceImplTest {
         verify(mapper).map(existingExam);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenExamDoesNotExist() {
+        Long id = 1L;
+        ExamRequestDTO dto = new ExamRequestDTO("Matematika");
+
+        when(examRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> examService.update(id, dto));
+
+        verify(examRepository).findById(id);
+        verify(mapper, never()).update(any(Exam.class), any(ExamRequestDTO.class));
+        verify(examRepository, never()).save(any(Exam.class));
     }
 }

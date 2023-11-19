@@ -65,7 +65,7 @@ public class UserRoleServiceImplTest {
     }
 
     @Test
-    void testGetById() {
+    void testGetByIdWhenUserRoleExists() {
         Long id = 1L;
         UserRole mockUserRole = new UserRole("ROLE_USER");
         UserRoleResponseDTO expectedResponseDTO = new UserRoleResponseDTO(1L, "ROLE_USER");
@@ -80,6 +80,19 @@ public class UserRoleServiceImplTest {
 
         assertEquals(expectedResponseDTO, actualResponseDTO);
     }
+
+    @Test
+    void testGetByIdWhenUserRoleDoesNotExist() {
+        Long nonExistentId = 999L;
+        when(userRoleRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userRoleService.getById(nonExistentId);
+        });
+
+        verify(userRoleRepository).findById(nonExistentId);
+    }
+
 
     @Test
     void testGet() {
@@ -138,5 +151,20 @@ public class UserRoleServiceImplTest {
         verify(mapper).map(existingUserRole);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenUserRoleDoesNotExist() {
+        Long nonExistentId = 999L;
+        UserRoleRequestDTO userRoleDTO = new UserRoleRequestDTO("ROLE_ADMIN");
+
+        when(userRoleRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userRoleService.update(nonExistentId, userRoleDTO);
+        });
+
+        verify(userRoleRepository).findById(nonExistentId);
+        verify(userRoleRepository, never()).save(any(UserRole.class));
     }
 }

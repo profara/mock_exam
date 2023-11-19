@@ -150,7 +150,7 @@ public class PriceListItemServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenPriceListItemExists() {
         Long id = 1L;
         BigDecimal price = new BigDecimal("100.00");
         Year year = Year.now();
@@ -172,11 +172,30 @@ public class PriceListItemServiceImplTest {
 
         PriceListItemResponseDTO resultDTO = priceListItemService.update(id, dto);
 
-        verify(mapper).update(any(), any());
+        verify(mapper).update(existingPriceListItem,dto);
         verify(priceListItemRepository).save(existingPriceListItem);
         verify(mapper).map(existingPriceListItem);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenPriceListItemDoesNotExist() {
+        Long nonExistentId = 99L;
+        BigDecimal price = new BigDecimal("100.00");
+        Year year = Year.now();
+        PriceListRequestDTO priceListRequestDTO = new PriceListRequestDTO(year);
+        CurrencyCodeRequestDTO currencyCodeRequestDTO = new CurrencyCodeRequestDTO("RSD");
+        ExamRequestDTO examRequestDTO = new ExamRequestDTO("Matematika");
+
+        PriceListItemRequestDTO dto = new PriceListItemRequestDTO(priceListRequestDTO, price, true, currencyCodeRequestDTO, examRequestDTO);
+
+        when(priceListItemRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> priceListItemService.update(nonExistentId, dto));
+
+        verify(priceListItemRepository, never()).save(any(PriceListItem.class));
+        verify(mapper, never()).update(any(PriceListItem.class), any(PriceListItemRequestDTO.class));
     }
 
     @Test

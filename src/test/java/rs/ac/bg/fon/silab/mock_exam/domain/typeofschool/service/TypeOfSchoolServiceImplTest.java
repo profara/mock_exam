@@ -133,7 +133,7 @@ public class TypeOfSchoolServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdateWhenTypeOfSchoolExists() {
         Long id = 1L;
         TypeOfSchoolRequestDTO dto = new TypeOfSchoolRequestDTO("Ekonomska");
         TypeOfSchool existingTypeOfSchool = new TypeOfSchool();
@@ -150,5 +150,19 @@ public class TypeOfSchoolServiceImplTest {
         verify(mapper).map(existingTypeOfSchool);
 
         assertEquals(responseDTO, resultDTO);
+    }
+
+    @Test
+    void testUpdateWhenTypeOfSchoolDoesNotExist() {
+        Long id = 1L;
+        TypeOfSchoolRequestDTO dto = new TypeOfSchoolRequestDTO("Ekonomska");
+
+        when(typeOfSchoolRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            typeOfSchoolService.update(id, dto);
+        });
+
+        verify(typeOfSchoolRepository, never()).save(any(TypeOfSchool.class));
     }
 }
