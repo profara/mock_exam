@@ -171,7 +171,7 @@ const UpdateCandidateProfileForm = () => {
                         updateCandidate(isAdmin() ? selectedCandidate.id : candidate.id, candidateData)
                             .then(res => {
                                 successNotification(
-                                    "Uspesno potvrdjen kandidat",
+                                    "Uspesna izmena podataka",
                                     ""
                                 )
                                 if(!isAdmin()){
